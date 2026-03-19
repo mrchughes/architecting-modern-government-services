@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Obsidian
+.obsidian/
+
+# Working files not for publication
+Archive/
+IMPROVEMENT_BACKLOG.md
+Paper_Series_Outlines.md
+llm_microservices_strategy_v2.md
+llm_microservices_strategy_v3.md
+Cloud Data/
+Cloud_Sovereign_Citizen_Database*.md
+Email_PL_SQL_Thoughts.md
+Architect's Concise Reference.md
