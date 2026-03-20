@@ -1,0 +1,2758 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A six-paper series on DDD, evidence-based identity, and LLM-assisted development for government services">
+      
+      
+      
+        <link rel="canonical" href="https://mrchughes.github.io/architecting-modern-government-services/Paper_5_Getting_Started/">
+      
+      
+        <link rel="prev" href="../Paper_4_Automated_LLM_Development/">
+      
+      
+        <link rel="next" href="../Paper_6_Case_Study/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>5 — Getting Started - Architecting Modern Government Services</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started-a-practical-guide" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Architecting Modern Government Services" class="md-header__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Architecting Modern Government Services
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              5 — Getting Started
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Paper_1_DDD_Clean_Architecture/" class="md-tabs__link">
+          
+  
+  
+  Papers
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Architecting Modern Government Services" class="md-nav__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Architecting Modern Government Services
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_1_DDD_Clean_Architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — DDD & Clean Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_2_Evidence_Based_Identity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Evidence-Based Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_3_LLM_RAG_Guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — LLM RAG & Guardrails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_4_Automated_LLM_Development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 — Automated LLM Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5 — Getting Started
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5 — Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#who-this-paper-is-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Who This Paper Is For
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#week-0-before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 0: Before You Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-one-the-technology-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part One: The Technology Stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part One: The Technology Stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-you-actually-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Actually Need
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-these-choices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why These Choices?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-two-setting-up-rag-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Two: Setting Up RAG Infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Two: Setting Up RAG Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-understand-the-indexing-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Understand the Indexing Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-build-the-indexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Build the Indexer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-build-the-retriever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Build the Retriever
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-keep-the-index-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Keep the Index Current
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-three-llm-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Three: LLM Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Three: LLM Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-prompt-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Prompt Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wiring-it-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring It Together
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handling-conversations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handling Conversations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-four-the-manifest-and-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Four: The Manifest and Enforcement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Four: The Manifest and Enforcement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-manifest-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Manifest Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enforcement-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enforcement Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ci-pipeline-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI Pipeline Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-five-a-lightweight-approach-for-prototyping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Five: A Lightweight Approach for Prototyping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Five: A Lightweight Approach for Prototyping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-single-developer-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Single-Developer Version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimum-viable-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Viable Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-to-add-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to Add Next
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-six-common-problems-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Six: Common Problems and Solutions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Six: Common Problems and Solutions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rag-retrieval-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAG Retrieval Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-generation-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Generation Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contract-testing-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Testing Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#organisational-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Organisational Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-seven-from-prototype-to-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Seven: From Prototype to Production
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Seven: From Prototype to Production">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-good-looks-like" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Good Looks Like
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-scale-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Scale Up
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-change-your-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Change Your Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-production-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Production Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commands-youll-use-daily" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands You'll Use Daily
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Papers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_6_Case_Study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6 — Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#who-this-paper-is-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Who This Paper Is For
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#week-0-before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Week 0: Before You Start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-one-the-technology-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part One: The Technology Stack
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part One: The Technology Stack">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-you-actually-need" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Actually Need
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-these-choices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why These Choices?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-two-setting-up-rag-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Two: Setting Up RAG Infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Two: Setting Up RAG Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Install Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-understand-the-indexing-process" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Understand the Indexing Process
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-build-the-indexer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Build the Indexer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-build-the-retriever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Build the Retriever
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-keep-the-index-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Keep the Index Current
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-three-llm-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Three: LLM Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Three: LLM Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-prompt-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Prompt Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wiring-it-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wiring It Together
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handling-conversations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handling Conversations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-four-the-manifest-and-enforcement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Four: The Manifest and Enforcement
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Four: The Manifest and Enforcement">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-manifest-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Manifest Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enforcement-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Enforcement Scripts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ci-pipeline-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI Pipeline Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-five-a-lightweight-approach-for-prototyping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Five: A Lightweight Approach for Prototyping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Five: A Lightweight Approach for Prototyping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-single-developer-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Single-Developer Version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimum-viable-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimum Viable Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-to-add-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What to Add Next
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-six-common-problems-and-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Six: Common Problems and Solutions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Six: Common Problems and Solutions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rag-retrieval-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RAG Retrieval Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#llm-generation-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LLM Generation Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contract-testing-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contract Testing Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#organisational-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Organisational Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-seven-from-prototype-to-production" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Seven: From Prototype to Production
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Seven: From Prototype to Production">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-good-looks-like" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Good Looks Like
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-scale-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Scale Up
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-change-your-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Change Your Tools
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-production-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Production Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#commands-youll-use-daily" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands You'll Use Daily
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#troubleshooting-quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Papers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="getting-started-a-practical-guide">Getting Started: A Practical Guide</h1>
+<p><strong>Building Your First LLM-Assisted Microservice System</strong></p>
+<p><em>Part 5 of 6 of the Architecting Modern Government Services Series</em></p>
+<p><em>Version 1.0 | February 2026</em></p>
+<hr />
+<h2 id="version-history">Version History</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>Feb 2026</td>
+<td>Initial release</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="who-this-paper-is-for">Who This Paper Is For</h2>
+<p>You've read Papers 1-4. You understand the concepts. Now you want to build something. This paper bridges the gap between understanding and doing.</p>
+<p>We'll cover:
+- The technology stack you need
+- How to set up RAG infrastructure
+- How to build the enforcement pipeline
+- How to wire up LLM integration
+- A lightweight approach for prototyping
+- Common problems and how to solve them</p>
+<p>This is the practical companion to the conceptual papers. Less "why," more "how."</p>
+<blockquote>
+<p><strong>How to Read This Paper</strong>
+<strong>Prototype in a day?</strong> Jump to Part Five (A Lightweight Approach), then return to Parts Two–Four for depth.
+<strong>Setting up from scratch?</strong> Follow the parts in sequence — each one builds on the previous.
+<strong>Debugging a problem?</strong> Jump directly to Part Six (Common Problems).
+<strong>Already running and want to scale?</strong> Part Seven covers production readiness and tool graduation.
+<strong>New to the series?</strong> Papers 1, 3, and 4 establish the <em>why</em> behind everything in this paper.</p>
+</blockquote>
+<hr />
+<h2 id="week-0-before-you-start">Week 0: Before You Start</h2>
+<p>The most common reason teams stall at Week 1 is that Week 0 prerequisites weren't in place. These aren't optional preparation steps — they're hard dependencies. Skip them, and the framework will fight your organisation's existing habits rather than enhance them.</p>
+<p><strong>A monorepo, or a committed plan to move to one.</strong> The manifest pattern, path validation, and service scoping all assume code lives in one repository. If you're currently multi-repo, you need a migration plan. You don't need to complete it before piloting — but you need agreement on the destination. Without it, enforcement becomes politically contentious: why should my repo follow your rules?</p>
+<p><strong>A champion team.</strong> Pick one team willing to be your pilot. They need to understand the deal: slightly slower initial setup, a week or two learning the new workflow, and willingness to report problems rather than work around them. The pilot team's experience becomes the evidence base for persuading everyone else.</p>
+<p><strong>Technical sponsorship.</strong> Someone with authority to say "this is how we write services now" needs to be publicly behind this. The enforcement pipeline will catch a change that a developer considers valid and block it. Without sponsorship, that block gets overridden and the framework loses credibility on day one.</p>
+<p><strong>An understood pilot service.</strong> The first service you index should be one your team knows deeply — ideally the one you work on daily. Piloting on an unfamiliar codebase makes it impossible to tell whether poor LLM suggestions are a framework problem or a knowledge gap.</p>
+<p><strong>Basic git discipline.</strong> The enforcement pipeline runs on pull requests. If your team currently commits directly to main, establish PR-based workflow first — not for governance reasons, but because every validation script assumes this flow.</p>
+<p>None of these take weeks to establish. Most teams can address them in a day of honest conversations. But they are blockers, and skipping them produces a pilot that "didn't work" for reasons unrelated to the framework itself.</p>
+<hr />
+<h2 id="part-one-the-technology-stack">Part One: The Technology Stack</h2>
+<h3 id="what-you-actually-need">What You Actually Need</h3>
+<p>The framework described in Papers 3-4 sounds like it requires significant infrastructure. For a production system at scale, it does. But for prototyping and learning, you can start much smaller. Here's the minimum viable stack:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Production Choice</th>
+<th>Prototype Choice</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vector Database</td>
+<td>Pinecone, Weaviate</td>
+<td>ChromaDB (local)</td>
+<td>Store and search code embeddings</td>
+</tr>
+<tr>
+<td>Embedding Model</td>
+<td>OpenAI ada-002, Cohere</td>
+<td>OpenAI ada-002</td>
+<td>Convert code to vectors</td>
+</tr>
+<tr>
+<td>LLM</td>
+<td>GPT-4, Claude</td>
+<td>GPT-4 or Claude API</td>
+<td>Generate and reason about code</td>
+</tr>
+<tr>
+<td>Orchestration</td>
+<td>Custom framework</td>
+<td>LangChain or direct API</td>
+<td>Wire RAG to LLM</td>
+</tr>
+<tr>
+<td>CI/CD</td>
+<td>GitHub Actions, GitLab CI</td>
+<td>GitHub Actions</td>
+<td>Enforce boundaries</td>
+</tr>
+<tr>
+<td>Contract Testing</td>
+<td>Pact, Spring Cloud Contract</td>
+<td>Pact</td>
+<td>Verify service contracts</td>
+</tr>
+<tr>
+<td>Repository</td>
+<td>Monorepo (Nx, Turborepo)</td>
+<td>Single Git repo</td>
+<td>Store all code and artefacts</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For a prototype, you need:</strong>
+1. An OpenAI API key (or Anthropic for Claude)
+2. Python 3.10+ installed
+3. A Git repository
+4. About £20-50 in API credits to experiment</p>
+<p>That's it. Everything else can be local or free-tier.</p>
+<h3 id="why-these-choices">Why These Choices?</h3>
+<p><strong>ChromaDB for prototyping</strong> because it runs locally, requires no account setup, and has a simple API. You can literally <code>pip install chromadb</code> and start indexing in five minutes. For production, you'd move to a managed service like Pinecone (scalable, reliable) or Weaviate (open source, self-hostable).</p>
+<p><strong>OpenAI ada-002 for embeddings</strong> because it's the most widely used, well-documented, and cost-effective embedding model. At $0.0001 per 1K tokens, indexing a 100-file service costs about $0.10. Alternatives like Cohere or open-source models (sentence-transformers) work too, but ada-002 has the best documentation and tooling.</p>
+<p><strong>GPT-4 or Claude for generation</strong> because they're the most capable models for code generation and reasoning. GPT-4 is slightly better at following complex instructions; Claude is better at longer contexts and more nuanced reasoning. Either works. For prototyping, use whichever you have access to.</p>
+<p><strong>LangChain for orchestration</strong> because it handles the RAG workflow out of the box: load documents, chunk them, embed them, store in vector DB, retrieve on query, inject into prompt, call LLM. You could build this yourself, but LangChain saves weeks of plumbing. For production, you might replace it with a custom solution optimised for your needs.</p>
+<p><strong>GitHub Actions for CI/CD</strong> because it's free for public repos, cheap for private, and most developers already know it. The enforcement scripts we'll build are just Python—they'd work in any CI system.</p>
+<p><strong>Pact for contract testing</strong> because it's the industry standard, supports multiple languages, and has excellent documentation. It's slightly complex to set up, but worth it.</p>
+<hr />
+<h2 id="part-two-setting-up-rag-infrastructure">Part Two: Setting Up RAG Infrastructure</h2>
+<h3 id="step-1-install-dependencies">Step 1: Install Dependencies</h3>
+<p>Create a new Python project with these dependencies:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a># requirements.txt
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>chromadb&gt;=0.4.0
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>openai&gt;=1.0.0
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>langchain&gt;=0.1.0
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>langchain-openai&gt;=0.0.5
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>tiktoken&gt;=0.5.0
+</code></pre></div>
+<p>Set your API key as an environment variable:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>export OPENAI_API_KEY=sk-your-key-here
+</code></pre></div>
+<h3 id="step-2-understand-the-indexing-process">Step 2: Understand the Indexing Process</h3>
+<p>Before writing code, understand what we're building. The RAG index is the service-scoped context architecture described in Paper 3, Part Two. Filtering the index to a single service is what prevents context contamination between bounded contexts: when the LLM only retrieves code from the <code>eligibility-decision</code> service, it cannot accidentally suggest patterns from the <code>claims-intake</code> service. Service isolation at the retrieval layer enforces boundary isolation at the reasoning layer.</p>
+<p>The index is created through this process:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Source Code Files
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>       ↓
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>   [Chunking]
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>   Split files into semantic units (functions, classes, ~500 tokens each)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>       ↓
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>   [Metadata Extraction]
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>   Tag each chunk: file path, type (domain/application/infrastructure/test), service name
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>       ↓
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>   [Embedding]
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>   Convert each chunk to a vector using ada-002
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>       ↓
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>   [Storage]
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>   Store vectors + metadata in ChromaDB
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>       ↓
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>   Service RAG Index
+</code></pre></div>
+<p>When a query comes in:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Developer Question
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>       ↓
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>   [Query Embedding]
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>   Convert question to vector using same embedding model
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>       ↓
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>   [Similarity Search]
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>   Find 10-20 most similar chunks in the index
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>       ↓
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>   [Re-ranking]
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>   Prioritise: tests first, then domain, then application, then infrastructure
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>       ↓
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>   [Context Assembly]
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>   Combine top 8-12 chunks into prompt context
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>       ↓
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>   LLM Prompt
+</code></pre></div>
+<h3 id="step-3-build-the-indexer">Step 3: Build the Indexer</h3>
+<p>Here's the structure of a service indexer. This isn't production code—it's a clear illustration of the process:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>ServiceIndexer
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── __init__(service_name, service_paths, vector_store)
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>│
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>├── index_service()
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>│   ├── load_files(paths)           # Read all code files
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>│   ├── chunk_files(files)          # Split into semantic units
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>│   ├── extract_metadata(chunks)    # Tag with file type, service, etc.
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>│   ├── embed_chunks(chunks)        # Convert to vectors
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>│   └── store_chunks(embeddings)    # Save to vector DB
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>│
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>├── chunk_file(file_content, file_path)
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>│   ├── Detect language (Python, Java, etc.)
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>│   ├── Parse into AST if possible
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>│   ├── Extract functions, classes, methods as chunks
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>│   ├── Fall back to sliding window for non-parseable files
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>│   └── Return list of chunks with boundaries
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>│
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>└── classify_chunk(chunk, file_path)
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>    ├── If path contains &quot;test&quot; → type = &quot;test&quot;
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>    ├── If path contains &quot;domain&quot; → type = &quot;domain&quot;
+<a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a>    ├── If path contains &quot;application&quot; → type = &quot;application&quot;
+<a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a>    ├── If path contains &quot;infrastructure&quot; → type = &quot;infrastructure&quot;
+<a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a>    └── Else → type = &quot;other&quot;
+</code></pre></div>
+<p><strong>Key decisions in chunking:</strong></p>
+<ul>
+<li>
+<p><strong>Chunk size:</strong> Aim for 300-800 tokens per chunk. Too small and you lose context; too large and you waste tokens on irrelevant content. Functions and classes are natural boundaries.</p>
+</li>
+<li>
+<p><strong>Overlap:</strong> Include 50-100 tokens of overlap between chunks so context isn't lost at boundaries.</p>
+</li>
+<li>
+<p><strong>Metadata:</strong> Always include file path, chunk type, service name, and line numbers. This metadata enables filtering and re-ranking.</p>
+</li>
+</ul>
+<p><strong>Pseudocode for the core indexing loop:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>function index_service(service_name, paths):
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    chunks = []
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    for each file in find_files(paths):
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        content = read_file(file)
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        file_chunks = chunk_file(content, file.path)
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        for chunk in file_chunks:
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>            chunk.metadata = {
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>                &quot;service&quot;: service_name,
+<a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>                &quot;file_path&quot;: file.path,
+<a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a>                &quot;type&quot;: classify_chunk(chunk, file.path),
+<a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a>                &quot;start_line&quot;: chunk.start_line,
+<a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a>                &quot;end_line&quot;: chunk.end_line
+<a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a>            }
+<a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a>            chunks.append(chunk)
+<a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a>
+<a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a>    embeddings = embedding_model.embed(chunks)
+<a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a>
+<a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a>    vector_store.add(
+<a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a>        documents=[c.content for c in chunks],
+<a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a>        metadatas=[c.metadata for c in chunks],
+<a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a>        embeddings=embeddings,
+<a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a>        ids=[generate_id(c) for c in chunks]
+<a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a>    )
+<a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a>
+<a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a>    return len(chunks)
+</code></pre></div>
+<h3 id="step-4-build-the-retriever">Step 4: Build the Retriever</h3>
+<p>The retriever finds relevant chunks for a query. The key insight is that raw similarity isn't enough—you need to re-rank by chunk type to prioritise tests and domain logic.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>function retrieve_context(query, service_name, top_k=12):
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    # Step 1: Embed the query
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    query_embedding = embedding_model.embed(query)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    # Step 2: Search with service filter
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    results = vector_store.query(
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        query_embedding=query_embedding,
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>        filter={&quot;service&quot;: service_name},
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>        top_k=top_k * 2  # Get more than we need for re-ranking
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>    )
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    # Step 3: Re-rank by type priority
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    priority = {&quot;test&quot;: 0, &quot;domain&quot;: 1, &quot;application&quot;: 2, &quot;infrastructure&quot;: 3, &quot;other&quot;: 4}
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>    results.sort(key=lambda r: (
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>        priority.get(r.metadata[&quot;type&quot;], 5),  # Primary: type priority
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>        -r.similarity_score                    # Secondary: similarity (descending)
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>    ))
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    # Step 4: Take top_k after re-ranking
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    return results[:top_k]
+</code></pre></div>
+<p><strong>Why tests first?</strong> Tests encode expected behaviour. When an LLM sees tests before implementation, it understands what the code <em>should do</em>, not just what it currently does. This dramatically improves generation accuracy. The prioritisation order mirrors Paper 3's principle that test artefacts carry higher signal density than implementation code.</p>
+<h3 id="step-5-keep-the-index-current">Step 5: Keep the Index Current</h3>
+<p>The index must update when code changes. The simplest approach:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>function update_index_for_changes(service_name, changed_files):
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    # Delete old chunks for changed files
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    for file_path in changed_files:
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        vector_store.delete(
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>            filter={&quot;service&quot;: service_name, &quot;file_path&quot;: file_path}
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        )
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    # Re-index only the changed files
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    for file_path in changed_files:
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        content = read_file(file_path)
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        chunks = chunk_file(content, file_path)
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        # ... embed and store as before
+</code></pre></div>
+<p>In CI/CD, trigger this on every merge to main:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># In your CI pipeline (e.g., GitHub Actions)
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>on:
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>  push:
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    branches: [main]
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>jobs:
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>  update-rag:
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    steps:
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>      - name: Get changed files
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        id: changes
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>        run: |
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>          echo &quot;files=$(git diff --name-only HEAD~1)&quot; &gt;&gt; $GITHUB_OUTPUT
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>      - name: Update RAG index
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>        run: python scripts/update_rag.py --files &quot;${{ steps.changes.outputs.files }}&quot;
+</code></pre></div>
+<hr />
+<h2 id="part-three-llm-integration">Part Three: LLM Integration</h2>
+<p>With the RAG index in place, the LLM has eyes. Now it needs rules. The prompt structure determines what the LLM is allowed to do and how it should behave within those constraints. This is where the service manifest — filled in during Part Four — begins to earn its value: the allowed paths and dependencies in the manifest become the guardrails encoded in the system prompt.</p>
+<h3 id="the-prompt-structure">The Prompt Structure</h3>
+<p>The LLM needs three things in its prompt:
+1. <strong>System instructions:</strong> What it should do and what constraints apply
+2. <strong>Retrieved context:</strong> The relevant code chunks from RAG
+3. <strong>User query:</strong> What the developer is asking</p>
+<p>Here's the structure:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>SYSTEM:
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>You are an expert developer working on the {service_name} microservice.
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>You must follow Clean Architecture principles.
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>You may only modify files within these paths: {allowed_paths}
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>You must not import from these forbidden modules: {forbidden_imports}
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>When proposing changes, output a unified diff format.
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>Always include or update tests for any logic changes.
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>CONTEXT:
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>The following code snippets are relevant to your task:
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>--- File: tests/domain/test_refund.py (lines 45-89) ---
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>{chunk_content}
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>--- File: domain/entities/refund.py (lines 1-67) ---
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>{chunk_content}
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>... more chunks ...
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a>USER:
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>{user_query}
+</code></pre></div>
+<h3 id="wiring-it-together">Wiring It Together</h3>
+<p>The orchestration flow connects RAG retrieval to LLM generation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>function assist_with_code(user_query, service_name):
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    # Step 1: Load service configuration from manifest
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    service_config = load_manifest()[&quot;services&quot;][service_name]
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    allowed_paths = service_config[&quot;paths&quot;]
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    dependencies = service_config[&quot;dependencies&quot;]
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>    # Step 2: Retrieve relevant context
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>    context_chunks = retrieve_context(user_query, service_name)
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>    # Step 3: Format context for prompt
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>    formatted_context = &quot;&quot;
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>    for chunk in context_chunks:
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>        formatted_context += f&quot;&quot;&quot;
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>--- File: {chunk.metadata[&quot;file_path&quot;]} (lines {chunk.metadata[&quot;start_line&quot;]}-{chunk.metadata[&quot;end_line&quot;]}) ---
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>{chunk.content}
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>&quot;&quot;&quot;
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>    # Step 4: Build the prompt
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>    system_prompt = f&quot;&quot;&quot;
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>You are an expert developer working on the {service_name} microservice.
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>Follow Clean Architecture: domain has no external dependencies, 
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>application depends only on domain, infrastructure implements interfaces.
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>You may ONLY modify files matching these patterns: {allowed_paths}
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>You may ONLY import from: {dependencies}
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>Output proposed changes as unified diffs.
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>Include tests for any logic changes.
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>&quot;&quot;&quot;
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>    # Step 5: Call the LLM
+<a id="__codelineno-10-33" name="__codelineno-10-33" href="#__codelineno-10-33"></a>    response = llm.chat([
+<a id="__codelineno-10-34" name="__codelineno-10-34" href="#__codelineno-10-34"></a>        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: system_prompt},
+<a id="__codelineno-10-35" name="__codelineno-10-35" href="#__codelineno-10-35"></a>        {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: f&quot;CONTEXT:\n{formatted_context}\n\nQUERY:\n{user_query}&quot;}
+<a id="__codelineno-10-36" name="__codelineno-10-36" href="#__codelineno-10-36"></a>    ])
+<a id="__codelineno-10-37" name="__codelineno-10-37" href="#__codelineno-10-37"></a>
+<a id="__codelineno-10-38" name="__codelineno-10-38" href="#__codelineno-10-38"></a>    # Step 6: Parse and validate the response
+<a id="__codelineno-10-39" name="__codelineno-10-39" href="#__codelineno-10-39"></a>    proposed_changes = parse_diff(response.content)
+<a id="__codelineno-10-40" name="__codelineno-10-40" href="#__codelineno-10-40"></a>    validation_errors = validate_changes(proposed_changes, allowed_paths, dependencies)
+<a id="__codelineno-10-41" name="__codelineno-10-41" href="#__codelineno-10-41"></a>
+<a id="__codelineno-10-42" name="__codelineno-10-42" href="#__codelineno-10-42"></a>    if validation_errors:
+<a id="__codelineno-10-43" name="__codelineno-10-43" href="#__codelineno-10-43"></a>        # Ask LLM to fix violations
+<a id="__codelineno-10-44" name="__codelineno-10-44" href="#__codelineno-10-44"></a>        return assist_with_code(
+<a id="__codelineno-10-45" name="__codelineno-10-45" href="#__codelineno-10-45"></a>            f&quot;Your changes had these violations: {validation_errors}. Please fix them.\n\nOriginal query: {user_query}&quot;,
+<a id="__codelineno-10-46" name="__codelineno-10-46" href="#__codelineno-10-46"></a>            service_name
+<a id="__codelineno-10-47" name="__codelineno-10-47" href="#__codelineno-10-47"></a>        )
+<a id="__codelineno-10-48" name="__codelineno-10-48" href="#__codelineno-10-48"></a>
+<a id="__codelineno-10-49" name="__codelineno-10-49" href="#__codelineno-10-49"></a>    return proposed_changes
+</code></pre></div>
+<h3 id="handling-conversations">Handling Conversations</h3>
+<p>For multi-turn conversations, maintain conversation history but be aggressive about pruning irrelevant context:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>function continue_conversation(conversation_history, new_query, service_name):
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    # Retrieve fresh context for the new query
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    new_context = retrieve_context(new_query, service_name)
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    # Summarise old conversation if it&#39;s getting long
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    if count_tokens(conversation_history) &gt; 4000:
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>        summary = llm.chat([
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>            {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: &quot;Summarise this conversation, keeping key decisions and context.&quot;},
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>            {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: format_conversation(conversation_history)}
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        ])
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>        conversation_history = [{&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: f&quot;Previous discussion summary: {summary}&quot;}]
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>    # Add new context and query
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>    conversation_history.append({
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>        &quot;role&quot;: &quot;user&quot;, 
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>        &quot;content&quot;: f&quot;UPDATED CONTEXT:\n{format_context(new_context)}\n\nNEW QUERY:\n{new_query}&quot;
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>    })
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>    response = llm.chat(conversation_history)
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>    conversation_history.append({&quot;role&quot;: &quot;assistant&quot;, &quot;content&quot;: response.content})
+<a id="__codelineno-11-21" name="__codelineno-11-21" href="#__codelineno-11-21"></a>
+<a id="__codelineno-11-22" name="__codelineno-11-22" href="#__codelineno-11-22"></a>    return response, conversation_history
+</code></pre></div>
+<p><strong>Key insight:</strong> Don't let conversations grow unbounded. Fresh RAG retrieval for each query is better than accumulating stale context.</p>
+<hr />
+<h2 id="part-four-the-manifest-and-enforcement">Part Four: The Manifest and Enforcement</h2>
+<p>The RAG index and LLM integration together give you a capable coding assistant. The manifest and enforcement layer is what makes it a <em>trustworthy</em> one. Without enforcement, the LLM can produce code that violates service boundaries — and the violation will only be discovered in code review, or worse, in production. The manifest is the machine-readable form of the bounded context declarations described in Paper 1, Section 1.4. The enforcement scripts and CI pipeline are the guardrails described in Paper 3, Part Three. Together, they make boundary violations impossible to merge without explicit override.</p>
+<h3 id="the-manifest-schema">The Manifest Schema</h3>
+<p>The manifest is the single source of truth for your architecture. Here's the complete schema:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>{
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  &quot;$schema&quot;: &quot;monorepo-manifest-v1&quot;,
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>  &quot;boundedContexts&quot;: {
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    &quot;&lt;context-name&gt;&quot;: {
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>      &quot;description&quot;: &quot;string - what this context is responsible for&quot;,
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>      &quot;glossary&quot;: &quot;string - path to ubiquitous language definitions&quot;,
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>      &quot;owner&quot;: &quot;string - team responsible for this context&quot;,
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>      &quot;microservices&quot;: [&quot;array of microservice names in this context&quot;]
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    }
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>  },
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>  &quot;microservices&quot;: {
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>    &quot;&lt;service-name&gt;&quot;: {
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>      &quot;boundedContext&quot;: &quot;string - which BC this service belongs to&quot;,
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>      &quot;aggregate&quot;: &quot;string - which aggregate this service owns&quot;,
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>      &quot;paths&quot;: [&quot;array of glob patterns for allowed file paths&quot;],
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>      &quot;dependencies&quot;: [&quot;array of allowed import paths&quot;],
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>      &quot;owner&quot;: &quot;string - team or individual owner&quot;,
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>      &quot;contacts&quot;: [&quot;array of contact emails&quot;],
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>      &quot;contracts&quot;: {
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>        &quot;provides&quot;: [&quot;array of contract IDs this service implements&quot;],
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>        &quot;consumes&quot;: [&quot;array of contract IDs this service depends on&quot;],
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>        &quot;consumers&quot;: [&quot;array of service names that consume this service&quot;]
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>      },
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>      &quot;database&quot;: {
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>        &quot;type&quot;: &quot;postgres|mysql|mongodb|dynamodb&quot;,
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>        &quot;schema&quot;: &quot;string - database schema name&quot;,
+<a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>        &quot;migrations&quot;: &quot;string - path to migration files&quot;,
+<a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>        &quot;pii&quot;: [&quot;array of field names containing PII&quot;]
+<a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>      }
+<a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a>    }
+<a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>  },
+<a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>
+<a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>  &quot;contracts&quot;: {
+<a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>    &quot;&lt;contract-id&gt;&quot;: {
+<a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>      &quot;type&quot;: &quot;rest|grpc|event&quot;,
+<a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>      &quot;version&quot;: &quot;string - semantic version&quot;,
+<a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a>      &quot;schema&quot;: &quot;string - path to OpenAPI/AsyncAPI/protobuf file&quot;,
+<a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a>      &quot;owner&quot;: &quot;string - service that owns this contract&quot;
+<a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a>    }
+<a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a>  },
+<a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a>
+<a id="__codelineno-12-46" name="__codelineno-12-46" href="#__codelineno-12-46"></a>  &quot;sharedLibraries&quot;: {
+<a id="__codelineno-12-47" name="__codelineno-12-47" href="#__codelineno-12-47"></a>    &quot;&lt;library-name&gt;&quot;: {
+<a id="__codelineno-12-48" name="__codelineno-12-48" href="#__codelineno-12-48"></a>      &quot;paths&quot;: [&quot;array of glob patterns&quot;],
+<a id="__codelineno-12-49" name="__codelineno-12-49" href="#__codelineno-12-49"></a>      &quot;consumers&quot;: [&quot;array of services that may use this library&quot;],
+<a id="__codelineno-12-50" name="__codelineno-12-50" href="#__codelineno-12-50"></a>      &quot;owner&quot;: &quot;string - team responsible&quot;
+<a id="__codelineno-12-51" name="__codelineno-12-51" href="#__codelineno-12-51"></a>    }
+<a id="__codelineno-12-52" name="__codelineno-12-52" href="#__codelineno-12-52"></a>  }
+<a id="__codelineno-12-53" name="__codelineno-12-53" href="#__codelineno-12-53"></a>}
+</code></pre></div>
+<h3 id="enforcement-scripts">Enforcement Scripts</h3>
+<p>These scripts run in CI to enforce boundaries. They're simple—the power comes from the manifest they read.</p>
+<p><strong>Path Validator:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>function validate_paths(changed_files, service_name, manifest):
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    service = manifest[&quot;microservices&quot;][service_name]
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    allowed_patterns = service[&quot;paths&quot;]
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    violations = []
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>    for file_path in changed_files:
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>        if not matches_any_pattern(file_path, allowed_patterns):
+<a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>            violations.append({
+<a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>                &quot;file&quot;: file_path,
+<a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>                &quot;error&quot;: f&quot;File not in allowed paths for {service_name}&quot;,
+<a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>                &quot;allowed&quot;: allowed_patterns
+<a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>            })
+<a id="__codelineno-13-13" name="__codelineno-13-13" href="#__codelineno-13-13"></a>
+<a id="__codelineno-13-14" name="__codelineno-13-14" href="#__codelineno-13-14"></a>    return violations  # Empty list means pass
+</code></pre></div>
+<p><strong>Dependency Validator:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>function validate_dependencies(changed_files, service_name, manifest):
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    service = manifest[&quot;microservices&quot;][service_name]
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    allowed_deps = service[&quot;dependencies&quot;] + service[&quot;paths&quot;]  # Can import from self
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    violations = []
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    for file_path in changed_files:
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>        imports = extract_imports(file_path)
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>        for imp in imports:
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>            if not matches_any_pattern(imp, allowed_deps):
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>                violations.append({
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>                    &quot;file&quot;: file_path,
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>                    &quot;import&quot;: imp,
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>                    &quot;error&quot;: f&quot;Import not in allowed dependencies for {service_name}&quot;,
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>                    &quot;allowed&quot;: allowed_deps
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>                })
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>    return violations
+</code></pre></div>
+<p><strong>Architecture Layer Validator:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>function validate_layers(changed_files, service_name, manifest):
+<a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    violations = []
+<a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>
+<a id="__codelineno-15-4" name="__codelineno-15-4" href="#__codelineno-15-4"></a>    for file_path in changed_files:
+<a id="__codelineno-15-5" name="__codelineno-15-5" href="#__codelineno-15-5"></a>        layer = detect_layer(file_path)  # domain, application, infrastructure, api
+<a id="__codelineno-15-6" name="__codelineno-15-6" href="#__codelineno-15-6"></a>        imports = extract_imports(file_path)
+<a id="__codelineno-15-7" name="__codelineno-15-7" href="#__codelineno-15-7"></a>
+<a id="__codelineno-15-8" name="__codelineno-15-8" href="#__codelineno-15-8"></a>        for imp in imports:
+<a id="__codelineno-15-9" name="__codelineno-15-9" href="#__codelineno-15-9"></a>            imp_layer = detect_layer(imp)
+<a id="__codelineno-15-10" name="__codelineno-15-10" href="#__codelineno-15-10"></a>
+<a id="__codelineno-15-11" name="__codelineno-15-11" href="#__codelineno-15-11"></a>            # Domain can&#39;t import from any other layer
+<a id="__codelineno-15-12" name="__codelineno-15-12" href="#__codelineno-15-12"></a>            if layer == &quot;domain&quot; and imp_layer in [&quot;application&quot;, &quot;infrastructure&quot;, &quot;api&quot;]:
+<a id="__codelineno-15-13" name="__codelineno-15-13" href="#__codelineno-15-13"></a>                violations.append({
+<a id="__codelineno-15-14" name="__codelineno-15-14" href="#__codelineno-15-14"></a>                    &quot;file&quot;: file_path,
+<a id="__codelineno-15-15" name="__codelineno-15-15" href="#__codelineno-15-15"></a>                    &quot;import&quot;: imp,
+<a id="__codelineno-15-16" name="__codelineno-15-16" href="#__codelineno-15-16"></a>                    &quot;error&quot;: f&quot;Domain layer cannot import from {imp_layer}&quot;
+<a id="__codelineno-15-17" name="__codelineno-15-17" href="#__codelineno-15-17"></a>                })
+<a id="__codelineno-15-18" name="__codelineno-15-18" href="#__codelineno-15-18"></a>
+<a id="__codelineno-15-19" name="__codelineno-15-19" href="#__codelineno-15-19"></a>            # Application can&#39;t import from infrastructure (only interfaces)
+<a id="__codelineno-15-20" name="__codelineno-15-20" href="#__codelineno-15-20"></a>            if layer == &quot;application&quot; and imp_layer == &quot;infrastructure&quot;:
+<a id="__codelineno-15-21" name="__codelineno-15-21" href="#__codelineno-15-21"></a>                if &quot;ports&quot; not in imp and &quot;interfaces&quot; not in imp:
+<a id="__codelineno-15-22" name="__codelineno-15-22" href="#__codelineno-15-22"></a>                    violations.append({
+<a id="__codelineno-15-23" name="__codelineno-15-23" href="#__codelineno-15-23"></a>                        &quot;file&quot;: file_path,
+<a id="__codelineno-15-24" name="__codelineno-15-24" href="#__codelineno-15-24"></a>                        &quot;import&quot;: imp,
+<a id="__codelineno-15-25" name="__codelineno-15-25" href="#__codelineno-15-25"></a>                        &quot;error&quot;: &quot;Application layer can only import infrastructure interfaces, not implementations&quot;
+<a id="__codelineno-15-26" name="__codelineno-15-26" href="#__codelineno-15-26"></a>                    })
+<a id="__codelineno-15-27" name="__codelineno-15-27" href="#__codelineno-15-27"></a>
+<a id="__codelineno-15-28" name="__codelineno-15-28" href="#__codelineno-15-28"></a>    return violations
+</code></pre></div>
+<p><strong>Pre-flight Diff Validator:</strong></p>
+<p>This runs BEFORE the LLM's proposed changes are applied:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>function validate_proposed_diff(diff, service_name, manifest):
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    # Parse the diff to extract affected files
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    affected_files = extract_files_from_diff(diff)
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>    # Run all validators
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>    path_violations = validate_paths(affected_files, service_name, manifest)
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>    dep_violations = validate_dependencies(affected_files, service_name, manifest)
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>    layer_violations = validate_layers(affected_files, service_name, manifest)
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>    all_violations = path_violations + dep_violations + layer_violations
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>    if all_violations:
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>        # Don&#39;t apply the diff - return errors to the LLM
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>        return {
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>            &quot;status&quot;: &quot;rejected&quot;,
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>            &quot;violations&quot;: all_violations,
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>            &quot;message&quot;: &quot;Proposed changes violate architectural constraints&quot;
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>        }
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>    return {&quot;status&quot;: &quot;approved&quot;, &quot;violations&quot;: []}
+</code></pre></div>
+<h3 id="ci-pipeline-integration">CI Pipeline Integration</h3>
+<p>This is the enforcement mechanism from Paper 3, Part Three — the pipeline that makes boundary violations impossible to merge without an explicit override decision. The CI checks are not advisory; they block the PR. Every validator that passes is a guarantee, not a hope.</p>
+<p>Here's how these validators integrate into a GitHub Actions workflow:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a># .github/workflows/validate.yaml
+<a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>
+<a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>name: Architectural Validation
+<a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>
+<a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a>on:
+<a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>  pull_request:
+<a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>    branches: [main]
+<a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>
+<a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>jobs:
+<a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>  validate:
+<a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>    runs-on: ubuntu-latest
+<a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>    steps:
+<a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>      - uses: actions/checkout@v4
+<a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>        with:
+<a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>          fetch-depth: 0  # Need full history for diff
+<a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>
+<a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>      - name: Determine affected service
+<a id="__codelineno-17-18" name="__codelineno-17-18" href="#__codelineno-17-18"></a>        id: service
+<a id="__codelineno-17-19" name="__codelineno-17-19" href="#__codelineno-17-19"></a>        run: |
+<a id="__codelineno-17-20" name="__codelineno-17-20" href="#__codelineno-17-20"></a>          # Find which service the changes belong to
+<a id="__codelineno-17-21" name="__codelineno-17-21" href="#__codelineno-17-21"></a>          changed_files=$(git diff --name-only origin/main...HEAD)
+<a id="__codelineno-17-22" name="__codelineno-17-22" href="#__codelineno-17-22"></a>          service=$(python scripts/detect_service.py --files &quot;$changed_files&quot;)
+<a id="__codelineno-17-23" name="__codelineno-17-23" href="#__codelineno-17-23"></a>          echo &quot;name=$service&quot; &gt;&gt; $GITHUB_OUTPUT
+<a id="__codelineno-17-24" name="__codelineno-17-24" href="#__codelineno-17-24"></a>
+<a id="__codelineno-17-25" name="__codelineno-17-25" href="#__codelineno-17-25"></a>      - name: Validate paths
+<a id="__codelineno-17-26" name="__codelineno-17-26" href="#__codelineno-17-26"></a>        run: |
+<a id="__codelineno-17-27" name="__codelineno-17-27" href="#__codelineno-17-27"></a>          python scripts/validate_paths.py \
+<a id="__codelineno-17-28" name="__codelineno-17-28" href="#__codelineno-17-28"></a>            --service &quot;${{ steps.service.outputs.name }}&quot; \
+<a id="__codelineno-17-29" name="__codelineno-17-29" href="#__codelineno-17-29"></a>            --manifest monorepo.json
+<a id="__codelineno-17-30" name="__codelineno-17-30" href="#__codelineno-17-30"></a>
+<a id="__codelineno-17-31" name="__codelineno-17-31" href="#__codelineno-17-31"></a>      - name: Validate dependencies
+<a id="__codelineno-17-32" name="__codelineno-17-32" href="#__codelineno-17-32"></a>        run: |
+<a id="__codelineno-17-33" name="__codelineno-17-33" href="#__codelineno-17-33"></a>          python scripts/validate_deps.py \
+<a id="__codelineno-17-34" name="__codelineno-17-34" href="#__codelineno-17-34"></a>            --service &quot;${{ steps.service.outputs.name }}&quot; \
+<a id="__codelineno-17-35" name="__codelineno-17-35" href="#__codelineno-17-35"></a>            --manifest monorepo.json
+<a id="__codelineno-17-36" name="__codelineno-17-36" href="#__codelineno-17-36"></a>
+<a id="__codelineno-17-37" name="__codelineno-17-37" href="#__codelineno-17-37"></a>      - name: Validate architecture layers
+<a id="__codelineno-17-38" name="__codelineno-17-38" href="#__codelineno-17-38"></a>        run: |
+<a id="__codelineno-17-39" name="__codelineno-17-39" href="#__codelineno-17-39"></a>          python scripts/validate_layers.py \
+<a id="__codelineno-17-40" name="__codelineno-17-40" href="#__codelineno-17-40"></a>            --service &quot;${{ steps.service.outputs.name }}&quot; \
+<a id="__codelineno-17-41" name="__codelineno-17-41" href="#__codelineno-17-41"></a>            --manifest monorepo.json
+<a id="__codelineno-17-42" name="__codelineno-17-42" href="#__codelineno-17-42"></a>
+<a id="__codelineno-17-43" name="__codelineno-17-43" href="#__codelineno-17-43"></a>      - name: Run contract tests
+<a id="__codelineno-17-44" name="__codelineno-17-44" href="#__codelineno-17-44"></a>        run: |
+<a id="__codelineno-17-45" name="__codelineno-17-45" href="#__codelineno-17-45"></a>          cd services/${{ steps.service.outputs.name }}
+<a id="__codelineno-17-46" name="__codelineno-17-46" href="#__codelineno-17-46"></a>          pytest tests/contract -v
+</code></pre></div>
+<hr />
+<h2 id="part-five-a-lightweight-approach-for-prototyping">Part Five: A Lightweight Approach for Prototyping</h2>
+<h3 id="the-single-developer-version">The Single-Developer Version</h3>
+<p>If you're prototyping alone, much of the cross-team coordination doesn't apply. Here's what you actually need:</p>
+<p><strong>Keep:</strong>
+- RAG indexing (essential for focused LLM context)
+- The manifest (even for one service, it clarifies boundaries)
+- Path and dependency validation (catches mistakes early)
+- Basic contract definitions (even if you're the only consumer)</p>
+<p><strong>Skip for now:</strong>
+- Consumer contract tests (no consumers yet)
+- Cross-service impact analysis (only one service)
+- CODEOWNERS and approval workflows (you're the only owner)
+- Team coordination processes</p>
+<p><strong>Simplify:</strong>
+- One bounded context to start
+- One or two microservices maximum
+- Local ChromaDB instead of hosted vector DB
+- Manual RAG updates instead of CI-triggered</p>
+<h3 id="minimum-viable-setup">Minimum Viable Setup</h3>
+<p>Here's what you can build in a day:</p>
+<p><strong>Hour 1-2: Project structure</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>my-prototype/
+<a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>├── monorepo.json                 # Manifest
+<a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>├── services/
+<a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>│   └── eligibility-decision/     # One service to start
+<a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>│       ├── domain/
+<a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>│       ├── application/
+<a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>│       ├── infrastructure/
+<a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>│       ├── api/
+<a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>│       └── tests/
+<a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>├── contracts/
+<a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>│   └── eligibility-decision-api-v1.yaml
+<a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>├── scripts/
+<a id="__codelineno-18-13" name="__codelineno-18-13" href="#__codelineno-18-13"></a>│   ├── index_service.py          # RAG indexer
+<a id="__codelineno-18-14" name="__codelineno-18-14" href="#__codelineno-18-14"></a>│   ├── validate_paths.py         # Path validator
+<a id="__codelineno-18-15" name="__codelineno-18-15" href="#__codelineno-18-15"></a>│   └── assist.py                 # LLM integration
+<a id="__codelineno-18-16" name="__codelineno-18-16" href="#__codelineno-18-16"></a>└── .github/
+<a id="__codelineno-18-17" name="__codelineno-18-17" href="#__codelineno-18-17"></a>    └── workflows/
+<a id="__codelineno-18-18" name="__codelineno-18-18" href="#__codelineno-18-18"></a>        └── validate.yaml         # CI pipeline
+</code></pre></div>
+<p><strong>Hour 3-4: RAG setup</strong></p>
+<p>Write a simple indexer that:
+- Reads all Python files in <code>services/eligibility-decision/</code>
+- Chunks them by function/class
+- Embeds with OpenAI
+- Stores in local ChromaDB</p>
+<p><strong>Hour 5-6: LLM integration</strong></p>
+<p>Write a simple CLI that:
+- Takes a query as input
+- Retrieves context from ChromaDB
+- Sends to GPT-4 with system prompt
+- Prints the response</p>
+<p><strong>Hour 7-8: Basic validation</strong></p>
+<p>Write path validation script and add to GitHub Actions.</p>
+<p>You now have a working prototype of the framework. It's not production-ready, but it demonstrates the core concepts and gives you something to iterate on.</p>
+<h3 id="what-to-add-next">What to Add Next</h3>
+<p>Once the basics work, add in order of value:</p>
+<ol>
+<li><strong>Dependency validation</strong> - Catches architectural violations</li>
+<li><strong>Layer validation</strong> - Ensures Clean Architecture compliance</li>
+<li><strong>Contract definitions</strong> - Even simple OpenAPI specs help</li>
+<li><strong>Automated RAG updates</strong> - Trigger on git push</li>
+<li><strong>Multi-turn conversations</strong> - Better developer experience</li>
+<li><strong>Second service</strong> - Test cross-service boundaries</li>
+<li><strong>Contract tests</strong> - When you have consumers</li>
+</ol>
+<hr />
+<h2 id="part-six-common-problems-and-solutions">Part Six: Common Problems and Solutions</h2>
+<p>The problems below are drawn from teams at different stages of implementation. They're ordered from most to least frequently encountered.</p>
+<h3 id="rag-retrieval-problems">RAG Retrieval Problems</h3>
+<p><strong>Problem: RAG index gets stale between code changes</strong></p>
+<p>Symptoms: The LLM suggests patterns that no longer exist, references functions that have been renamed, or seems unaware of recent refactors. Developers notice the LLM working from an outdated version of the code.</p>
+<p>Causes and solutions:
+- <strong>Missing CI trigger:</strong> Ensure the RAG update job runs on every merge to main, not just nightly or manually.
+- <strong>Update script fails silently:</strong> A failed index update should fail the CI run. Add explicit success/failure reporting to the RAG update step.
+- <strong>Partial update bug:</strong> New chunks are added without deleting old ones for changed files. Verify your update logic deletes existing chunks for changed files before re-indexing.</p>
+<p>Re-indexing strategy by scale:</p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Strategy</th>
+<th>Expected time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 10 services, &lt; 50 files each</td>
+<td>Full re-index on every merge</td>
+<td>&lt; 5 minutes</td>
+</tr>
+<tr>
+<td>10–50 services</td>
+<td>Incremental update: changed files only</td>
+<td>&lt; 2 minutes</td>
+</tr>
+<tr>
+<td>50+ services</td>
+<td>Per-service re-index, triggered by path filter</td>
+<td>&lt; 1 minute per service</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Problem: False-negative retrieval (relevant code doesn't appear)</strong></p>
+<p>Symptoms: The LLM is unaware of code you know exists. It suggests solutions that duplicate existing logic, misses important constraints, or contradicts code that wasn't retrieved.</p>
+<p>Causes and solutions:
+- <strong>File not indexed:</strong> Verify the file is in the index with <code>list_service_chunks(service_name)</code> filtered by file path.
+- <strong>Query doesn't match vocabulary:</strong> The code uses <code>AbcPolicy</code> but the query says <code>pricing rule</code>. Use the service's ubiquitous language glossary (defined in Paper 1) as prompt context, or add synonym mapping to your embedding step.
+- <strong>Chunk boundary splits a function:</strong> The function spans two chunks and neither half alone has enough signal to surface it. Adjust chunking to respect function/class boundaries. Increase overlap from 50 to 150 tokens.
+- <strong>Embedding model mismatch:</strong> Code was indexed with <code>text-embedding-ada-002</code> but a different model is used at query time. Indexing and retrieval must use identical models.</p>
+<p>Diagnostic command for false-negative investigation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="c1"># Query directly with your search term to see what ranks</span>
+<a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="n">results</span> <span class="o">=</span> <span class="n">vector_store</span><span class="o">.</span><span class="n">query</span><span class="p">(</span>
+<a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="s2">&quot;pricing rule&quot;</span><span class="p">,</span>
+<a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>    <span class="nb">filter</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;service&quot;</span><span class="p">:</span> <span class="s2">&quot;my-service&quot;</span><span class="p">},</span>
+<a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>    <span class="n">top_k</span><span class="o">=</span><span class="mi">20</span>
+<a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="p">)</span>
+<a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="nb">print</span><span class="p">([(</span><span class="n">r</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;file_path&quot;</span><span class="p">],</span> <span class="n">r</span><span class="o">.</span><span class="n">similarity_score</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">results</span><span class="p">])</span>
+</code></pre></div>
+<p><strong>Problem: LLM gets irrelevant context</strong></p>
+<p>Symptoms: The LLM makes changes to the wrong files or misunderstands the codebase.</p>
+<p>Causes and solutions:
+- <strong>Chunk size too large:</strong> Reduce to 300–500 tokens. Large chunks dilute relevance.
+- <strong>Poor metadata:</strong> Ensure file type classification is accurate. If tests aren't tagged as tests, they won't be prioritised.
+- <strong>Query too vague:</strong> "Fix the bug" retrieves poorly; "Fix the refund amount validation in ProcessRefund use case" retrieves well.</p>
+<h3 id="llm-generation-problems">LLM Generation Problems</h3>
+<p><strong>Problem: LLM ignores retrieved context</strong></p>
+<p>Symptoms: The LLM generates code from scratch rather than extending existing patterns, or contradicts conventions visible in the retrieved chunks. The prompt includes relevant examples but the output doesn't reflect them.</p>
+<p>Causes and solutions:
+- <strong>Context is buried too deep in the prompt:</strong> Move CONTEXT to immediately precede the USER message. LLMs attend to recent content more than distant content.
+- <strong>Context is too long and diluted:</strong> If retrieved chunks total more than 4,000 tokens, the signal is diluted. Reduce top_k from 12 to 6, ensuring only the most relevant chunks are included.
+- <strong>Generic system prompt overrides examples:</strong> If your system prompt prescribes how to write code very specifically, the model follows that over the provided examples. Reference the context explicitly: "Use the patterns shown in the CONTEXT section."
+- <strong>Wrong retrieval filter:</strong> The query retrieved code from a different layer than needed. Filter by <code>chunk_type=domain</code> when asking about business rules; <code>chunk_type=application</code> for use case changes.</p>
+<p><strong>Problem: LLM proposes changes outside allowed paths</strong></p>
+<p>Symptoms: Validation rejects the diff.</p>
+<p>Solutions:
+- Make the system prompt more explicit about allowed paths
+- Include a concrete example of a valid change in the prompt
+- If it persists, the LLM may not understand the boundary — simplify the constraint description and test with a simpler query first</p>
+<p><strong>Problem: LLM generates code that doesn't compile</strong></p>
+<p>Symptoms: Syntax errors, import errors, type mismatches.</p>
+<p>Solutions:
+- Include more context (increase top_k) — missing type definitions are a common cause
+- Add a validation step that attempts to parse/compile proposed code before showing it to the developer. For Python: <code>ast.parse()</code>. For TypeScript: <code>tsc --noEmit</code>.
+- Ensure retrieved context includes imports and type definitions from the same file as the function being modified</p>
+<p><strong>Problem: LLM ignores Clean Architecture</strong></p>
+<p>Symptoms: Domain code imports from infrastructure, business logic in controllers.</p>
+<p>Solutions:
+- Make layer rules explicit in the system prompt with examples of what's forbidden and why
+- Include architecture tests in the RAG context — the LLM will see what patterns are expected and what the tests catch
+- Add post-generation validation that checks layer dependencies before accepting changes</p>
+<h3 id="contract-testing-problems">Contract Testing Problems</h3>
+<p><strong>Problem: Contract tests are too brittle</strong></p>
+<p>Symptoms: Contract tests fail after changes that shouldn't have broken them. Every minor refactor triggers failures across consumer tests.</p>
+<p>Causes and solutions:
+- <strong>Consumer tests assert too much:</strong> Consumer tests should assert only what the consumer actually uses. If a consumer only uses <code>id</code> and <code>status</code>, assert only those fields. Don't copy the full provider response schema into consumer test fixtures.
+- <strong>Provider tests are too loose:</strong> Provider tests must verify every field in the contract. Generate test data that exercises all contract fields, including optional ones.
+- <strong>Contract not versioned:</strong> When the contract changes, the version must change. If consumers pin to <code>v1</code>, changes to <code>v1</code> contents break them. Create <code>v2</code> and migrate consumers explicitly.</p>
+<p><strong>Problem: Contract tests fail but code is correct</strong></p>
+<p>Symptoms: Provider tests pass but consumer tests fail.</p>
+<p>Causes and solutions:
+- Ensure provider and consumer use the same contract version
+- Verify test fixtures match actual contract schema (check for optional field ordering issues, date format representation differences)
+- For breaking changes, follow the versioning workflow — create a new contract version rather than modifying an existing one</p>
+<h3 id="cicd-problems">CI/CD Problems</h3>
+<p><strong>Problem: Validation is too slow</strong></p>
+<p>Symptoms: CI takes 10+ minutes; developers bypass it.</p>
+<p>Solutions:
+- Only validate changed files, not the entire codebase
+- Cache dependencies and the manifest parse result
+- Run validators in parallel
+- Run lightweight validation (path/dep check) on PRs; full contract testing on merge to main</p>
+<p><strong>Problem: False positives in validation</strong></p>
+<p>Symptoms: Valid code is rejected.</p>
+<p>Solutions:
+- Review the manifest — are allowed paths correctly specified?
+- Check for edge cases in glob patterns (<code>services/payments/**</code> vs <code>services/payments/*</code>)
+- Add escape hatches for legitimate exceptions, but require them to be logged and reviewed. An escape hatch that's never reviewed is a silent vulnerability.</p>
+<h3 id="organisational-problems">Organisational Problems</h3>
+<p><strong>Problem: Teams resist the manifest</strong></p>
+<p>Symptoms: Teams treat the manifest as bureaucratic overhead. They delay updating it, request exceptions, or submit manifest-only PRs long after the code changes they describe.</p>
+<p>Causes and solutions:
+- <strong>Reframe it as ownership, not compliance:</strong> The manifest is how a team declares what they own. Owning something in the manifest means making decisions about it without asking permission. Teams resistant to the manifest often haven't internalised that declaration cuts both ways.
+- <strong>Remove the central committee bottleneck:</strong> Teams should be able to update their own manifest entries without external approval. Reserve central review only for new bounded contexts or cross-context dependency additions. A central approval process kills motivation.
+- <strong>Make enforcement visible:</strong> If the CI pipeline doesn't actually fail on boundary violations, the manifest becomes documentation that drifts. Make violations red in CI so teams see the connection between the manifest and real consequences.
+- <strong>Transfer ownership to service teams:</strong> If the platform team currently manages the manifest, transfer each service's entry to the owning team. Platform owns the schema and tooling; service teams own their data.</p>
+<p><strong>Problem: Developers bypass the framework</strong></p>
+<p>Symptoms: Direct commits to main, manual deployments, ignored validation failures.</p>
+<p>Solutions:
+- Make the framework faster and less intrusive first — friction is the primary motivation for bypass
+- Ensure the framework provides visible value (show developers the violations it caught before they reached review)
+- Get management buy-in to require enforcement at the process level
+- Make bypass require explicit approval and logging — not to punish, but to create a paper trail that surfaces patterns</p>
+<hr />
+<h2 id="part-seven-from-prototype-to-production">Part Seven: From Prototype to Production</h2>
+<h3 id="what-good-looks-like">What Good Looks Like</h3>
+<p>After your first few weeks running the framework, use these benchmarks to calibrate your progress. They aren't hard targets — but if your numbers are far outside these ranges, they signal a specific problem to investigate.</p>
+<p><strong>Token cost per engineer-day:</strong>
+| Stage | Interactions/day | Tokens/interaction | Daily cost (GPT-4) |
+|-------|-----------------|-------------------|-------------------|
+| Prototype (8 chunks, short context) | 10–20 | ~3,000 | £0.30–0.60 |
+| Mature (12 chunks, full system prompt) | 20–40 | ~6,000 | £1.20–2.40 |
+| High-volume (20+ changes, async workflows) | 50+ | ~8,000 | £4.00+ |</p>
+<p>If costs are significantly above these figures, check chunk size and top_k first — those are the main levers.</p>
+<p><strong>CI validation pass rate:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Maturity level</th>
+<th>Expected pass rate</th>
+<th>What failure signals</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First 4 weeks (teams learning boundaries)</td>
+<td>85–90%</td>
+<td>Normal learning curve</td>
+</tr>
+<tr>
+<td>After 3 months</td>
+<td>95%+</td>
+<td>Systematic violation suggests manifest needs revision</td>
+</tr>
+<tr>
+<td>Mature system</td>
+<td>99%+</td>
+<td>Each failure is a near-miss worth investigating</td>
+</tr>
+</tbody>
+</table>
+<p>If pass rate stays below 90% after month two, the most common causes are: manifest paths too narrow, teams working across service boundaries legitimately (possible missed bounded context split), or LLM system prompt not explicit enough about constraints.</p>
+<p><strong>Boundary violation rate:</strong>
+- Transition period (first 3 months): up to 5–10 violations per week per service is not unusual
+- After stabilisation: fewer than 1 violation per service per month is a healthy target
+- If violations cluster around the same file boundary, that boundary may be wrong — investigate whether the manifest needs adjusting rather than suppressing the violations</p>
+<p><strong>RAG retrieval quality check (weekly):</strong> Ask the LLM to fix a bug you already fixed. If it proposes the same fix you implemented, retrieval is working. If it proposes something different, check whether the relevant file is indexed and whether your query matches the code's vocabulary.</p>
+<p><strong>Time-to-first-guardrail:</strong> Target running path validation in CI within 2 days of initial setup. A 5-day delay usually means a blocker (monorepo setup, API key provisioning, test scaffold missing) — surface it early rather than grinding through it.</p>
+<h3 id="when-to-scale-up">When to Scale Up</h3>
+<p>Your prototype works. Developers like it. Now what? Here are the signals that you need to scale up:</p>
+<p><strong>Scale RAG infrastructure when:</strong>
+- Index size exceeds local ChromaDB comfort (&gt;100K chunks)
+- Multiple developers need simultaneous access
+- You need persistent, reliable storage
+- Index update speed becomes a bottleneck</p>
+<p><strong>Move to hosted vector DB:</strong> Pinecone, Weaviate Cloud, or similar.</p>
+<p><strong>Scale CI/CD when:</strong>
+- Validation time exceeds 5 minutes
+- You have more than 10 services
+- Multiple teams need different pipelines
+- You need sophisticated approval workflows</p>
+<p><strong>Action:</strong> Invest in CI infrastructure, parallel validation, caching.</p>
+<p><strong>Scale governance when:</strong>
+- Multiple teams own different bounded contexts
+- Contract changes affect multiple consumers
+- You need audit trails for compliance
+- Cross-team coordination becomes a bottleneck</p>
+<p><strong>Action:</strong> Implement formal governance workflows, contract review processes, architecture decision records.</p>
+<h3 id="when-to-change-your-tools">When to Change Your Tools</h3>
+<p>The prototype stack (ChromaDB, LangChain, GitHub Actions scripts) is intentionally simple. Here are the specific triggers that signal it's time to upgrade each component:</p>
+<p><strong>Move from ChromaDB to a hosted vector database (Pinecone, Weaviate) when:</strong>
+- Index size exceeds 500,000 chunks (roughly 50 services × 200 files × 50 chunks/file)
+- Multiple developers need simultaneous access and are experiencing contention
+- Your RAG update job takes more than 10 minutes
+- You need disaster recovery guarantees for the index</p>
+<p>Don't move early. ChromaDB running locally or on a single server is surprisingly capable. The main failure mode is trying to share it across a team — that's the trigger, not the size.</p>
+<p><strong>Move from LangChain to custom orchestration when:</strong>
+- You need retrieval behaviours LangChain doesn't support out of the box (custom re-ranking, multi-stage retrieval, graph-augmented RAG)
+- LangChain's abstraction is hiding errors that are difficult to diagnose
+- Upgrade costs: LangChain has broken backwards compatibility multiple times — if you're spending time on library upgrades, custom code may be cheaper to maintain</p>
+<p>Don't move early. LangChain's value is speed of iteration in the prototype stage. Switch when the abstractions genuinely constrain you, not before.</p>
+<p><strong>Move from GitHub Actions scripts to a platform pipeline when:</strong>
+- You have more than 20 services across multiple teams
+- Different services need genuinely different pipeline configurations that are hard to manage in YAML
+- You need cross-service orchestration (e.g., run consumers' contract tests when a provider changes) that requires a workflow engine
+- Your compliance requirements demand audit trails that CI logs don't satisfy</p>
+<p>The pattern: stay on the simpler tool until a specific pain point makes the cost of staying higher than the cost of migrating.</p>
+<h3 id="the-production-checklist">The Production Checklist</h3>
+<p>Before going to production, ensure:</p>
+<p><strong>RAG Infrastructure:</strong>
+- [ ] Hosted vector database with backups
+- [ ] Automated index updates on every commit
+- [ ] Monitoring for index health and retrieval quality
+- [ ] Separate indexes per service (no cross-contamination)</p>
+<p><strong>LLM Integration:</strong>
+- [ ] Rate limiting to control costs
+- [ ] Logging of all queries and responses (for audit)
+- [ ] Fallback behaviour when LLM is unavailable
+- [ ] PII filtering to prevent sensitive data in prompts</p>
+<p><strong>CI/CD:</strong>
+- [ ] All validators running on every PR
+- [ ] Contract tests for all service interactions
+- [ ] Automated RAG updates
+- [ ] Deployment pipelines per service</p>
+<p><strong>Governance:</strong>
+- [ ] Manifest is complete and accurate
+- [ ] CODEOWNERS reflects actual ownership
+- [ ] Contract change process is documented
+- [ ] Escalation paths are clear</p>
+<p><strong>Monitoring:</strong>
+- [ ] Token usage tracking (costs)
+- [ ] Validation pass/fail rates
+- [ ] RAG retrieval quality metrics
+- [ ] Developer satisfaction surveys</p>
+<hr />
+<h2 id="quick-reference">Quick Reference</h2>
+<h3 id="commands-youll-use-daily">Commands You'll Use Daily</h3>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a># Index a service
+<a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>python scripts/index_service.py --service eligibility-decision
+<a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>
+<a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a># Update index for changed files
+<a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>python scripts/update_rag.py --files &quot;domain/entities/decision.py,application/use_cases/create.py&quot;
+<a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+<a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a># Get LLM assistance
+<a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>python scripts/assist.py --service eligibility-decision --query &quot;Add partial refund support&quot;
+<a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>
+<a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a># Validate changes locally
+<a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>python scripts/validate_all.py --service eligibility-decision
+<a id="__codelineno-20-12" name="__codelineno-20-12" href="#__codelineno-20-12"></a>
+<a id="__codelineno-20-13" name="__codelineno-20-13" href="#__codelineno-20-13"></a># Run contract tests
+<a id="__codelineno-20-14" name="__codelineno-20-14" href="#__codelineno-20-14"></a>cd services/eligibility-decision &amp;&amp; pytest tests/contract -v
+</code></pre></div>
+<h3 id="key-files">Key Files</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>monorepo.json</code></td>
+<td>Manifest defining all boundaries</td>
+</tr>
+<tr>
+<td><code>scripts/index_service.py</code></td>
+<td>Build RAG index for a service</td>
+</tr>
+<tr>
+<td><code>scripts/validate_paths.py</code></td>
+<td>Check files are in allowed paths</td>
+</tr>
+<tr>
+<td><code>scripts/validate_deps.py</code></td>
+<td>Check imports are allowed</td>
+</tr>
+<tr>
+<td><code>scripts/validate_layers.py</code></td>
+<td>Check Clean Architecture compliance</td>
+</tr>
+<tr>
+<td><code>scripts/assist.py</code></td>
+<td>LLM integration CLI</td>
+</tr>
+<tr>
+<td><code>.github/workflows/validate.yaml</code></td>
+<td>CI pipeline</td>
+</tr>
+</tbody>
+</table>
+<h3 id="troubleshooting-quick-reference">Troubleshooting Quick Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely Cause</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Irrelevant RAG results</td>
+<td>Poor chunking or stale index</td>
+<td>Re-chunk, update index</td>
+</tr>
+<tr>
+<td>LLM violates boundaries</td>
+<td>Weak system prompt</td>
+<td>Make constraints more explicit</td>
+</tr>
+<tr>
+<td>CI too slow</td>
+<td>Validating everything</td>
+<td>Validate only changed files</td>
+</tr>
+<tr>
+<td>Contract test failures</td>
+<td>Version mismatch</td>
+<td>Sync contract versions</td>
+</tr>
+<tr>
+<td>Import errors in generated code</td>
+<td>Missing context</td>
+<td>Increase top-k, check index</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>This paper has translated the conceptual framework of Papers 1-4 into practical implementation guidance. You now know:</p>
+<ul>
+<li>What tools to use and why</li>
+<li>How to build RAG indexes</li>
+<li>How to integrate LLMs</li>
+<li>How to enforce boundaries</li>
+<li>How to start small and scale up</li>
+<li>How to solve common problems</li>
+</ul>
+<p>The framework is substantial, but you don't have to build it all at once. Start with a single service, basic RAG, and simple validation. Add sophistication as you learn what works in your context.</p>
+<p>The papers that preceded this one explain why these patterns matter. This paper explains how to make them real. The rest is iteration, refinement, and learning from your specific challenges.</p>
+<p>Build something. See what breaks. Fix it. Repeat.</p>
+<hr />
+<h2 id="related-papers">Related Papers</h2>
+<ul>
+<li>
+<p><strong>Paper 1: Domain-Driven Design &amp; Clean Architecture</strong> — The conceptual foundation for the boundaries this framework enforces. The manifest bounds context declarations you'll write in Part Four.</p>
+</li>
+<li>
+<p><strong>Paper 2: Evidence-Based Identity</strong> — A domain-specific application of the DDD patterns, showing how the bounded context model works in practice.</p>
+</li>
+<li>
+<p><strong>Paper 3: LLM-Assisted Development</strong> — The guardrails and RAG architecture in depth. Part Two and Part Four of this paper implement the concepts from Paper 3.</p>
+</li>
+<li>
+<p><strong>Paper 4: Automated Development</strong> — The end-to-end pipeline from requirements to deployment. This paper covers the manual and semi-automated implementation; Paper 4 covers full automation.</p>
+</li>
+<li>
+<p><strong>Paper 6: Case Study</strong> — End-to-end walkthrough applying the framework to a DWP benefits administration system. Useful as a reference for what a mature implementation looks like across multiple services.</p>
+</li>
+</ul>
+<hr />
+<p><em>End of Paper 5</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

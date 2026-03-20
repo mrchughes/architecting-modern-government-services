@@ -1,0 +1,2353 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A six-paper series on DDD, evidence-based identity, and LLM-assisted development for government services">
+      
+      
+      
+        <link rel="canonical" href="https://mrchughes.github.io/architecting-modern-government-services/Paper_6_Case_Study/">
+      
+      
+        <link rel="prev" href="../Paper_5_Getting_Started/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>6 — Case Study - Architecting Modern Government Services</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#paper-6-putting-it-all-together-a-government-service-case-study" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Architecting Modern Government Services" class="md-header__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Architecting Modern Government Services
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              6 — Case Study
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Paper_1_DDD_Clean_Architecture/" class="md-tabs__link">
+          
+  
+  
+  Papers
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Architecting Modern Government Services" class="md-nav__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Architecting Modern Government Services
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_1_DDD_Clean_Architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — DDD & Clean Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_2_Evidence_Based_Identity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Evidence-Based Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_3_LLM_RAG_Guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — LLM RAG & Guardrails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_4_Automated_LLM_Development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 — Automated LLM Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_5_Getting_Started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5 — Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6 — Case Study
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6 — Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introduction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-one-the-problem-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part One: The Problem Space
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part One: The Problem Space">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-dwp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding DWP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-domain-federation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Domain Federation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-two-the-architectural-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Two: The Architectural Decomposition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Two: The Architectural Decomposition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#business-domains-and-platform-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Domains and Platform Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-trust-axis-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Two-Trust-Axis Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-three-the-chicken-and-egg-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Three: The Chicken-and-Egg Problem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Three: The Chicken-and-Egg Problem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claimed-identity-vs-verified-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claimed Identity vs. Verified Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-four-bounded-contexts-in-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Four: Bounded Contexts in Detail
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Four: Bounded Contexts in Detail">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identity-bounded-context-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity Bounded Context (Platform)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence-bounded-context-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence Bounded Context (Platform)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trust-provenance-bounded-context-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trust &amp; Provenance Bounded Context (Platform)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-corroboration-bounded-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution &amp; Corroboration Bounded Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customer360-bounded-context-shared-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customer360 Bounded Context (Shared Kernel)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eligibility-bounded-context-one-per-benefit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eligibility Bounded Context (One Per Benefit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payments-bounded-context-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Payments Bounded Context (Platform)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-five-inter-context-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Five: Inter-Context Communication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Five: Inter-Context Communication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-pattern-anti-corruption-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Pattern: Anti-Corruption Layers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Pattern: Anti-Corruption Layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-benefits-identity-requires-acl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Benefits → Identity (Requires ACL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-service-manifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Service Manifest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#putting-it-together-end-to-end-event-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting It Together: End-to-End Event Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-six-implications-for-llm-assistance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Six: Implications for LLM Assistance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Six: Implications for LLM Assistance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters-for-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters for the Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-four-tier-rag-model-applied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Four-Tier RAG Model Applied
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#governance-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Governance Implications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-seven-practical-implementation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Seven: Practical Implementation Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Seven: Practical Implementation Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-from-scratch-the-child-maintenance-greenfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting From Scratch: The Child Maintenance Greenfield
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Starting From Scratch: The Child Maintenance Greenfield">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-discovering-the-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Discovering the Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-defining-aggregates-and-microservices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Defining Aggregates and Microservices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-contract-first-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Contract-First Design
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-implementing-within-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: Implementing Within Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrating-an-existing-system-extracting-from-a-monolith" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrating an Existing System: Extracting from a Monolith
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrating an Existing System: Extracting from a Monolith">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-build-framework-infrastructure-months-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Build Framework Infrastructure (Months 1-2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-strangle-the-edge-months-3-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Strangle the Edge (Months 3-6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-gradual-migration-months-6-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Gradual Migration (Months 6-18)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-eight-the-strategic-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Eight: The Strategic Insight
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Eight: The Strategic Insight">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-architecture-enables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Architecture Enables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-architects-got-wrong-initially" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Architects Got Wrong Initially
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-surprised-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Surprised Them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-framework-prevented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Framework Prevented
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-architects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Architects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-llm-assistance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For LLM Assistance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#introduction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Introduction
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-one-the-problem-space" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part One: The Problem Space
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part One: The Problem Space">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-dwp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding DWP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-domain-federation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Domain Federation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-two-the-architectural-decomposition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Two: The Architectural Decomposition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Two: The Architectural Decomposition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#business-domains-and-platform-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Domains and Platform Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-trust-axis-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Two-Trust-Axis Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-three-the-chicken-and-egg-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Three: The Chicken-and-Egg Problem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Three: The Chicken-and-Egg Problem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#claimed-identity-vs-verified-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Claimed Identity vs. Verified Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-four-bounded-contexts-in-detail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Four: Bounded Contexts in Detail
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Four: Bounded Contexts in Detail">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identity-bounded-context-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity Bounded Context (Platform)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence-bounded-context-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence Bounded Context (Platform)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trust-provenance-bounded-context-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trust &amp; Provenance Bounded Context (Platform)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-corroboration-bounded-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution &amp; Corroboration Bounded Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customer360-bounded-context-shared-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customer360 Bounded Context (Shared Kernel)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eligibility-bounded-context-one-per-benefit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eligibility Bounded Context (One Per Benefit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#payments-bounded-context-platform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Payments Bounded Context (Platform)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-five-inter-context-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Five: Inter-Context Communication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Five: Inter-Context Communication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-pattern-anti-corruption-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Pattern: Anti-Corruption Layers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Pattern: Anti-Corruption Layers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#example-benefits-identity-requires-acl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example: Benefits → Identity (Requires ACL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-service-manifest" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Service Manifest
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#putting-it-together-end-to-end-event-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Putting It Together: End-to-End Event Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-six-implications-for-llm-assistance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Six: Implications for LLM Assistance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Six: Implications for LLM Assistance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters-for-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters for the Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-four-tier-rag-model-applied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Four-Tier RAG Model Applied
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#governance-implications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Governance Implications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-seven-practical-implementation-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Seven: Practical Implementation Examples
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Seven: Practical Implementation Examples">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#starting-from-scratch-the-child-maintenance-greenfield" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starting From Scratch: The Child Maintenance Greenfield
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Starting From Scratch: The Child Maintenance Greenfield">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-discovering-the-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Discovering the Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-defining-aggregates-and-microservices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Defining Aggregates and Microservices
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-contract-first-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Contract-First Design
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-4-implementing-within-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 4: Implementing Within Boundaries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#migrating-an-existing-system-extracting-from-a-monolith" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Migrating an Existing System: Extracting from a Monolith
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Migrating an Existing System: Extracting from a Monolith">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-build-framework-infrastructure-months-1-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: Build Framework Infrastructure (Months 1-2)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-strangle-the-edge-months-3-6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Strangle the Edge (Months 3-6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-3-gradual-migration-months-6-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 3: Gradual Migration (Months 6-18)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-eight-the-strategic-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Eight: The Strategic Insight
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Eight: The Strategic Insight">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-architecture-enables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Architecture Enables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-architects-got-wrong-initially" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Architects Got Wrong Initially
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-surprised-them" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Surprised Them
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-framework-prevented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Framework Prevented
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-architects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Architects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-llm-assistance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For LLM Assistance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="paper-6-putting-it-all-together-a-government-service-case-study">Paper 6: Putting It All Together — A Government Service Case Study</h1>
+<p><strong>Series:</strong> LLM-Assisted Microservice Development<br />
+<strong>Paper:</strong> 6 of 6<br />
+<strong>Version:</strong> 1.1 | March 2026</p>
+<h3 id="version-history">Version History</h3>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>Mar 2026</td>
+<td>Initial release</td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>Mar 2026</td>
+<td>Expanded Eligibility BC with legislative grounding, product context internals (ClaimantProfile, EligibilityAssessment, EntitlementCalculation, EligibilityPolicy, EntitlementPolicy); added end-to-end event flow (ClaimSubmitted→PaymentScheduled) with statutory mapping</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>Papers 1–5 presented principles, patterns, and processes. This paper shows what happens when you apply all of them to a real system with real constraints: decomposing a complex government domain into bounded contexts, designing microservices with clear ownership, and establishing the architectural boundaries that make safe LLM assistance possible at scale.</p>
+<p>The UK Department for Work and Pensions serves as our case study. DWP provides social security, pensions, and benefits to millions of citizens across multiple distinct business domains — Universal Credit, State Pension, Child Maintenance, Employment Support — that happen to share the same organisational umbrella and common platform services. Getting the boundaries right between these domains is not a theoretical exercise: it is the difference between a system that can evolve safely and one that gradually calcifies into a distributed monolith.</p>
+<blockquote>
+<p><strong>If this is your first paper in the series:</strong> The most important background concepts are bounded contexts, aggregates, and RAG scoping — covered in Papers 1 and 3. This paper makes sense without them, but those papers explain <em>why</em> the boundaries are drawn where they are. For the deepest value, read Papers 1–3 first and return here for the applied example.</p>
+<p><strong>Series reading guide:</strong> Papers 1–3 establish the foundations. Paper 4 describes the full automation pipeline. Paper 5 is the practical setup guide. This paper applies everything to a complex, real case study intended as a capstone and reference.</p>
+</blockquote>
+<p>The DWP case study demonstrates:
+1. How to decompose a large domain into bounded contexts when those contexts share vocabulary but mean different things
+2. How platform services (shared across all domains) differ from business services in governance and RAG scope
+3. How evidence and identity can be modelled as separate bounded contexts that compose without coupling
+4. How this structure enables safe, scoped LLM assistance — and how it makes certain architectural mistakes impossible to commit silently</p>
+<hr />
+<h2 id="part-one-the-problem-space">Part One: The Problem Space</h2>
+<h3 id="understanding-dwp">Understanding DWP</h3>
+<p>The UK Department for Work and Pensions provides social security, pensions, benefits, and financial support services to millions of citizens — Universal Credit, Pension Credit, Disability benefits, Carer's Allowance, Employment and Support Allowance (ESA), and more. These aren't one system or one domain — they're multiple distinct business areas that happen to share common platform capabilities.</p>
+<p>The modernisation challenge includes:
+- Reducing fraud and error
+- Speeding up benefit decisions
+- Improving customer experience
+- Integrating identity verification through GOV.UK One Login
+- Creating a "single customer view" without creating a god-model</p>
+<p>This is exactly the kind of problem Domain-Driven Design was designed to solve: multiple domains with overlapping concerns, shared services, and the need for both independence and coordination.</p>
+<h3 id="the-domain-federation">The Domain Federation</h3>
+<p>The first thing to understand about DWP is that it's not one domain — it's a federation of domains, each with its own model, language, and rules. Benefits, Pensions, Child Maintenance, and Employment Support are distinct business areas that happen to share the same organisational umbrella. Forcing them into one unified domain model would create the "god-model" antipattern: a massive, inconsistent mess that tries to mean everything to everyone.</p>
+<p>Traditional benefits systems ask "Is this person eligible?" and try to verify identity as part of answering that question. The architecture we'll describe reverses this: "What do we know with what confidence about this person?" becomes the foundation, and eligibility decisions consume that verified truth. This shift enables:
+- Evidence reuse across benefits
+- Fraud detection through confidence analysis
+- Policy agility without touching the identity layer</p>
+<hr />
+<h2 id="part-two-the-architectural-decomposition">Part Two: The Architectural Decomposition</h2>
+<h3 id="business-domains-and-platform-services">Business Domains and Platform Services</h3>
+<p>DWP operates as a federation:</p>
+<p><strong>Business Domains:</strong>
+- <strong>Benefits</strong> — Universal Credit, Housing Benefit
+- <strong>Pensions</strong> — State Pension, Pension Credit
+- <strong>Child Maintenance</strong> — Child support, enforcement
+- <strong>Employment Support</strong> — JSA, work capability assessments</p>
+<p>Each domain has its own language, business rules, experts, and pace of change. The word "payment" means something different in Benefits (regular benefit payments) than in Child Maintenance (enforcement collections).</p>
+<p><strong>Platform Services (Shared):</strong>
+- <strong>Identity</strong> — OneLogin integration, verification
+- <strong>Payments</strong> — Transactions, reconciliation
+- <strong>Notifications</strong> — Email, letters, SMS
+- <strong>Evidence</strong> — Document collection, validation</p>
+<pre class="mermaid"><code>graph TB
+    subgraph domains["Business Domains"]
+        B["Benefits&lt;br/&gt;&lt;small&gt;Universal Credit, Housing Benefit&lt;/small&gt;"]
+        P["Pensions&lt;br/&gt;&lt;small&gt;State Pension, Pension Credit&lt;/small&gt;"]
+        CM["Child Maintenance&lt;br/&gt;&lt;small&gt;Child Support, Enforcement&lt;/small&gt;"]
+        ES["Employment Support&lt;br/&gt;&lt;small&gt;JSA, Work Capability&lt;/small&gt;"]
+    end
+
+    subgraph platform["Platform Services (Shared)"]
+        ID["Identity&lt;br/&gt;&lt;small&gt;OneLogin, Verification&lt;/small&gt;"]
+        PAY["Payments&lt;br/&gt;&lt;small&gt;Transactions, Reconciliation&lt;/small&gt;"]
+        NOT["Notifications&lt;br/&gt;&lt;small&gt;Email, Letters, SMS&lt;/small&gt;"]
+        EV["Evidence&lt;br/&gt;&lt;small&gt;Document Collection&lt;/small&gt;"]
+    end
+
+    B --&gt; ID
+    B --&gt; PAY
+    B --&gt; NOT
+    B --&gt; EV
+    P --&gt; ID
+    P --&gt; PAY
+    P --&gt; NOT
+    CM --&gt; ID
+    CM --&gt; PAY
+    CM --&gt; NOT
+    ES --&gt; ID
+    ES --&gt; NOT
+
+    style domains fill:#e3f2fd
+    style platform fill:#fce4ec</code></pre>
+<p>This structure reflects Paper 1's taxonomy: business domains are <em>core subdomains</em> (competitive differentiators with complex rules), while platform services are <em>generic subdomains</em> (necessary but not differentiating, suitable for central governance and potential reuse).</p>
+<h3 id="the-two-trust-axis-architecture">The Two-Trust-Axis Architecture</h3>
+<p>DWP must make benefit decisions based on evidence, but truth isn't binary — it's accumulated confidence. When a citizen uploads a utility bill as proof of address, two questions matter:
+1. Does this evidence relate to this person? (Identity Match)
+2. Can we trust the issuer? (Issuer Trust)</p>
+<p>These separate concerns become separate bounded contexts.</p>
+<pre class="mermaid"><code>quadrantChart
+    title Two-Trust-Axis Evidence Assessment
+    x-axis Low Identity Match --&gt; High Identity Match
+    y-axis Low Issuer Trust --&gt; High Issuer Trust
+    quadrant-1 "HIGH CONFIDENCE&lt;br/&gt;(Strong evidence)"
+    quadrant-2 "WRONG PERSON?&lt;br/&gt;(Trusted source, poor match)"
+    quadrant-3 "LOW CONFIDENCE&lt;br/&gt;(Investigate further)"
+    quadrant-4 "FORGED DOCUMENT?&lt;br/&gt;(Good match, untrusted source)"
+    "HMRC Record via API": [0.85, 0.95]
+    "Bank Statement": [0.75, 0.80]
+    "Utility Bill": [0.70, 0.60]
+    "Landlord Letter": [0.65, 0.25]
+    "Screenshot": [0.40, 0.10]</code></pre>
+<p>An authentic document from a real issuer might still not prove identity — a landlord can sign a tenancy letter without verifying the tenant's ID. You need both axes to compute attribute confidence. This is why Identity and Evidence are separate bounded contexts: each models a distinct trust dimension.</p>
+<hr />
+<h2 id="part-three-the-chicken-and-egg-problem">Part Three: The Chicken-and-Egg Problem</h2>
+<h3 id="claimed-identity-vs-verified-identity">Claimed Identity vs. Verified Identity</h3>
+<p>Before explaining bounded contexts in detail, we need to address a fundamental architectural puzzle that many identity systems get wrong: <strong>how do you bind evidence to an identity when you haven't proven the identity exists yet?</strong></p>
+<p><strong>The Naive Approach (Why It Fails):</strong>
+1. User claims to be "John Smith, born 1980-03-15"
+2. System tries to find existing identity matching those attributes
+3. User uploads evidence (utility bill, bank statement)
+4. System tries to link evidence to the found identity</p>
+<p>The problems: What if there are three John Smiths born in March 1980? What if this is a new person? What if evidence contradicts claimed attributes? What if evidence reveals two people using one login (fraud)?</p>
+<p><strong>The Correct Architecture: Claimed Identity as the Anchor</strong></p>
+<p>The solution separates <strong>claimed identity</strong> from <strong>verified identity</strong>:</p>
+<ol>
+<li><strong>Claimed Identity (Digital Identity)</strong> is created when a user first authenticates via OneLogin</li>
+<li>This is a digital anchor point — a unique identifier for "this authentication session and all evidence gathered during it"</li>
+<li>Attributes are claimed but unverified: name, DOB, address</li>
+<li>Status: <code>Unverified</code> or <code>PartiallyVerified</code></li>
+<li>
+<p>This identity may not yet correspond to any real-world person in DWP systems</p>
+</li>
+<li>
+<p><strong>Evidence is bound to the Claimed Identity</strong>, not a verified person</p>
+</li>
+<li>Evidence arrives: utility bill with name "J Smith" and address "12 Oak Road"</li>
+<li>Evidence is linked to the Claimed Identity UUID</li>
+<li>
+<p>Attributes are extracted from evidence and stored independently</p>
+</li>
+<li>
+<p><strong>Resolution determines what this Claimed Identity actually represents</strong></p>
+</li>
+<li>The Resolution service compares claimed attributes + evidence against existing verified identities</li>
+<li>
+<p>Possible outcomes:</p>
+<ul>
+<li><strong>Merge:</strong> Matches existing verified identity with high confidence → merge evidence</li>
+<li><strong>Split:</strong> Sharing credentials with someone else (fraud) → split into two identities</li>
+<li><strong>Create:</strong> Genuinely new person → promote claimed identity to verified</li>
+<li><strong>Ambiguous:</strong> Insufficient evidence → pending state, more evidence required</li>
+</ul>
+</li>
+<li>
+<p><strong>Verification establishes uniqueness within the identity domain</strong></p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>OneLogin Authentication → Claimed Identity (UUID)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>                              ↓
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>                    Evidence Gathering
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>                    (multiple sources)
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                              ↓
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                      Resolution Engine
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                ┌─────────────┼─────────────┐
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                ↓             ↓             ↓
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>            Create        Merge         Split/Ambiguous
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>         (new person) (existing match) (fraud/unclear)
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                ↓             ↓             ↓
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                    Verified Identity
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                              ↓
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>            Customer360 (attribute snapshot)
+<a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                              ↓
+<a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>        Eligibility Contexts (policy interpretation)
+</code></pre></div>
+<p><strong>Why This Matters:</strong></p>
+<p>This architecture makes fraud patterns detectable:
+- Multiple people using one login (evidence divergence)
+- One person with multiple identities (evidence convergence)
+- Stolen credentials (evidence location/pattern mismatches)
+- Fabricated evidence (low issuer trust + poor attribute correlation)</p>
+<hr />
+<h2 id="part-four-bounded-contexts-in-detail">Part Four: Bounded Contexts in Detail</h2>
+<p>Each bounded context below corresponds to a distinct problem area with its own language, aggregates, and owning team. For the formal aggregate specifications and the full rationale behind each separation, see Paper 2, Section 4. What follows is the narrative account of <em>why</em> each context took the shape it did.</p>
+<h4 id="identity-bounded-context-platform">Identity Bounded Context (Platform)</h4>
+<p>The identity team's first question was deceptively simple: what exactly is an identity? Their initial instinct was to model it as a verified record — a confirmed set of attributes about a real person. But this broke immediately when they tried to describe what happens before verification is complete. What do you call the thing that accumulates evidence during an authentication session?</p>
+<p>They needed two distinct things: a <strong>Claimed Identity</strong> — a unique digital anchor point for a user's authentication session and everything gathered during it — and a <strong>Verified Identity</strong>, which only comes into existence once the resolution process confirms that this Claimed Identity corresponds to a unique real-world person. The split between these two isn't an implementation detail; it's the architectural insight that makes fraud detection possible. When evidence attached to a single Claimed Identity starts arriving with different names, addresses, and biometric signals, that divergence is structurally visible. Two people may be sharing credentials. The boundary catches it.</p>
+<p>The key aggregate is <code>IdentityProfile</code> — a verified attribute collection with confidence scores, cycling through states from <code>ClaimedOnly</code> through <code>PartiallyVerified</code> to <code>FullyVerified</code>, with side exits to <code>Ambiguous</code> and <code>Fraudulent</code>. The <code>identity-resolution-service</code> is the only microservice that may create or modify Verified Identities. Every other service creates Claimed Identities and submits evidence against them; resolution is a platform responsibility.</p>
+<h4 id="evidence-bounded-context-platform">Evidence Bounded Context (Platform)</h4>
+<p>The evidence team's founding invariant came from a hard lesson in legacy systems: once stored, evidence must never change. Altering evidence destroys the chain of custody that makes fraud prosecution possible. If you can't prove the original document was unchanged from the moment of submission, the audit trail breaks. This immutability principle shaped everything downstream.</p>
+<p><code>EvidenceItem</code> is a fact assertion with its provenance intact. Metadata can be added — classification, validation results, confidence scores from external assessors. Content cannot be changed. The original payload is frozen at ingestion. This means the evidence service operates at high volume (uploads, OCR, AI attribute extraction) without any write contention on the core record.</p>
+<p>The reason evidence is independent of identity — linked, not owned — matters most when things go wrong. When fraud is detected and an identity is split into two (because the same login was being shared by two people), the evidence stays intact and can be relinked without needing to touch the evidence service. Neither identity knows anything about how the evidence is stored; the Resolution context manages the links.</p>
+<h4 id="trust-provenance-bounded-context-platform">Trust &amp; Provenance Bounded Context (Platform)</h4>
+<p>The trust team's job is the question no other context can answer: how reliable is the source? A landlord letter and an HMRC record both provide address information, but their confidence values differ by an order of magnitude. This context models the two-dimensional problem — issuer trust (how much do we trust the organisation that produced this evidence?) and verification capability (is this issuer authorised to verify this particular attribute?) — and holds the authoritative answer.</p>
+<p>One constraint emerged from painful realisation: trust tiers must be immutable for evidence already issued. If an issuer is retroactively downgraded — say, a document authentication provider loses its accreditation — you cannot quietly apply the downgrade to all evidence they provided. That would silently corrupt the confidence scores on which past benefit decisions were made. Downgrading an issuer requires a formal review, an explicit re-assessment of all evidence they produced, and an audit trail of what changed and when.</p>
+<h4 id="resolution-corroboration-bounded-context">Resolution &amp; Corroboration Bounded Context</h4>
+<p>If Identity asks "who is this person?" and Evidence asks "what do we know about them?", Resolution asks "does this evidence belong to this identity, and how confident are we?" This was the hardest context to get right, and the one architects initially underestimated.</p>
+<p>Their first design put resolution logic inside the Identity context. It owned both the identity model and the matching process, and it worked — until they tried to model the fraud scenario where evidence suggested two people were sharing credentials. The Identity aggregate was simultaneously the entity under question and the entity making the investigation decision. The conflict was structurally unresolvable in a single context.</p>
+<p>Separating Resolution created the boundary that made the conflict visible. Evidence arrives from the Evidence context. Identity exists in the Identity context. Resolution reasons about the connection with its own vocabulary: <code>EvidenceLink</code> (the association between evidence and identity, with match confidence), <code>ResolutionDecision</code> (the Create/Merge/Split/Enrich decision with an audit trail), and <code>IdentityGraph</code> (the network of evidence, attributes, and identities). Confidence is computed as match confidence × issuer trust × authenticity × freshness × independence of sources.</p>
+<h4 id="customer360-bounded-context-shared-kernel">Customer360 Bounded Context (Shared Kernel)</h4>
+<p>Customer360 emerged from a proliferation problem. Five different services each needed to answer "where does this person live?" Each built their own version. Each had different confidence thresholds, different interpretations of "primary address," and different staleness tolerances. The inconsistency was not just inefficient — it was a compliance risk.</p>
+<p>Customer360 was designed to solve this by providing a single read model of verified customer attributes. The critical design constraint — debated longer than any other in the platform team — was the strict separation between <em>reporting</em> and <em>interpreting</em>. Customer360 answers "what verified relationships exist with what confidence?" It explicitly does not answer "what does this mean for the housing benefit entitlement?" That is policy interpretation, and policy belongs in the Eligibility contexts, not in the platform.</p>
+<p>For LLM assistance, Customer360 RAG is available as read-only context to all consuming services. An LLM assisting a Benefits engineer can query Customer360 in its context. It cannot propose modifications to it.</p>
+<h4 id="eligibility-bounded-context-one-per-benefit">Eligibility Bounded Context (One Per Benefit)</h4>
+<p>The eligibility architects came to an uncomfortable conclusion early: Universal Credit eligibility and State Pension eligibility are not the same problem wearing different rules. They look similar on the surface — both determine benefit entitlement — but they change for completely different reasons, are owned by completely different policy teams, and would, if combined, create the god-model the framework exists to prevent.</p>
+<p>The decision was one Eligibility bounded context per benefit. Each context has its own <code>EligibilityRequest</code> aggregate, its own <code>PolicyRuleSet</code> aggregate (versioned explicitly — policy changes must never silently override past decisions), and its own <code>DecisionResult</code> aggregate with its complete audit trail. A strict invariant applies to all of them: decisions can only be based on attributes that have reached the declared minimum confidence threshold. An eligibility service cannot decide on unverified claims.</p>
+<p>This separation also maps cleanly to team ownership. The Universal Credit policy team owns UC eligibility rules. The Pensions policy team owns State Pension rules. Neither needs to understand, negotiate with, or be blocked by the other.</p>
+<p>The legislative foundation for this separation runs deeper than organisational preference. UC income rules and ESA income rules are defined in entirely separate statutory instruments — the Universal Credit Regulations 2013 and the Employment and Support Allowance Regulations 2013 respectively. They count different income sources, permit different deductions, and apply different taper mathematics. Sharing an income model across UC and ESA would not be a simplification; it would embed a category error. Different legislative instruments mandate different domain concepts.</p>
+<p>What does a product Eligibility context actually contain? The UC context illustrates the pattern. Its core aggregates are <code>ClaimantProfile</code> (household composition, income sources, work status — the factual picture of the claimant's circumstances at a point in time), <code>EligibilityAssessment</code> (the act of evaluating rules against those circumstances to produce an eligibility outcome), and <code>EntitlementCalculation</code> (the monetary award — standard allowance, housing element, capital deductions, taper rate application). These are three distinct concepts with three distinct lifecycles: a claimant's profile can change without triggering a new assessment; an assessment can be challenged without altering the entitlement calculation already in payment.</p>
+<p>The rules themselves live in domain services rather than aggregates, because rules change independently of individual claimant records. <code>EligibilityPolicy</code> encapsulates income thresholds, work capability criteria, and residency requirements — each rule class mapping to a distinct statutory instrument. <code>EntitlementPolicy</code> encapsulates the standard allowance tables, housing element rules, and taper logic. When parliament amends the taper rate, only <code>EntitlementPolicy</code> changes. When the Work Capability Assessment criteria are reformed, only <code>EligibilityPolicy</code> changes. No other bounded context is affected.</p>
+<h4 id="payments-bounded-context-platform">Payments Bounded Context (Platform)</h4>
+<p>The Payments context solved a problem that seemed simple but revealed surprising depth: what does "complete" mean for a payment? The team quickly found that authorisation, capture, and settlement were three separate states with three distinct invariants, and conflating them created logic that was impossible to reason about.</p>
+<p>You cannot capture more than you authorised. You cannot issue a refund larger than the captured amount. Reconciliation records must balance — a deceptively simple invariant across hundreds of thousands of daily transactions. The team explicitly separated <code>PaymentInstruction</code> (intent) from <code>PaymentStatus</code> (lifecycle), because the story of a payment moving through authorised → captured → overpaid → recovered was a narrative that a single aggregate would have obscured into a state machine with dozens of flags.</p>
+<p><code>Overpayment</code> and <code>ReconciliationRecord</code> are separate aggregates, not fields on a payment. Each has its own consistency boundary, its own invariants, and — critically — its own audit trail that can be provided to citizens, auditors, and fraud investigators without exposing the full payment lifecycle.</p>
+<hr />
+<h2 id="part-five-inter-context-communication">Part Five: Inter-Context Communication</h2>
+<h3 id="the-pattern-anti-corruption-layers">The Pattern: Anti-Corruption Layers</h3>
+<p>This is what makes federated organisations work. The benefits-claim-service (within Benefits) needs to verify a citizen's identity. It does NOT import Identity domain models directly or access the Identity database. Instead:
+1. It calls the identity-service's published API contract
+2. Translates responses through its own anti-corruption layer
+3. The microservice knows <em>what</em> Identity provides, not <em>how</em> Identity implements it</p>
+<h4 id="example-benefits-identity-requires-acl">Example: Benefits → Identity (Requires ACL)</h4>
+<p><strong>Identity Context speaks in terms of <code>IdentityProfile</code>:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">IdentityProfile</span><span class="p">:</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="n">identity_id</span><span class="p">:</span> <span class="n">UUID</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="n">verification_level</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;LOW&quot;</span><span class="p">,</span> <span class="s2">&quot;MEDIUM&quot;</span><span class="p">,</span> <span class="s2">&quot;HIGH&quot;</span><span class="p">,</span> <span class="s2">&quot;VERIFIED&quot;</span><span class="p">]</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="n">place_relationships</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">PlaceRelationship</span><span class="p">]</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="n">trust_score</span><span class="p">:</span> <span class="nb">float</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="n">evidence_chain</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">EvidenceItem</span><span class="p">]</span>
+</code></pre></div></p>
+<p><strong>Benefits Context speaks in terms of <code>Claimant</code>:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Claimant</span><span class="p">:</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="n">claimant_id</span><span class="p">:</span> <span class="n">UUID</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="n">identity_verified</span><span class="p">:</span> <span class="nb">bool</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="n">current_address</span><span class="p">:</span> <span class="n">Address</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="n">can_receive_payments</span><span class="p">:</span> <span class="nb">bool</span>
+</code></pre></div></p>
+<p><strong>The ACL translates between these models:</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">IdentityACL</span><span class="p">:</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">translate_to_claimant</span><span class="p">(</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>        <span class="bp">self</span><span class="p">,</span> 
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="n">response</span><span class="p">:</span> <span class="n">IdentityVerificationResponse</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClaimantVerificationStatus</span><span class="p">:</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="k">return</span> <span class="n">ClaimantVerificationStatus</span><span class="p">(</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>            <span class="n">claimant_id</span><span class="o">=</span><span class="n">UUID</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">identity_id</span><span class="p">),</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>            <span class="n">identity_verified</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">verification_level</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;HIGH&quot;</span><span class="p">,</span> <span class="s2">&quot;VERIFIED&quot;</span><span class="p">],</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>            <span class="n">current_address</span><span class="o">=</span><span class="n">Address</span><span class="p">(</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>                <span class="n">line1</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">primary_place</span><span class="p">[</span><span class="s1">&#39;address_line_1&#39;</span><span class="p">],</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>                <span class="n">postcode</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">primary_place</span><span class="p">[</span><span class="s1">&#39;postcode&#39;</span><span class="p">]</span>
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>            <span class="p">),</span>
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>            <span class="n">can_receive_payments</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">verification_level</span> <span class="o">==</span> <span class="s2">&quot;VERIFIED&quot;</span>
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>        <span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Why the ACL matters:</strong> Identity's model includes trust scores, evidence chains, and verification levels. Benefits doesn't care — it just needs "Can this person claim benefits?" The ACL shields Benefits from Identity's implementation details. If Identity adds a new evidence type or changes trust scoring, Benefits is unaffected as long as the contract remains stable.</p>
+<pre class="mermaid"><code>graph LR
+    subgraph benefits["Benefits Domain"]
+        BC["Benefits Claim&lt;br/&gt;Service"]
+        ACL["Anti-Corruption&lt;br/&gt;Layer"]
+    end
+
+    subgraph platform["Platform Services"]
+        ID["Identity&lt;br/&gt;Service"]
+        PAY["Payments&lt;br/&gt;Service"]
+    end
+
+    BC --&gt; ACL
+    ACL --&gt;|"API Contract"| ID
+    ACL --&gt;|"API Contract"| PAY
+
+    ID -.-&gt;|"Implementation&lt;br/&gt;hidden"| IDB[(Identity DB)]
+    PAY -.-&gt;|"Implementation&lt;br/&gt;hidden"| PDB[(Payments DB)]
+
+    style benefits fill:#e3f2fd
+    style platform fill:#fce4ec
+    style ACL fill:#fff9c4</code></pre>
+<h3 id="the-service-manifest">The Service Manifest</h3>
+<p>To make this pattern enforceable — and to enable LLM assistance that respects these boundaries — we need a machine-readable way to declare what each service owns and what it can access:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">{</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&quot;microservices&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&quot;benefits-claim-service&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">&quot;domain&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;benefits&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">      </span><span class="nt">&quot;boundedContext&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;claims&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">      </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;benefits-claim-team&quot;</span><span class="p">,</span>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">      </span><span class="nt">&quot;platformDependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;identity&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;payments&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;evidence&quot;</span><span class="p">],</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="nt">&quot;contracts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">        </span><span class="nt">&quot;consumes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;identity-api-v2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;evidence-api-v1&quot;</span><span class="p">]</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>For LLM assistance:</strong> The benefits-claim-service RAG includes the Identity API contract as read-only context, but does NOT include the identity-service's implementation code. The LLM can see how to call the platform service but cannot modify it. Contract tests ensure compatibility even as both services evolve.</p>
+<h3 id="putting-it-together-end-to-end-event-flow">Putting It Together: End-to-End Event Flow</h3>
+<p>The architectural decomposition described in Parts Two through Five is most legible as a sequence of domain events crossing context boundaries. A single Universal Credit claim, from submission to first payment, produces the following chain:</p>
+<ol>
+<li>Claimant submits application → Claims context emits <code>ClaimSubmitted</code></li>
+<li>Supporting documents uploaded → Evidence context emits <code>EvidenceAdded</code></li>
+<li>Identity verified against evidence → Trust context emits <code>IdentityVerified</code></li>
+<li>UC Eligibility context consumes <code>IdentityVerified</code>, evaluates policy rules → emits <code>EligibilityAssessed</code></li>
+<li>Decision context records the outcome and audit trail → emits <code>DecisionMade</code></li>
+<li>Payments context receives <code>DecisionMade</code>, schedules the award disbursement → emits <code>PaymentScheduled</code></li>
+</ol>
+<p>No context in this chain queries another context's database. No context makes a synchronous call that would block the chain if a downstream service is slow. Each event crosses a context boundary as a published contract — each consumer decides what to do upon arrival, according to its own rules and its own invariants.</p>
+<p>This chain is also a statutory map. Legislation mandates claim management, evidence handling, identity verification, eligibility assessment, formal decision-making, and payment as legally separable acts — each with its own accountability and audit requirements. The bounded context decomposition is not an architectural preference layered over the legislation; it is a direct reflection of the statutory structure the service exists to execute.</p>
+<hr />
+<h2 id="part-six-implications-for-llm-assistance">Part Six: Implications for LLM Assistance</h2>
+<h3 id="why-this-matters-for-the-framework">Why This Matters for the Framework</h3>
+<p>The DWP decomposition demonstrates exactly what the framework must handle:</p>
+<p><strong>For Benefits domain code, the LLM must:</strong>
+- Use Benefits language (Claimant, Benefit Award, Payment Schedule)
+- NOT use Identity language (Subject, Credential) directly in domain code
+- Respect that Identity is accessed via contract, not implementation
+- Understand that Customer360 is a read model, not an aggregate to modify</p>
+<p><strong>For the platform Identity service, the constraints differ:</strong>
+- Recognise that multiple business domains consume this service
+- Contract changes require impact analysis across ALL consumers
+- Breaking changes trigger coordinated migration workflows
+- Test burden is higher because downtime affects the entire organisation</p>
+<h3 id="the-four-tier-rag-model-applied">The Four-Tier RAG Model Applied</h3>
+<p>From Paper 3, the four-tier model enforces these boundaries:</p>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>DWP Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Domain RAG</strong></td>
+<td>Benefits team sees Benefits contexts + platform contracts</td>
+</tr>
+<tr>
+<td><strong>Service RAG</strong></td>
+<td>Identity team sees Identity implementation + all consumer contracts</td>
+</tr>
+<tr>
+<td><strong>Shared Kernel RAG</strong></td>
+<td>Customer360 schema accessible to all domains (read-only for most)</td>
+</tr>
+<tr>
+<td><strong>Infrastructure RAG</strong></td>
+<td>AWS/Kubernetes patterns available to all</td>
+</tr>
+</tbody>
+</table>
+<h3 id="governance-implications">Governance Implications</h3>
+<p><strong>Platform services (Identity, Payments, Evidence):</strong>
+- Changes require cross-domain impact analysis
+- Contract versioning is mandatory
+- Higher test coverage requirements
+- Longer approval chains</p>
+<p><strong>Business services (Eligibility, Claims):</strong>
+- Teams have autonomy within contracts
+- Faster approval for internal changes
+- Policy teams own eligibility rules</p>
+<hr />
+<h2 id="part-seven-practical-implementation-examples">Part Seven: Practical Implementation Examples</h2>
+<h3 id="starting-from-scratch-the-child-maintenance-greenfield">Starting From Scratch: The Child Maintenance Greenfield</h3>
+<p>To illustrate how the framework operates when building with no legacy constraints, consider DWP designing the Child Maintenance digital service from scratch. The Child Maintenance Service (CMS) handles support calculations, payment collection, and enforcement between separated parents. It has no existing digital service — just a legacy of paper-based processes and telephony. The brief: design this properly, knowing it will need LLM assistance and safe evolution for the next decade.</p>
+<h4 id="phase-1-discovering-the-domain">Phase 1: Discovering the Domain</h4>
+<p>In Design Mode, the LLM has access to the Child Maintenance policy documents, stakeholder interview notes, and process diagrams. You ask: "Based on these requirements, what bounded contexts do you see? Where are the natural seams?"</p>
+<p>The LLM observes that "case" means different things in different conversations. A Social Mobility Advisor uses "case" to mean the relationship arrangement between two parents. A Finance Officer uses "case" to mean an arrears recovery action. These are different languages signalling different bounded contexts.</p>
+<p>It proposes five contexts: <strong>Case Management</strong> (the arrangement between the paying and receiving parent, including calculation of the payment amount), <strong>Payments</strong> (collecting and disbursing, separate from calculating), <strong>Enforcement</strong> (when payments fail — liability orders, deduction from earnings, vehicle immobilisation), <strong>Assessment</strong> (determining the paying parent's disposable income — a calculation problem with its own policy rules), and <strong>Compliance</strong> (the history of a case: how often has this paying parent paid, missed, been given extensions?).</p>
+<p>You push back on Assessment: "Should that be inside Case Management?" The LLM reasons: Assessment rules change frequently because they follow legislation, while Case Management rules are relatively stable. Different expert ownership. Different change cadence. Different language — Assessment uses <code>DisposableIncome</code>, <code>IncomeSource</code>, <code>DeductionRate</code>; Case Management uses <code>CaseRecord</code>, <code>CalculatedAmount</code>, <code>ReviewDate</code>. The separation stands.</p>
+<p>Once the five contexts are agreed, they're documented formally. These documents become the seed of the Domain Architecture tier RAG.</p>
+<h4 id="phase-2-defining-aggregates-and-microservices">Phase 2: Defining Aggregates and Microservices</h4>
+<p>Within each bounded context, you identify aggregates. For the Enforcement context, you ask: "What aggregates do you see? What are their invariants?"</p>
+<p>The LLM proposes three. The <code>EnforcementCase</code> aggregate models a single enforcement action with its invariant: you cannot escalate enforcement without evidence of missed payment above the threshold. The <code>LiabilityOrder</code> aggregate models the legal instrument with its invariant: a liability order cannot be issued without a court hearing record. The <code>DeductionFromEarnings</code> aggregate models the employer instruction with its invariant: deduction cannot exceed the legal maximum percentage of net earnings, regardless of arrears.</p>
+<p>The team decides that <code>DeductionFromEarnings</code> and <code>LiabilityOrder</code> are tightly coupled enough to live in one microservice (<code>enforcement-action-service</code>), while <code>EnforcementCase</code> is separate (<code>enforcement-case-service</code>) because it needs access to Case Management data to make escalation decisions.</p>
+<p>The output is a service manifest — the <code>monorepo.json</code>.</p>
+<h4 id="phase-3-contract-first-design">Phase 3: Contract-First Design</h4>
+<p>Before any implementation, contracts are defined between services. The Case Management service needs to inform the Enforcement service when a payment is missed. Rather than a direct call, this is an event contract: <code>PaymentMissed</code> with <code>caseId</code>, <code>scheduledAmount</code>, <code>missedDate</code>, <code>cumulativeArrears</code>. The Assessment service provides income data via a REST contract: <code>GET /assessments/{respondentId}/current</code> returning <code>DisposableIncome</code> with <code>calculationDate</code> and <code>confidence</code>.</p>
+<p>Consumer services write contract tests against these specifications before the providers implement them. The Assessment team can start building knowing exactly what the Case Management team expects — and that CI will catch any deviation before it reaches integration.</p>
+<h4 id="phase-4-implementing-within-boundaries">Phase 4: Implementing Within Boundaries</h4>
+<p>The framework shifts to Evolution Mode. A developer asks: "Implement the RecordMissedPayment use case." The system queries only the <code>payments-service</code> RAG, retrieves the Payment aggregate, the contract definition for the <code>PaymentMissed</code> event, and the existing test patterns. Everything within declared paths. Imports from allowed dependencies only.</p>
+<p>The LLM cannot accidentally import from the Enforcement service even if doing so would seem convenient. The manifest doesn't allow it. The CI validation would catch it. The boundary prevents the tight coupling that, in five years, would make the services impossible to change independently.</p>
+<h3 id="migrating-an-existing-system-extracting-from-a-monolith">Migrating an Existing System: Extracting from a Monolith</h3>
+<p>Most architects face a different reality: existing systems, legacy code, organisational inertia. Here's how the framework applies when extracting microservices from a 15-year-old monolith.</p>
+<h4 id="phase-1-build-framework-infrastructure-months-1-2">Phase 1: Build Framework Infrastructure (Months 1-2)</h4>
+<p>Before touching the legacy system, build the framework machinery: RAG infrastructure, CI/CD pipelines, contract testing tooling. But critically, don't enforce anything yet. The framework exists but operates in "observe and learn" mode.</p>
+<p>Create a minimal manifest documenting the world as it exists:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">{</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&quot;legacySystems&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">    </span><span class="nt">&quot;core-monolith&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">      </span><span class="nt">&quot;paths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;legacy/core/**&quot;</span><span class="p">],</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">      </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Java&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;decomposing&quot;</span><span class="p">,</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">      </span><span class="nt">&quot;target-contexts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;payments&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;orders&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;customers&quot;</span><span class="p">]</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="p">}</span>
+</code></pre></div>
+<h4 id="phase-2-strangle-the-edge-months-3-6">Phase 2: Strangle the Edge (Months 3-6)</h4>
+<p>Pick a bounded context to extract — ideally one with clear boundaries and willing teams. For this example: Payments.</p>
+<ol>
+<li>Define the Payments API contract that the monolith will eventually call</li>
+<li>Create the payments-service with Clean Architecture scaffolding</li>
+<li>Build payment-service's RAG index from the new code</li>
+<li>Run both systems in parallel, routing a percentage of traffic to the new service</li>
+</ol>
+<p>The LLM now assists with the new service using proper guardrails, while the monolith remains outside the framework.</p>
+<h4 id="phase-3-gradual-migration-months-6-18">Phase 3: Gradual Migration (Months 6-18)</h4>
+<p>Each extracted service gets its own manifest entry, RAG index, and CI/CD guardrails. The monolith shrinks. The manifest grows. Teams migrate at their own pace.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">{</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span><span class="nt">&quot;legacySystems&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">    </span><span class="nt">&quot;core-monolith&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">      </span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;decomposing&quot;</span><span class="p">,</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">      </span><span class="nt">&quot;extractedContexts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;payments&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;notifications&quot;</span><span class="p">],</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">      </span><span class="nt">&quot;remaining&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;orders&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;inventory&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;customers&quot;</span><span class="p">]</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="nt">&quot;microservices&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a><span class="w">    </span><span class="nt">&quot;payment-processing&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"> </span><span class="p">},</span>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">    </span><span class="nt">&quot;notification-service&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;...&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"> </span><span class="p">}</span>
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a><span class="p">}</span>
+</code></pre></div>
+<p>Eventually, the monolith disappears. The manifest becomes the single source of truth. The framework that started as an observer becomes the enforcer.</p>
+<hr />
+<h2 id="part-eight-the-strategic-insight">Part Eight: The Strategic Insight</h2>
+<h3 id="what-this-architecture-enables">What This Architecture Enables</h3>
+<p>DWP's architecture is not "build a benefits system." It's "build a national trust platform that multiple benefit systems consume."</p>
+<p>Truth about a citizen emerges through a chain of bounded contexts:
+1. <strong>Identity resolution</strong> establishes who this person is
+2. <strong>Evidence collection</strong> determines what we know about them
+3. <strong>Issuer trust</strong> evaluates how reliable the sources are
+4. <strong>Attribute corroboration</strong> computes the confidence level
+5. <strong>Policy application</strong> determines whether this meets benefit rules</p>
+<p>Each step is a separate bounded context with clear ownership, contracts, and confidence thresholds. Eligibility decisions are downstream consumers of verified truth — they don't create it.</p>
+<p>This separation enables evidence reuse across benefits (upload once, use everywhere), consistent identity with no duplicate records, fraud detection through structural anomalies, policy agility without touching identity or evidence layers, and platform evolution that doesn't cascade into benefit-specific services.</p>
+<h3 id="what-architects-got-wrong-initially">What Architects Got Wrong Initially</h3>
+<p><strong>The first domain model put Claims and Eligibility in the same bounded context.</strong> It seemed logical — a citizen's claim leads directly to an eligibility decision. But the language was wrong immediately. "Claim" in the Claims Intake context means "a citizen's request for benefit, with supporting evidence." "Claim" in the Eligibility context means "a case under policy assessment." Same word, different meanings, different actors, different ownership, different change cadence. This is the textbook signal of a missed context boundary. Separating them removed the linguistic confusion and clarified ownership: Intake owns the submission journey, Eligibility owns the policy logic.</p>
+<p><strong>The second mistake was assuming the Payment context was simple.</strong> A payment is just moving money — initially modelled as one aggregate with a status field. The moment the team tried to represent an overpayment recovery spanning multiple future payment periods, the status field had seventeen possible combinations and the invariants were impossible to reason about. Separating <code>PaymentInstruction</code>, <code>PaymentStatus</code>, <code>Overpayment</code>, and <code>ReconciliationRecord</code> as distinct aggregates resolved the confusion by making each concern's consistency boundary explicit.</p>
+<h3 id="what-surprised-them">What Surprised Them</h3>
+<p>The biggest surprise was how much the boundary structure affected fraud detection capability. The assumption had been that fraud would need to be detected algorithmically — analysing patterns across the data. What emerged was that correctly drawn boundaries made many fraud patterns <em>structurally visible</em> rather than requiring algorithmic hunting.</p>
+<p>When a single Claimed Identity began receiving evidence with consistently different names and addresses from two distinct households, this did not need analysis to find. It surfaced as an anomaly in the Resolution context's evidence linking: the same identity had divergent evidence streams suggesting two people. The architecture made the fraud visible before any human reviewed it.</p>
+<p>Similarly, one person attempting to create two Verified Identities (to claim the same benefit twice) showed up as a convergence anomaly — two Claimed Identities with evidence pointing to the same real-world attributes, trying to resolve to two separate Verified Identities. The graph structure of the Resolution context caught this as a merge candidate, not a create candidate.</p>
+<h3 id="what-the-framework-prevented">What the Framework Prevented</h3>
+<p>Three specific violations the framework caught before they reached production.</p>
+<p><strong>The Benefits team's identity shortcut.</strong> During implementation, the Benefits team began building identity resolution logic inside <code>benefits-claim-service</code>. Frustrated with the round-trip latency of calling the Identity API, they started pulling identity database records directly through a shared connection. The manifest flagged the import direction before the PR reached review: <code>identity-db</code> was not in <code>benefits-claim-service</code>'s allowed dependencies. CI validation failed. The architectural conversation revealed the real issue was in the API contract — the Identity service's attribute endpoint required three separate calls to assemble what Benefits needed as one. The platform team added a composite attribute endpoint. The performance requirement was met without coupling Benefits to Identity internals.</p>
+<p><strong>The Payments team's eligibility assumption.</strong> The Payments service began checking eligibility status directly before processing a payment instruction. The reasoning seemed sound: why issue a payment if the person is ineligible? But eligibility belongs in the Eligibility context. The allowed dependencies for <code>payment-processing-service</code> did not include any eligibility service's implementation code. The layer validation caught an import from <code>universal-credit-eligibility-service</code> within the Payments domain layer. The correct fix was a contract: Payments receives a <code>PaymentInstruction</code> with an <code>eligibilityVerifiedAt</code> field, signed by the Eligibility service. Payments trusts the assertion without re-running the check.</p>
+<p><strong>The Evidence team's immutability drift.</strong> Six months into operation, <code>evidence-validation-service</code> began modifying the <code>raw_payload</code> field of <code>EvidenceItem</code> records when OCR produced corrections. The immutability invariant — evidence content must never change once ingested — existed in the domain model, but the validation service had been written to update records rather than creating linked assessment records alongside the original. An architecture fitness test caught this: it specifically verified that no OCR output was being written to <code>EvidenceItem.raw_payload</code>. The service was corrected to create <code>ExtractedAttributes</code> records linked to the original, preserving the original payload intact.</p>
+<h3 id="for-architects">For Architects</h3>
+<p>This is the pattern for any large organisation with multiple business domains and shared services. The boundaries aren't theoretical — they're the difference between a maintainable system and a distributed monolith.</p>
+<h3 id="for-llm-assistance">For LLM Assistance</h3>
+<p>These boundaries become enforcement points. The LLM can't accidentally couple Benefits to Identity internals because it physically cannot see them. It can't break eight services while fixing one because contract tests fail automatically. It can't corrupt the immutability invariant because the domain layer has no method that permits it.</p>
+<p>This is DDD doing its job: making complex systems comprehensible by creating boundaries that both humans and LLMs must respect.</p>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>This case study has demonstrated how all the elements from Papers 1-5 combine in practice:</p>
+<ul>
+<li>
+<p><strong>Paper 1's DDD principles</strong> decomposed DWP into business domains and platform services, identified bounded contexts with precise language, and located aggregates that become microservices</p>
+</li>
+<li>
+<p><strong>Paper 2's semantic identity</strong> appears in the two-trust-axis model, the claimed-vs-verified identity distinction, and the resolution patterns that handle fraud detection</p>
+</li>
+<li>
+<p><strong>Paper 3's RAG scoping</strong> determines what each service can see: Identity sees broad context for resolution, Benefits sees narrow context plus contracts, Customer360 is read-only for consumers</p>
+</li>
+<li>
+<p><strong>Paper 4's automation</strong> enforces the manifest, runs contract tests, prevents cross-boundary violations, and catches architectural drift before humans review</p>
+</li>
+<li>
+<p><strong>Paper 5's implementation guidance</strong> applies to each microservice as it's built or extracted</p>
+</li>
+</ul>
+<p>The DWP example is complex — it has to be, to demonstrate the framework's value. Simpler systems don't need this machinery. But any organisation with multiple domains, shared services, and the need to modernise without creating chaos will recognise these patterns.</p>
+<p>The framework doesn't make complexity disappear. It makes complexity <em>manageable</em> — by creating boundaries that both humans and AI assistants must respect.</p>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li>Paper 1: Domain-Driven Design and Clean Architecture Fundamentals</li>
+<li>Paper 2: Evidence-Based Identity and Cross-Boundary Coordination</li>
+<li>Paper 3: LLM Assistance, Service-Scoped RAG, and CI/CD Guardrails</li>
+<li>Paper 4: End-to-End Automated LLM-Assisted Development</li>
+<li>Paper 5: Getting Started — A Practical Implementation Guide</li>
+<li>Evans, Eric. <em>Domain-Driven Design: Tackling Complexity in the Heart of Software</em></li>
+<li>Vernon, Vaughn. <em>Implementing Domain-Driven Design</em></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

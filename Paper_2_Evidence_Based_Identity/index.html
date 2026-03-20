@@ -1,0 +1,4440 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A six-paper series on DDD, evidence-based identity, and LLM-assisted development for government services">
+      
+      
+      
+        <link rel="canonical" href="https://mrchughes.github.io/architecting-modern-government-services/Paper_2_Evidence_Based_Identity/">
+      
+      
+        <link rel="prev" href="../Paper_1_DDD_Clean_Architecture/">
+      
+      
+        <link rel="next" href="../Paper_3_LLM_RAG_Guardrails/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>2 — Evidence-Based Identity - Architecting Modern Government Services</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#evidence-based-identity-a-semantic-coordination-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Architecting Modern Government Services" class="md-header__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Architecting Modern Government Services
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2 — Evidence-Based Identity
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Paper_1_DDD_Clean_Architecture/" class="md-tabs__link">
+          
+  
+  
+  Papers
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Architecting Modern Government Services" class="md-nav__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Architecting Modern Government Services
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_1_DDD_Clean_Architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — DDD & Clean Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Evidence-Based Identity
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Evidence-Based Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Executive Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-technical-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Technical Argument
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-ddd-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The DDD Foundation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Reality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-the-systematic-failure-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: The Systematic Failure Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: The Systematic Failure Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-why-shared-schema-approaches-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Why Shared Schema Approaches Fail
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-the-three-fatal-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 The Three Fatal Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-identity-without-universal-identifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Identity Without Universal Identifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-evidence-processing-without-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Evidence Processing Without Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 Evidence Processing Without Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-institutional-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Institutional Reality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-summary-three-root-causes-and-their-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Summary: Three Root Causes and Their Solutions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-the-technical-breakthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: The Technical Breakthrough
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: The Technical Breakthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#21-model-assertions-not-facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Model Assertions, Not Facts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-three-layer-confidence-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Three-Layer Confidence Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Three-Layer Confidence Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#confidence-calibration-and-threshold-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confidence Calibration and Threshold Tuning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-probabilistic-identity-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Probabilistic Identity Clustering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Probabilistic Identity Clustering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-fellegi-sunter-a-brief-primer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Fellegi-Sunter: A Brief Primer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-semantic-translation-without-standardisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Semantic Translation Without Standardisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-social-evidence-community-vouching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Social Evidence — Community Vouching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Social Evidence — Community Vouching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-inclusion-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The Inclusion Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-vouching-as-structured-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Vouching as Structured Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-fraud-prevention-five-layer-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Fraud Prevention: Five-Layer Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-trust-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Trust Propagation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-the-domain-model-ddd-applied-to-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: The Domain Model — DDD Applied to Identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: The Domain Model — DDD Applied to Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-identity-domain-landscape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The Identity Domain Landscape
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-key-bounded-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Key Bounded Contexts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 Key Bounded Contexts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identity-bounded-context-platform-service-generic-subdomain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity Bounded Context (Platform Service — Generic Subdomain)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence-bounded-context-platform-service-generic-subdomain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence Bounded Context (Platform Service — Generic Subdomain)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trust-provenance-bounded-context-platform-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trust &amp; Provenance Bounded Context (Platform Service)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-corroboration-bounded-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution &amp; Corroboration Bounded Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customer360-shared-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customer360 (Shared Kernel)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eligibility-bounded-contexts-core-subdomains-one-per-benefit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eligibility Bounded Contexts (Core Subdomains — One Per Benefit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-the-chicken-and-egg-problem-solved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 The Chicken-and-Egg Problem Solved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-customer360-the-360-view-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Customer360: The "360 View" Challenge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-context-relationships-in-the-identity-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Context Relationships in the Identity Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-v-the-three-coordination-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part V: The Three Coordination Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part V: The Three Coordination Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-pattern-1-internal-organisational-coordination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Pattern 1: Internal Organisational Coordination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-pattern-2-cross-government-coordination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Pattern 2: Cross-Government Coordination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-pattern-3-business-interactions-verifiable-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Pattern 3: Business Interactions (Verifiable Credentials)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-vi-security-operational-resilience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part VI: Security &amp; Operational Resilience
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part VI: Security &amp; Operational Resilience">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-novel-security-threats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Novel Security Threats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Novel Security Threats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#threat-1-semantic-manipulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat 1: Semantic Manipulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threat-2-confidence-threshold-gaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat 2: Confidence Threshold Gaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threat-3-privacy-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat 3: Privacy Inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threat-4-query-dos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat 4: Query DoS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-failure-modes-degradation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Failure Modes &amp; Degradation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 Failure Modes &amp; Degradation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#triple-store-unavailability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triple Store Unavailability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ambiguous-identity-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ambiguous Identity Clustering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic-translation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Semantic Translation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contradictory-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contradictory Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cascade-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cascade Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-vii-implementation-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part VII: Implementation Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part VII: Implementation Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-phased-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Phased Delivery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.1 Phased Delivery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-0-proof-of-concept-4-6-months" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 0: Proof of Concept (4-6 months)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-mvp-pilot-12-18-months" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: MVP Pilot (12-18 months)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-production-scale-18-24-months" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Production Scale (18-24 months)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-risk-mitigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Risk Mitigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-viii-key-technical-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part VIII: Key Technical Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part VIII: Key Technical Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-why-rdf-over-relational" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Why RDF Over Relational?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-why-probabilistic-identity-over-master-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Why Probabilistic Identity Over Master Record?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-why-semantic-translation-over-standardisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Why Semantic Translation Over Standardisation?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-what-estonia-proved-and-didnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 What Estonia Proved (and Didn't)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-architecture-solves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Architecture Solves
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-realistic-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Realistic Assessment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Alternative
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A: Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-b-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix B: References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_3_LLM_RAG_Guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — LLM RAG & Guardrails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_4_Automated_LLM_Development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 — Automated LLM Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_5_Getting_Started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5 — Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_6_Case_Study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6 — Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Executive Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-technical-argument" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Technical Argument
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-ddd-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The DDD Foundation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#implementation-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Reality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-the-systematic-failure-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: The Systematic Failure Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: The Systematic Failure Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-why-shared-schema-approaches-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Why Shared Schema Approaches Fail
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-the-three-fatal-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 The Three Fatal Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-identity-without-universal-identifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Identity Without Universal Identifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-evidence-processing-without-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Evidence Processing Without Context
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 Evidence Processing Without Context">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-institutional-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Institutional Reality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-summary-three-root-causes-and-their-solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Summary: Three Root Causes and Their Solutions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-the-technical-breakthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: The Technical Breakthrough
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: The Technical Breakthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#21-model-assertions-not-facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Model Assertions, Not Facts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-three-layer-confidence-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Three-Layer Confidence Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.2 Three-Layer Confidence Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#confidence-calibration-and-threshold-tuning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confidence Calibration and Threshold Tuning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-probabilistic-identity-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Probabilistic Identity Clustering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Probabilistic Identity Clustering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#understanding-fellegi-sunter-a-brief-primer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Fellegi-Sunter: A Brief Primer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-semantic-translation-without-standardisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Semantic Translation Without Standardisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-social-evidence-community-vouching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Social Evidence — Community Vouching
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Social Evidence — Community Vouching">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-inclusion-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The Inclusion Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-vouching-as-structured-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Vouching as Structured Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-fraud-prevention-five-layer-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Fraud Prevention: Five-Layer Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-trust-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Trust Propagation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-the-domain-model-ddd-applied-to-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: The Domain Model — DDD Applied to Identity
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: The Domain Model — DDD Applied to Identity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-identity-domain-landscape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The Identity Domain Landscape
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-key-bounded-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Key Bounded Contexts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 Key Bounded Contexts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#identity-bounded-context-platform-service-generic-subdomain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identity Bounded Context (Platform Service — Generic Subdomain)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#evidence-bounded-context-platform-service-generic-subdomain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence Bounded Context (Platform Service — Generic Subdomain)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trust-provenance-bounded-context-platform-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trust &amp; Provenance Bounded Context (Platform Service)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-corroboration-bounded-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution &amp; Corroboration Bounded Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customer360-shared-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customer360 (Shared Kernel)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#eligibility-bounded-contexts-core-subdomains-one-per-benefit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Eligibility Bounded Contexts (Core Subdomains — One Per Benefit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-the-chicken-and-egg-problem-solved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 The Chicken-and-Egg Problem Solved
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-customer360-the-360-view-challenge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Customer360: The "360 View" Challenge
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-context-relationships-in-the-identity-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 Context Relationships in the Identity Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-v-the-three-coordination-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part V: The Three Coordination Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part V: The Three Coordination Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-pattern-1-internal-organisational-coordination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Pattern 1: Internal Organisational Coordination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-pattern-2-cross-government-coordination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Pattern 2: Cross-Government Coordination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-pattern-3-business-interactions-verifiable-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Pattern 3: Business Interactions (Verifiable Credentials)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-vi-security-operational-resilience" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part VI: Security &amp; Operational Resilience
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part VI: Security &amp; Operational Resilience">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-novel-security-threats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Novel Security Threats
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 Novel Security Threats">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#threat-1-semantic-manipulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat 1: Semantic Manipulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threat-2-confidence-threshold-gaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat 2: Confidence Threshold Gaming
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threat-3-privacy-inference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat 3: Privacy Inference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#threat-4-query-dos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat 4: Query DoS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-failure-modes-degradation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Failure Modes &amp; Degradation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.2 Failure Modes &amp; Degradation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#triple-store-unavailability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triple Store Unavailability
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ambiguous-identity-clustering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ambiguous Identity Clustering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic-translation-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Semantic Translation Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#contradictory-evidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contradictory Evidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cascade-failures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cascade Failures
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-vii-implementation-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part VII: Implementation Strategy
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part VII: Implementation Strategy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-phased-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 Phased Delivery
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.1 Phased Delivery">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-0-proof-of-concept-4-6-months" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 0: Proof of Concept (4-6 months)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-1-mvp-pilot-12-18-months" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 1: MVP Pilot (12-18 months)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-2-production-scale-18-24-months" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase 2: Production Scale (18-24 months)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-risk-mitigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 Risk Mitigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-viii-key-technical-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part VIII: Key Technical Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part VIII: Key Technical Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-why-rdf-over-relational" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 Why RDF Over Relational?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-why-probabilistic-identity-over-master-record" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Why Probabilistic Identity Over Master Record?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-why-semantic-translation-over-standardisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 Why Semantic Translation Over Standardisation?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-what-estonia-proved-and-didnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 What Estonia Proved (and Didn't)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-architecture-solves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Architecture Solves
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-realistic-assessment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Realistic Assessment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Alternative
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A: Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-b-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix B: References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="evidence-based-identity-a-semantic-coordination-architecture">Evidence-Based Identity: A Semantic Coordination Architecture</h1>
+<p><strong>Applying Domain-Driven Design to Identity Coordination</strong></p>
+<p><em>Part 2 of the Architecting Modern Government Services Series</em></p>
+<p><em>Version 1.2 | March 2026</em></p>
+<hr />
+<h2 id="version-history">Version History</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>Feb 2026</td>
+<td>Initial release</td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>Feb 2026</td>
+<td>Added Fellegi-Sunter primer, confidence calibration section, Mermaid diagrams</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Mar 2026</td>
+<td>Added §1.4 "The Institutional Reality" — why metadata stripping persists despite known costs; the perverse equilibrium of bad data vs no data</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<p>UK government efforts to align identity and attributes across departments have repeatedly failed, despite major investments. The core challenge is coordination: enabling different systems and organisations to work together so that evidence about a person or circumstance can be reused, trusted, and interpreted correctly wherever it is needed.</p>
+<p>When coordination fails, the result is costly duplication, increased fraud and error, and a frustrating experience for citizens who must repeatedly provide the same information. Many initiatives have focused on standardising data formats and identifiers, but these efforts have not solved the underlying problem.</p>
+<p><strong>True coordination requires the ability to translate meaning between different organisational contexts, track the provenance and confidence of evidence, and manage uncertainty—tasks that demand semantic translation and probabilistic reasoning, not just technical integration.</strong></p>
+<h3 id="core-technical-argument">Core Technical Argument</h3>
+<p>Evidence-based coordination using RDF triples, semantic translation, and probabilistic identity clustering solves coordination problems that relational databases cannot address. Estonia demonstrates viability at national scale over 20+ years.</p>
+<h3 id="the-ddd-foundation">The DDD Foundation</h3>
+<p>This paper applies Domain-Driven Design principles from Paper 1 to the identity coordination problem:</p>
+<table>
+<thead>
+<tr>
+<th>DDD Concept</th>
+<th>Identity Application</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bounded Contexts</td>
+<td>Identity, Evidence, Trust, Resolution, Eligibility</td>
+</tr>
+<tr>
+<td>Shared Kernel</td>
+<td>Customer360 (verified attributes)</td>
+</tr>
+<tr>
+<td>Semantic Translation</td>
+<td>Bilateral vocabulary mappings with confidence penalties</td>
+</tr>
+<tr>
+<td>Aggregates</td>
+<td>Identity Cluster, Evidence Item, Resolution Decision</td>
+</tr>
+<tr>
+<td>Anti-Corruption Layer</td>
+<td>Policy-specific interpretation of shared attributes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="implementation-reality">Implementation Reality</h3>
+<p>The solution assembles mature technologies (RDF triple stores, microservices, event streams, verifiable credentials) into an architecture that models coordination reality accurately.</p>
+<p><strong>Why previous approaches failed:</strong> Standardisation attempts asked departments to abandon policy-driven semantic differences that their governing legislation requires. They treated identity as a shared fact to be standardised rather than a conclusion drawn from evidence requiring coordination.</p>
+<p><strong>The solution in one sentence:</strong> Evidence-based coordination preserves organisational autonomy by treating every piece of information as a structured assertion with provenance and confidence, enabling semantic translation between contexts rather than forcing shared schemas.</p>
+<hr />
+<blockquote>
+<p><strong>How to Read This Paper</strong></p>
+<p><strong>Strategic readers (CTO, Programme Director, Head of Architecture):</strong> Parts I and IV provide the complete argument. Part I diagnoses why existing approaches fail; Part IV maps the solution onto the domain model you will need to govern. Forty minutes here gives you enough to commission a proof of concept or challenge a vendor proposal confidently. Section 1.5 provides a single-table summary of root causes and solutions before you reach the technical detail.</p>
+<p><strong>Technical architects:</strong> Read all parts in sequence. Part II covers the core data model and probabilistic reasoning; Part III addresses social evidence edge cases; Parts V–VI cover coordination patterns and security at scale.</p>
+<p><strong>Engineers new to semantic web notation:</strong> Section 2.1 includes a Turtle notation primer. Section 2.3 contains a Fellegi-Sunter primer. Read these before the notation appears in later examples — they demystify both in under five minutes.</p>
+</blockquote>
+<hr />
+<h2 id="prerequisites">Prerequisites</h2>
+<p>This paper assumes familiarity with Domain-Driven Design concepts including bounded contexts, aggregates, and context relationships. For a complete treatment, see <strong>Paper 1: Domain-Driven Design &amp; Clean Architecture for Enterprise Systems</strong>.</p>
+<p>Key terms are summarised inline where they first appear.</p>
+<hr />
+<h2 id="part-i-the-systematic-failure-pattern">Part I: The Systematic Failure Pattern</h2>
+<h3 id="11-why-shared-schema-approaches-fail">1.1 Why Shared Schema Approaches Fail</h3>
+<p><strong>The Repeated Mistake:</strong></p>
+<p>Every major UK government identity initiative has attempted to create shared data standards that all departments will adopt. Universal Credit integration, NHS-to-DWP data sharing, cross-government identity verification—all have tried to force departments into common schemas.</p>
+<p><strong>Why It Fails:</strong></p>
+<p>The failure stems from a fundamental misunderstanding of organisational reality. Semantic diversity isn't a bug to be fixed—it's a feature reflecting legitimate policy differences.</p>
+<p>When HMRC defines "income" for tax purposes, they include bonuses and benefits-in-kind calculated annually. When Universal Credit defines "income" for benefit assessment, they exclude certain bonuses and calculate monthly net amounts. These aren't arbitrary technical choices; they're policy distinctions written into law.</p>
+<p>Departments resist standardisation precisely because it breaks their ability to implement their policy mandates. There's no forcing function compelling them to abandon interpretations that their governing legislation requires. Central governance teams quickly discover they cannot adjudicate thousands of semantic conflicts when each conflict represents a genuine policy question requiring ministerial authority.</p>
+<p>What emerges from these standardisation efforts isn't the intended unified system but rather sophisticated facades. "Common services" evolve into modernised silos with REST APIs delivering the same fragmented data that caused the original problems.</p>
+<p><strong>From a DDD perspective:</strong> This is the "god-model" antipattern. Forcing Benefits, Pensions, HMRC, and NHS into one shared model destroys the linguistic precision that each bounded context requires. Different ubiquitous languages exist for good reasons—they reflect different business authorities, different change drivers, and different invariants (see Paper 1, Section 1.3).</p>
+<h3 id="12-the-three-fatal-assumptions">1.2 The Three Fatal Assumptions</h3>
+<p>Standardisation failures stem from three conceptual errors so fundamental they remain invisible to practitioners:</p>
+<p><strong>Assumption 1: Identity is something you can "verify"</strong></p>
+<p>The language pervades every programme: "identity verification," "verified credentials," "proof of identity." But HMRC doesn't verify an abstract identity—they verify that specific evidence (passport, utility bill, P60) meets specific criteria for specific purposes.</p>
+<p>What we call "identity verification" is actually <strong>evidence assessment for adequacy against decision criteria</strong>. Systems produce binary "verified" tokens and pass them around, but receiving departments have no idea what evidence supports the token or whether that evidence meets their decision requirements.</p>
+<p><strong>Assumption 2: Attributes are properties of identity</strong></p>
+<p>We say "the identity has an address attribute" or "employment status attribute." But addresses and employment aren't properties of identity—they're <strong>conclusions drawn from evidence</strong>.</p>
+<p>When three pieces of evidence say you live at Flat 3 (council tax, bank statement, GP registration) but a fourth shows Flat 2 (recent DBS check), there's no single "correct" address attribute. There are four pieces of evidence telling a coherent story about a recent move. Systems built around identity attributes cannot represent this story—they can only show one address at a time, forcing arbitrary choices or generating errors.</p>
+<p><strong>Assumption 3: Integration means making systems talk to each other</strong></p>
+<p>When coordination fails, the obvious solution appears to be: build APIs, define data exchange formats, implement message queues, establish service contracts. Billions later, systems can technically communicate and exchange messages successfully, yet coordination still doesn't work.</p>
+<p>Why? Because <strong>integration isn't a technical problem—it's a semantic problem</strong>.</p>
+<p>When DWP asks HMRC "Is John Smith employed?" they're not asking for a database field. They're asking: "What evidence exists about this person's employment status, what's the provenance of that evidence, how recent is it, and does it meet DWP's specific criteria for this specific benefit decision?"</p>
+<p>No API specification captures that without shared semantic understanding of what "employment evidence" means, how confidence is calculated, and how to map from HMRC's evidence schema to DWP's decision requirements.</p>
+<p><strong>From a DDD perspective:</strong> These assumptions conflate multiple bounded contexts into one. Identity (who is this person?), Evidence (what do we know?), Trust (how reliable is the source?), and Eligibility (do they qualify?) are separate contexts with different invariants. Treating them as one creates the semantic confusion that causes coordination failure.</p>
+<h3 id="13-identity-without-universal-identifier">1.3 Identity Without Universal Identifier</h3>
+<p><strong>The Circular Dependency:</strong></p>
+<p>The UK lacks a universal citizen identifier. Evidence coordination demands answering "is this the same person?" across services—a question relational databases answer through foreign keys requiring deterministic identity records.</p>
+<p>The traditional solution creates a master identity record with a unique identifier linking all evidence. Reality reveals the circular dependency: <strong>you cannot create the identity record without coordinating evidence, yet you cannot correlate evidence without the identity record.</strong></p>
+<p>This architectural trap has paralysed coordination attempts for decades.</p>
+<p><strong>Current State:</strong></p>
+<ul>
+<li>Citizens upload the same documents 6+ times because departments cannot share evidence effectively</li>
+<li>Each department maintains separate identity verification systems with incompatible data models</li>
+<li>No cross-department evidence reuse exists because vocabulary differences and technical silos prevent interoperability</li>
+<li>Manual correlation becomes necessary when coordination proves unavoidable, operating at massive cost and introducing weeks of latency</li>
+</ul>
+<p><strong>From a DDD perspective:</strong> The foreign key problem is a symptom of treating Identity as a single aggregate when it's actually an emergent property of correlated evidence. The solution is probabilistic identity clustering (see Section 2.3)—modelling the uncertainty explicitly rather than forcing deterministic decisions.</p>
+<h3 id="14-evidence-processing-without-context">1.4 Evidence Processing Without Context</h3>
+<p><strong>Information Loss in Traditional Systems:</strong></p>
+<p>Consider what happens when rich evidence arrives at a government system. HMRC Real Time Information sends a cryptographically signed message stating:</p>
+<blockquote>
+<p>"Sarah Miller employed by ABC Ltd earning £30,000 annually"</p>
+</blockquote>
+<p>This arrives with full verification metadata: transmission date, cryptographic signatures, employer submission confirmation.</p>
+<p>When traditional relational databases store this information, they typically extract only the bare facts:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>| person_id | employer | income  | as_of_date |
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>|-----------|----------|---------|------------|
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>| 12345     | ABC Ltd  | 30000   | 2025-03-27 |
+</code></pre></div>
+<p><strong>What's Lost:</strong></p>
+<p>The database has stripped away everything that makes evidence usable:</p>
+<table>
+<thead>
+<tr>
+<th>Lost Context</th>
+<th>Why It Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WHO made the assertion</td>
+<td>HMRC statutory authority vs citizen self-report</td>
+</tr>
+<tr>
+<td>HOW it was verified</td>
+<td>Cryptographic proof vs manual review</td>
+</tr>
+<tr>
+<td>WHEN the assertion was made</td>
+<td>Currency assessment for decisions</td>
+</tr>
+<tr>
+<td>What CONFIDENCE it deserves</td>
+<td>0.94 vs 0.40</td>
+</tr>
+<tr>
+<td>Semantic context</td>
+<td>Annual pre-tax vs monthly post-tax</td>
+</tr>
+</tbody>
+</table>
+<p>Every downstream system must perform fresh verification because provenance is destroyed.</p>
+<p><strong>From a DDD perspective:</strong> This is a modelling failure. Evidence isn't a fact to be stored—it's an assertion with context. The aggregate boundary is wrong: we need an <code>Evidence</code> aggregate that preserves the complete assertion, not just extracted data fields.</p>
+<h4 id="the-institutional-reality">The Institutional Reality</h4>
+<p>This is not ignorance. Many government departments know exactly what they are losing when metadata is stripped. The problem is structural:</p>
+<ol>
+<li>
+<p><strong>Legacy systems were never built to hold provenance.</strong> A database schema designed in 1998 has columns for <code>income</code> and <code>employer</code>. It does not have columns for <code>assertion_source</code>, <code>verification_method</code>, <code>cryptographic_signature</code>, or <code>confidence_score</code>. Adding them is not a schema migration — it is a fundamental redesign of the data model, the APIs that consume it, and every downstream system that assumes the old shape.</p>
+</li>
+<li>
+<p><strong>Updating those systems costs millions.</strong> For a large department, modernising one core system can run into eight or nine figures. Multiply that across dozens of legacy estates, each with decades of accumulated integrations, and the total cost is politically undeliverable. Leadership knows the data quality problem exists. They do not have the budget to fix it.</p>
+</li>
+<li>
+<p><strong>Receiving bad data is often better than receiving no data.</strong> This is the uncomfortable trade-off. If DWP stopped accepting data feeds that lack provenance, it would lose visibility into employment, pensions, tax status, and dozens of other signals used to detect fraud and verify eligibility. The resulting increase in fraud and error would likely exceed the damage caused by processing unverified data. Departments continue receiving dubious data because the alternative is worse.</p>
+</li>
+<li>
+<p><strong>Metadata is often stripped at receipt, not transmission.</strong> Even when the sending department provides rich context, the receiving system may discard it because there is nowhere to put it. The problem compounds: after a few hops through intermediary systems, the original provenance is irrecoverable.</p>
+</li>
+</ol>
+<p>This creates a perverse equilibrium: everyone knows the data is unreliable, but no single actor can fix it unilaterally, and stopping the flow would cause more harm than continuing. The architecture described in this paper is designed to break that equilibrium — by making provenance preservation the <em>default</em> rather than an optional add-on, and by allowing incremental adoption without requiring every system to modernise simultaneously.</p>
+<h3 id="15-summary-three-root-causes-and-their-solutions">1.5 Summary: Three Root Causes and Their Solutions</h3>
+<table>
+<thead>
+<tr>
+<th>Root Cause</th>
+<th>Symptom</th>
+<th>What This Architecture Replaces It With</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Treating identity as a shared fact</td>
+<td>Standardisation failures; departments resist adoption; "common services" become silos</td>
+<td>Evidence-based coordination: each organisation keeps its own model; assertions are translated bilaterally via negotiated mappings</td>
+</tr>
+<tr>
+<td>Treating attributes as properties of identity</td>
+<td>Binary answers to probabilistic questions; forced choices about conflicting evidence; 6+ document uploads</td>
+<td>Probabilistic identity clusters: confidence scores propagate through every decision; uncertainty is represented, not hidden</td>
+</tr>
+<tr>
+<td>Treating integration as a technical problem</td>
+<td>Systems that "talk to each other" but don't coordinate meaning; successful API calls, failed coordination</td>
+<td>Semantic translation: the vocabulary mapping becomes an explicit, versionable, testable artefact governed bilaterally</td>
+</tr>
+</tbody>
+</table>
+<p>These three substitutions form the complete architecture described in what follows.</p>
+<blockquote>
+<p><strong>This is the strategic cut-off.</strong> If your goal is programme decision-making rather than implementation, read Part IV next (the domain model) then stop. Everything from Part II onward is implementation depth for architects and engineers.</p>
+</blockquote>
+<hr />
+<h2 id="part-ii-the-technical-breakthrough">Part II: The Technical Breakthrough</h2>
+<blockquote>
+<p><strong>Domain context:</strong> The mechanisms in this part implement two of the bounded contexts from Part IV—<em>Evidence</em> (stores assertions with provenance) and <em>Identity</em> (resolves probabilistic clusters). The technical choices here—RDF triples, confidence scores, Fellegi-Sunter matching—are <em>consequences</em> of the domain model, not arbitrary technology decisions. Part IV provides the "why"; this part provides the "how." If you prefer to understand the conceptual model before the implementation, read Part IV first then return here.</p>
+</blockquote>
+<h3 id="the-core-insight">The Core Insight</h3>
+<p>These failures share a common root—treating evidence as facts to extract rather than assertions to preserve. Relational databases optimise for fact storage but destroy the context that makes evidence usable across organisational boundaries.</p>
+<p><strong>The solution requires a fundamentally different data model that treats provenance, confidence, and semantic meaning as first-class concerns.</strong></p>
+<h3 id="21-model-assertions-not-facts">2.1 Model Assertions, Not Facts</h3>
+<p><strong>Philosophical Shift:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Traditional</th>
+<th>Evidence-Based</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Evidence records <strong>facts</strong> about people</td>
+<td>Evidence records <strong>assertions</strong>—claims organisations believe true</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The X-Y-Z Model:</strong></p>
+<p>Every piece of information modelled as: <strong>X (organisation) asserts Y (claim) about Z (subject)</strong></p>
+<blockquote>
+<p><strong>A note on Turtle notation:</strong> The examples below use Turtle, a compact syntax for writing RDF (Resource Description Framework) graphs. It reads like structured sentences. A few things to know before you encounter it:
+- Lines starting with <code>:name</code> define a resource (the subject)
+- <code>a :ClassName</code> means "is a"—it declares the type
+- <code>:</code>-prefixed words are named concepts from a defined vocabulary
+- <code>;</code> continues describing the same subject on the next line
+- The block describes an assertion much like a sentence: <em>who said it</em>, <em>what they claimed</em>, <em>about whom</em>, <em>with what confidence</em></p>
+<p>You do not need to know RDF to follow these examples. Read them as structured sentences about facts with metadata attached.</p>
+</blockquote>
+<p>The semantic graph model stores employment information completely differently from relational tables:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">:</span><span class="nt">emp_001</span> <span class="kt">a</span> <span class="p">:</span><span class="nt">EmploymentEvidence</span> <span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="p">:</span><span class="nt">assertedBy</span> <span class="p">:</span><span class="nt">HMRC_RTI</span> <span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">:</span><span class="nt">aboutSubject</span> <span class="p">:</span><span class="nt">NINO_AB123456C</span> <span class="p">;</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="p">:</span><span class="nt">employer</span> <span class="s">&quot;ABC Ltd&quot;</span> <span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="p">:</span><span class="nt">annualIncome</span> <span class="mi">30000</span> <span class="p">;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    <span class="p">:</span><span class="nt">verificationMethod</span> <span class="p">:</span><span class="nt">CryptographicSignature</span> <span class="p">;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="p">:</span><span class="nt">confidence</span> <span class="mf">0.94</span> <span class="p">;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="p">:</span><span class="nt">assertionTimestamp</span> <span class="s">&quot;2025-03-27T14:23:00Z&quot;</span><span class="p">^^</span><span class="nn">xsd</span><span class="p">:</span><span class="nt">dateTime</span> <span class="p">.</span>
+</code></pre></div>
+<p><strong>What This Preserves:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>How It's Preserved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source authority</td>
+<td><code>:assertedBy :HMRC_RTI</code> distinguishes statutory authority from self-report</td>
+</tr>
+<tr>
+<td>Verification strength</td>
+<td><code>:verificationMethod :CryptographicSignature</code> vs <code>:ManualReview</code></td>
+</tr>
+<tr>
+<td>Temporal validity</td>
+<td><code>:assertionTimestamp</code> enables currency assessment and time-decay</td>
+</tr>
+<tr>
+<td>Confidence quantification</td>
+<td><code>:confidence 0.94</code> enables risk-based processing</td>
+</tr>
+<tr>
+<td>Semantic interpretation</td>
+<td>Explicit <code>:annualIncome</code> vs ambiguous "income" field</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-three-layer-confidence-model">2.2 Three-Layer Confidence Model</h3>
+<p>Confidence in evidence is not a single number — it is the product of three independent assessments, each answering a different question. The first asks how reliable the source organisation is and how rigorous the verification was. The second asks how precisely the evidence identifies its subject — a National Insurance Number uniquely identifies a person in a way that "C Hughes" on a utility bill does not. The third asks how well this evidence matches the existing knowledge in this identity cluster.</p>
+<p>Multiplying these three scores is deliberate: uncertainty compounds. A system that papers over compounding uncertainty produces false confidence and, eventually, incorrect decisions. The illustrations below use DWP evidence examples.</p>
+<p><strong>Layer 1: Evidence Quality = Source × Verification × Transmission</strong></p>
+<table>
+<thead>
+<tr>
+<th>Evidence Type</th>
+<th>Source</th>
+<th>Verification</th>
+<th>Transmission</th>
+<th>Overall</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HMRC Real Time Information</td>
+<td>0.94 (statutory authority)</td>
+<td>0.95 (crypto signatures)</td>
+<td>0.99 (mutual TLS)</td>
+<td><strong>0.88</strong></td>
+</tr>
+<tr>
+<td>Utility bill</td>
+<td>0.90 (commercial reputation)</td>
+<td>0.95 (document features)</td>
+<td>0.99 (secure upload)</td>
+<td><strong>0.85</strong></td>
+</tr>
+<tr>
+<td>Citizen self-report (plain HTTP)</td>
+<td>0.40 (self-interested)</td>
+<td>0.55 (no verification)</td>
+<td>0.60 (insecure)</td>
+<td><strong>0.13</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Layer 2: Evidence-Identifier Binding</strong></p>
+<p>This layer assesses how tightly the evidence identifies its subject—entirely separate from evidence quality.</p>
+<table>
+<thead>
+<tr>
+<th>Evidence</th>
+<th>Binding Strength</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HMRC with NINO</td>
+<td>0.98</td>
+<td>Unique national identifier</td>
+</tr>
+<tr>
+<td>Driving licence</td>
+<td>0.96</td>
+<td>Photo + DOB + name + address</td>
+</tr>
+<tr>
+<td>Utility bill ("C Hughes")</td>
+<td>0.45</td>
+<td>Ambiguous—Chris, Christine, Charles?</td>
+</tr>
+<tr>
+<td>Anonymous tip</td>
+<td>0.10</td>
+<td>No identifier at all</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Layer 3: Cluster Matching (Our System's Work)</strong></p>
+<p>The third layer represents the system's inference work—using Fellegi-Sunter probabilistic record linkage to match evidence against existing identity clusters. This confidence ranges from 0.10 to 0.98 depending on:</p>
+<ul>
+<li>Name similarity (exact, abbreviation, typo)</li>
+<li>Date of birth agreement</li>
+<li>Address correlation (accounting for moves)</li>
+<li>National Insurance number matches</li>
+<li>Temporal consistency</li>
+</ul>
+<p><strong>Overall Confidence = Layer 1 × Layer 2 × Layer 3</strong></p>
+<p>Example: 0.88 (HMRC quality) × 0.98 (NINO binding) × 0.91 (cluster match) = <strong>0.78 overall</strong></p>
+<p><strong>Critical Distinction:</strong> Layer 2 (identifier binding) is a property of evidence. Layer 3 (cluster matching) is our system's inference work. These must remain separate and multiplicative.</p>
+<h4 id="confidence-calibration-and-threshold-tuning">Confidence Calibration and Threshold Tuning</h4>
+<p><strong>The Calibration Problem:</strong></p>
+<p>Multiplying three probabilities produces low overall scores—a feature, not a bug. A 0.78 confidence score correctly reflects that uncertainty compounds. However, thresholds must be calibrated to operational reality.</p>
+<p><strong>Calibration Methodology:</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Calibration["Confidence Threshold Calibration"]
+        Historical["1. Analyse 10,000+ historical decisions"] --&gt; Compare["2. Compare caseworker outcomes"]
+        Compare --&gt; Confusion["3. Build confusion matrix"]
+        Confusion --&gt; ROC["4. Plot ROC curve"]
+        ROC --&gt; Threshold["5. Select threshold for target FPR/FNR"]
+        Threshold --&gt; Validate["6. Validate on holdout set"]
+        Validate --&gt; Monitor["7. Continuous monitoring"]
+    end
+
+    style Calibration fill:#e3f2fd</code></pre>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Threshold</th>
+<th>False Positive Rate</th>
+<th>False Negative Rate</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Auto-approve benefit</td>
+<td>0.75</td>
+<td>&lt;2%</td>
+<td>~15%</td>
+<td>Minimise fraud, accept delays</td>
+</tr>
+<tr>
+<td>Flag for review</td>
+<td>0.50</td>
+<td>~10%</td>
+<td>&lt;5%</td>
+<td>Catch edge cases</td>
+</tr>
+<tr>
+<td>Identity merge</td>
+<td>0.85</td>
+<td>&lt;0.5%</td>
+<td>~20%</td>
+<td>Avoid wrongful merges</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dynamic Threshold Adjustment:</strong></p>
+<p>Thresholds aren’t static. The system adjusts based on:</p>
+<ol>
+<li><strong>Fraud pressure:</strong> If fraud detection spikes → raise auto-approve threshold temporarily</li>
+<li><strong>Appeal rates:</strong> If appeals on auto-decisions exceed 8% → raise threshold</li>
+<li><strong>Evidence source changes:</strong> New evidence types start at conservative thresholds until calibrated</li>
+</ol>
+<p><strong>Monthly Calibration Review:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Calibration Report - January 2026
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>────────────────────────────────
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>- Auto-processed: 847,291 (89.3%)
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>- Manual review: 98,442 (10.4%)
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>- Appeals filed: 2,847 (0.3%)
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>- Appeals upheld: 891 (31% of appeals)
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>- Threshold drift: +0.02 recommended
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>- Action: Raise Housing Benefit threshold from 0.75 → 0.77
+</code></pre></div>
+<h3 id="23-probabilistic-identity-clustering">2.3 Probabilistic Identity Clustering</h3>
+<h4 id="understanding-fellegi-sunter-a-brief-primer">Understanding Fellegi-Sunter: A Brief Primer</h4>
+<p>The Fellegi-Sunter model (1969) is the foundational algorithm for probabilistic record linkage—determining whether two records refer to the same real-world entity when you can’t be certain.</p>
+<p><strong>The Core Idea:</strong></p>
+<p>For each pair of records, compare individual fields (name, DOB, address, NINO) and calculate:</p>
+<ul>
+<li><strong>m-probability:</strong> Given records <em>are</em> a match, what’s the probability this field agrees?</li>
+<li><strong>u-probability:</strong> Given records <em>aren’t</em> a match, what’s the probability this field agrees by chance?</li>
+</ul>
+<p>The ratio m/u gives a <strong>weight</strong> for each field comparison:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>m-probability</th>
+<th>u-probability</th>
+<th>Weight (log₂ m/u)</th>
+<th>Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NINO exact match</td>
+<td>0.98</td>
+<td>0.0001</td>
+<td>+13.3</td>
+<td>Very strong evidence of match</td>
+</tr>
+<tr>
+<td>DOB exact match</td>
+<td>0.95</td>
+<td>0.003</td>
+<td>+8.3</td>
+<td>Strong evidence</td>
+</tr>
+<tr>
+<td>Name exact match</td>
+<td>0.90</td>
+<td>0.02</td>
+<td>+5.5</td>
+<td>Moderate evidence</td>
+</tr>
+<tr>
+<td>Name similar</td>
+<td>0.85</td>
+<td>0.15</td>
+<td>+2.5</td>
+<td>Weak evidence</td>
+</tr>
+<tr>
+<td>Address mismatch</td>
+<td>0.15</td>
+<td>0.70</td>
+<td>-2.2</td>
+<td>Evidence against (people move)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decision Rule:</strong></p>
+<p>Sum the weights across all field comparisons. If total &gt; upper threshold → <strong>match</strong>. If total &lt; lower threshold → <strong>non-match</strong>. Between thresholds → <strong>manual review</strong>.</p>
+<pre class="mermaid"><code>flowchart LR
+    A["Record Pair"] --&gt; B["Compare Fields"]
+    B --&gt; C["Sum Weights"]
+    C --&gt; D{"Total Score"}
+    D --&gt;|"&gt; 8.0"| E["Match"]
+    D --&gt;|"&lt; 2.0"| F["Non-Match"]
+    D --&gt;|"2.0 - 8.0"| G["Manual Review"]
+
+    style E fill:#c8e6c9
+    style F fill:#ffcdd2
+    style G fill:#fff9c4</code></pre>
+<p><strong>Why This Matters for Identity:</strong></p>
+<p>Fellegi-Sunter gives us a principled, calibratable way to answer "is this the same person?" without requiring deterministic identifiers. The thresholds can be adjusted based on the cost of false positives vs false negatives for different use cases.</p>
+<p><strong>No Master Identity Record:</strong></p>
+<p>Traditional identity systems create a master citizens table:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">citizens</span><span class="w"> </span><span class="p">(</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="n">id</span><span class="w"> </span><span class="n">UUID</span><span class="w"> </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="p">,</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="n">nino</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">9</span><span class="p">),</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="n">name</span><span class="w"> </span><span class="nb">VARCHAR</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">    </span><span class="n">dob</span><span class="w"> </span><span class="nb">DATE</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="p">);</span>
+</code></pre></div>
+<p>This deterministic approach assumes we can always confidently assign evidence to the correct person.</p>
+<p><strong>The evidence-based approach instead builds probabilistic identity clusters:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="p">:</span><span class="nt">cluster_AB123456C</span> <span class="kt">a</span> <span class="p">:</span><span class="nt">IdentityCluster</span> <span class="p">;</span>
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="p">:</span><span class="nt">primaryIdentifier</span> <span class="s">&quot;AB123456C&quot;</span> <span class="p">;</span>
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="p">:</span><span class="nt">hasEvidence</span> <span class="p">:</span><span class="nt">emp_001</span><span class="p">,</span> <span class="p">:</span><span class="nt">housing_047</span><span class="p">,</span> <span class="p">:</span><span class="nt">council_tax_112</span> <span class="p">;</span>
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    <span class="p">:</span><span class="nt">clusterConfidence</span> <span class="mf">0.89</span> <span class="p">;</span>
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="p">:</span><span class="nt">lastUpdated</span> <span class="s">&quot;2025-03-27T15:00:00Z&quot;</span><span class="p">^^</span><span class="nn">xsd</span><span class="p">:</span><span class="nt">dateTime</span> <span class="p">.</span>
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">:</span><span class="nt">match_emp_001_AB123456C</span> <span class="kt">a</span> <span class="p">:</span><span class="nt">ClusterMatch</span> <span class="p">;</span>
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="p">:</span><span class="nt">evidence</span> <span class="p">:</span><span class="nt">emp_001</span> <span class="p">;</span>
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    <span class="p">:</span><span class="nt">cluster</span> <span class="p">:</span><span class="nt">cluster_AB123456C</span> <span class="p">;</span>
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    <span class="p">:</span><span class="nt">matchConfidence</span> <span class="mf">0.91</span> <span class="p">;</span>
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    <span class="p">:</span><span class="nt">matchFactors</span> <span class="s">&quot;NINO exact, name exact, address consistent&quot;</span> <span class="p">.</span>
+</code></pre></div>
+<p><strong>Key Properties:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Clusters are inferences</td>
+<td>No external organisation asserts cluster membership—the system infers it</td>
+</tr>
+<tr>
+<td>Confidence evolves</td>
+<td>Early evidence provides tentative clustering; later evidence strengthens or refutes</td>
+</tr>
+<tr>
+<td>Multiple matches supported</td>
+<td>Ambiguity represented explicitly, not forced to premature decision</td>
+</tr>
+<tr>
+<td>External orgs never see cluster IDs</td>
+<td>They cite their own identifiers; clustering is internal</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Two-Track Processing:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Track</th>
+<th>Coverage</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fast Track</td>
+<td>~95%</td>
+<td>Evidence arrives pre-bound to authenticated registration points (LoA3+). Immediate processing, no probabilistic matching needed.</td>
+</tr>
+<tr>
+<td>Full Resolution</td>
+<td>~5%</td>
+<td>Evidence without binding context (anonymous tips, batch imports). Full Fellegi-Sunter matching; 0.75 threshold for automation; below that → caseworker.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="24-semantic-translation-without-standardisation">2.4 Semantic Translation Without Standardisation</h3>
+<p>The deepest challenge in cross-government coordination is semantic: the same word means different things in different departments because different legislation created different obligations. Any integration architecture that demands semantic agreement will fail when it meets the immovable object of legislative authority.</p>
+<p>The alternative is semantic translation: model the vocabulary differences explicitly, negotiate bilateral mappings between specific pairs of organisations, and propagate the translation uncertainty through confidence scores. No department changes its definitions; the coordination layer speaks everyone's language.</p>
+<p><strong>The Problem:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Organisation</th>
+<th>"Income" Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HMRC</td>
+<td>Annual gross employment income, including bonuses, excluding benefits-in-kind</td>
+</tr>
+<tr>
+<td>Universal Credit</td>
+<td>Monthly net assessment income, excluding bonuses, including benefits-in-kind</td>
+</tr>
+</tbody>
+</table>
+<p>The traditional approach attempts to force agreement on a single definition. This fails because it denies organisational autonomy and breaks legitimate policy distinctions.</p>
+<p><strong>The evidence-based approach creates bilateral semantic mappings:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="p">:</span><span class="nt">mapping_HMRC_to_UC</span> <span class="kt">a</span> <span class="p">:</span><span class="nt">SemanticMapping</span> <span class="p">;</span>
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>    <span class="p">:</span><span class="nt">sourceContext</span> <span class="p">:</span><span class="nt">HMRC_Income</span> <span class="p">;</span>
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="p">:</span><span class="nt">targetContext</span> <span class="p">:</span><span class="nt">UC_AssessmentIncome</span> <span class="p">;</span>
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="p">:</span><span class="nt">transformation</span> <span class="p">[</span>
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>        <span class="kt">a</span> <span class="p">:</span><span class="nt">IncomeTransformation</span> <span class="p">;</span>
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>        <span class="p">:</span><span class="nt">operation</span> <span class="s">&quot;subtract bonuses, divide by 12, multiply by 0.87&quot;</span> <span class="p">;</span>
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>        <span class="p">:</span><span class="nt">confidencePenalty</span> <span class="mf">0.03</span> <span class="p">;</span>
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>        <span class="p">:</span><span class="nt">validFrom</span> <span class="s">&quot;2025-01-01&quot;</span><span class="p">^^</span><span class="nn">xsd</span><span class="p">:</span><span class="nt">date</span> <span class="p">;</span>
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>        <span class="p">:</span><span class="nt">approvedBy</span> <span class="p">:</span><span class="nt">JointGovernanceBoard</span>
+<a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a>    <span class="p">]</span> <span class="p">.</span>
+</code></pre></div>
+<p><strong>Governance Model:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Negotiation</td>
+<td>Bilateral between source and destination organisations</td>
+</tr>
+<tr>
+<td>Version control</td>
+<td>Git with instant rollback</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Statistical testing against 1000+ historical cases</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Appeal rate triggers automatic review when spikes occur</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Mapping Counts by Pattern:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pattern</th>
+<th>Mapping Count</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pattern 1 (Internal)</td>
+<td>100-500</td>
+<td>Manageable—single organisation</td>
+</tr>
+<tr>
+<td>Pattern 2 (Cross-Gov)</td>
+<td>Thousands</td>
+<td>Challenging but necessary—bilateral model scales</td>
+</tr>
+<tr>
+<td>Pattern 3 (Credentials)</td>
+<td>Minimal</td>
+<td>Standardised W3C claims vocabulary</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="part-iii-social-evidence-community-vouching">Part III: Social Evidence — Community Vouching</h2>
+<p><em>Parts I and II have focused on institutional evidence—HMRC RTI data, cryptographic credentials, formal documents. This part addresses a different and important class: social evidence. The architecture would be incomplete without it. Government cannot exclude the 27% of lowest-income households who lack passports from the services they most need.</em></p>
+<h3 id="31-the-inclusion-problem">3.1 The Inclusion Problem</h3>
+<p>Traditional identity verification creates systematic exclusion:</p>
+<table>
+<thead>
+<tr>
+<th>Population</th>
+<th>Challenge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lowest-income households</td>
+<td>27% lack passports, 32% lack driving licences (2024 ONS)</td>
+</tr>
+<tr>
+<td>Asylum seekers</td>
+<td>Granted refugee status but can't obtain digital ID for employment</td>
+</tr>
+<tr>
+<td>Elderly without documents</td>
+<td>Stable identities but missing modern verification requirements</td>
+</tr>
+<tr>
+<td>Displaced workers</td>
+<td>Lacking stable residential histories</td>
+</tr>
+</tbody>
+</table>
+<p>The 2025 digital ID employment requirement makes this critical—people granted the legal right to work cannot exercise that right because verification systems fail.</p>
+<h3 id="32-vouching-as-structured-evidence">3.2 Vouching as Structured Evidence</h3>
+<p>UK passport applications already require professional countersignatures where teachers, doctors, or solicitors vouch "I have known this person for at least two years." This treats personal knowledge as sufficient evidence for establishing identity.</p>
+<p><strong>Evidence-based coordination formalises and extends this:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="p">:</span><span class="nt">vouch_001</span> <span class="kt">a</span> <span class="p">:</span><span class="nt">SocialEvidence</span> <span class="p">;</span>
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>    <span class="p">:</span><span class="nt">assertedBy</span> <span class="p">:</span><span class="nt">person_imam_mohammed</span> <span class="p">;</span>
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>    <span class="p">:</span><span class="nt">aboutSubject</span> <span class="p">:</span><span class="nt">person_amara_hassan</span> <span class="p">;</span>
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>    <span class="p">:</span><span class="nt">assertionType</span> <span class="p">:</span><span class="nt">IdentityVouch</span> <span class="p">;</span>
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>    <span class="p">:</span><span class="nt">relationshipContext</span> <span class="s">&quot;Community leader, known 3 years&quot;</span> <span class="p">;</span>
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>    <span class="p">:</span><span class="nt">confidence</span> <span class="mf">0.82</span> <span class="p">;</span>  <span class="c"># Layer 1: source 0.85, verification 0.78</span>
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>    <span class="p">:</span><span class="nt">verificationMethod</span> <span class="p">:</span><span class="nt">InPersonInterview</span> <span class="p">;</span>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>    <span class="p">:</span><span class="nt">legalBasis</span> <span class="p">:</span><span class="nt">ImmigrationAct2024_Section47</span> <span class="p">.</span>
+</code></pre></div>
+<p><strong>Multiple independent vouches create triangulation</strong> that can exceed single institutional assertions. When Amara receives vouches from mosque leader, refugee centre staff, and community families who all independently attest to her identity, combined confidence may surpass a single passport verification—especially when the passport itself proves difficult to verify through international channels during conflict.</p>
+<h3 id="33-fraud-prevention-five-layer-detection">3.3 Fraud Prevention: Five-Layer Detection</h3>
+<p>Organised fraud becomes detectable through graph analysis that honest vouching patterns cannot mimic:</p>
+<table>
+<thead>
+<tr>
+<th>Detection Layer</th>
+<th>What It Catches</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Geographic/temporal clustering</td>
+<td>60 vouches from same address in 48 hours</td>
+</tr>
+<tr>
+<td>Circular vouching</td>
+<td>A vouches for B, B for C, C for A</td>
+</tr>
+<tr>
+<td>Behavioural tracking</td>
+<td>Fraud networks form rapidly; real communities grow gradually</td>
+</tr>
+<tr>
+<td>Cross-reference validation</td>
+<td>Vouch claims employment that HMRC contradicts</td>
+</tr>
+<tr>
+<td>Asymmetry analysis</td>
+<td>Real communities have hierarchy; fraud rings are symmetric</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Real-world example:</strong> System detected a 15-person fraud ring. Graph analysis flagged:
+- Synchronised timing (all vouches within 3-day window)
+- Circular network structure
+- Low voucher confidence scores (all vouchers themselves recently verified)
+- No institutional cross-references
+- Symmetric relationships (no natural community hierarchy)</p>
+<p>The entire network was flagged before any identity reached auto-processing threshold.</p>
+<h3 id="34-trust-propagation">3.4 Trust Propagation</h3>
+<p>Vouching reliability builds through network effects:</p>
+<p>When the Imam has 15 years of high-confidence institutional evidence (employment, council tax, NHS records) plus a vouching history showing consistent accuracy, his vouches carry higher source reliability than vouches from newly-arrived community members.</p>
+<p>This creates virtuous cycles where well-verified community members become anchor points for expanding verification networks. The system tracks vouch accuracy over time—if vouches consistently prove accurate, future vouches receive higher weights.</p>
+<hr />
+<h2 id="part-iv-the-domain-model-ddd-applied-to-identity">Part IV: The Domain Model — DDD Applied to Identity</h2>
+<p><em>This section explicitly frames the architecture using DDD concepts from Paper 1.</em></p>
+<h3 id="41-the-identity-domain-landscape">4.1 The Identity Domain Landscape</h3>
+<p>Identity coordination is not one domain—it's a <strong>federation of bounded contexts</strong>, each with its own model, language, and rules.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Domain[\"Identity Coordination Domain\"]
+        subgraph Platform[\"Platform Services (Generic)\"]
+            IdBC[\"Identity\\nBC\"]
+            EvBC[\"Evidence\\nBC\"]
+            TrustBC[\"Trust\\nBC\"]
+            ResBC[\"Resolution\\nBC\"]
+        end
+
+        IdBC --&gt; C360
+        EvBC --&gt; C360
+        TrustBC --&gt; C360
+        ResBC --&gt; C360
+
+        C360[\"Customer360\\n(Shared Kernel)\\nRead Model of Verified Attrs\"]
+
+        C360 --&gt; UCBC
+        C360 --&gt; PensionBC
+        C360 --&gt; HousingBC
+
+        subgraph Business[\"Business Subdomains (Core)\"]
+            UCBC[\"UC Eligibility\\nBC (Benefits)\"]
+            PensionBC[\"Pension Eligibility\\nBC (Pensions)\"]
+            HousingBC[\"Housing Eligibility\\nBC (Housing)\"]
+        end
+    end
+
+    style Platform fill:#e3f2fd
+    style Business fill:#e8f5e9
+    style C360 fill:#fff9c4</code></pre>
+<h3 id="42-key-bounded-contexts">4.2 Key Bounded Contexts</h3>
+<h4 id="identity-bounded-context-platform-service-generic-subdomain">Identity Bounded Context (Platform Service — Generic Subdomain)</h4>
+<p>This context models citizen identity as it relates to government services.</p>
+<p><strong>Core Aggregates:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aggregate</th>
+<th>Description</th>
+<th>States</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity Profile</td>
+<td>Verified attributes with confidence scores</td>
+<td>ClaimedOnly → PartiallyVerified → FullyVerified → Ambiguous → Fraudulent</td>
+</tr>
+<tr>
+<td>Claimed Identity</td>
+<td>Unverified assertions with evidence links</td>
+<td>Created at first authentication</td>
+</tr>
+<tr>
+<td>Verification Session</td>
+<td>The resolution process</td>
+<td>Active → Resolved → Expired</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Microservices:</strong> <code>identity-resolution-service</code></p>
+<p><strong>Key Invariant:</strong> One verified identity per real-world person, with all evidence binding preserved in audit trails.</p>
+<p><strong>Resolution Operations:</strong> Create (new person), Merge (matches existing), Split (fraud detected), Enrich (additional evidence strengthens existing).</p>
+<h4 id="evidence-bounded-context-platform-service-generic-subdomain">Evidence Bounded Context (Platform Service — Generic Subdomain)</h4>
+<p>This context models evidence ingestion, classification, and storage.</p>
+<p><strong>Core Aggregates:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aggregate</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Evidence Item</td>
+<td>Type, source, collection metadata, raw content</td>
+</tr>
+<tr>
+<td>Extracted Attributes</td>
+<td>OCR/AI-processed data from evidence</td>
+</tr>
+<tr>
+<td>Authenticity Score</td>
+<td>Validation results and confidence</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Microservices:</strong> <code>evidence-ingestion-service</code>, <code>evidence-validation-service</code></p>
+<p><strong>Key Invariants:</strong>
+- Evidence is immutable once ingested (add metadata, never alter original)
+- Evidence is independent of identity—linked, not owned</p>
+<p><strong>Why this separation matters:</strong> Evidence arrives from multiple channels, needs OCR and AI processing, and operates at high volume. Keeping evidence independent means that when fraud is detected and an identity splits, the evidence remains intact and can be relinked to the correct identity.</p>
+<h4 id="trust-provenance-bounded-context-platform-service">Trust &amp; Provenance Bounded Context (Platform Service)</h4>
+<p>This context models issuer trust, credential validation, and verification methods.</p>
+<p><strong>Core Aggregates:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aggregate</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Issuer</td>
+<td>Trusted organisations (HMRC, banks, utilities)</td>
+</tr>
+<tr>
+<td>Trust Tier</td>
+<td>Issuer classification and reliability scores</td>
+</tr>
+<tr>
+<td>Verification Capability</td>
+<td>What an issuer can verify</td>
+</tr>
+<tr>
+<td>Cryptographic Key</td>
+<td>For digital credential validation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Microservices:</strong> <code>issuer-trust-service</code></p>
+<p><strong>Key Invariants:</strong>
+- Issuers must be validated before their evidence is trusted
+- Trust tiers are immutable for evidence already issued</p>
+<p><strong>Why this matters:</strong> This forms a security boundary with centralised trust policy reusable across all subdomains.</p>
+<h4 id="resolution-corroboration-bounded-context">Resolution &amp; Corroboration Bounded Context</h4>
+<p>This context models the complex reasoning that matches evidence to identities.</p>
+<p><strong>Core Aggregates:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aggregate</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Evidence Link</td>
+<td>Connecting evidence to identities with match confidence</td>
+</tr>
+<tr>
+<td>Resolution Decision</td>
+<td>Create/Merge/Split/Enrich with full audit trails</td>
+</tr>
+<tr>
+<td>Identity Graph</td>
+<td>Network of evidence, attributes, identities, relationships</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Microservices:</strong> <code>identity-resolution-service</code></p>
+<p><strong>Trust Computation:</strong> match_confidence × issuer_trust × authenticity × freshness × independence</p>
+<p><strong>Critical insight:</strong> Evidence is never "owned by" an identity—it's linked with confidence scores. This enables detection of fraud patterns when evidence suggests identities should be split, merged, or flagged.</p>
+<h4 id="customer360-shared-kernel">Customer360 (Shared Kernel)</h4>
+<p>A special bounded context providing read models of verified customer attributes—snapshots of identity, relationships, and evidence trails with confidence levels.</p>
+<p><strong>Core Aggregates:</strong> Customer Profile (read-only, populated from Identity, Evidence, and Resolution contexts)</p>
+<p><strong>Governance:</strong> Co-owned by all consuming subdomains; changes require cross-domain approval.</p>
+<p><strong>Critical Limitation:</strong> Customer360 provides verified relationships with confidence scores but does NOT define what those relationships mean for policy purposes. It answers:
+- ✓ "What verified relationships exist with what confidence?"
+- ✗ "What does this mean for eligibility?"</p>
+<p>The second question belongs in Eligibility contexts.</p>
+<p><strong>What Customer360 Contains:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identity Profile</td>
+<td>Verified name, DOB, NINO</td>
+</tr>
+<tr>
+<td>Place Relationships</td>
+<td>Person-to-location associations (owned, rented, care home, registered)</td>
+</tr>
+<tr>
+<td>Person Relationships</td>
+<td>Parent/child, spouse, household member</td>
+</tr>
+<tr>
+<td>Contact Preferences</td>
+<td>Communication channels</td>
+</tr>
+<tr>
+<td>Evidence History</td>
+<td>Complete provenance chain</td>
+</tr>
+</tbody>
+</table>
+<h4 id="eligibility-bounded-contexts-core-subdomains-one-per-benefit">Eligibility Bounded Contexts (Core Subdomains — One Per Benefit)</h4>
+<p>Each benefit has its own Eligibility bounded context modelling policy rules.</p>
+<p><strong>Core Aggregates:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Aggregate</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eligibility Request</td>
+<td>Application with claimed circumstances</td>
+</tr>
+<tr>
+<td>Policy Rule Set</td>
+<td>Versioned eligibility rules</td>
+</tr>
+<tr>
+<td>Decision Result</td>
+<td>Approved/denied with reasoning</td>
+</tr>
+<tr>
+<td>Decision Audit Trail</td>
+<td>Complete history</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Microservices:</strong> <code>universal-credit-eligibility-service</code>, <code>pension-credit-eligibility-service</code>, etc.</p>
+<p><strong>Key Invariant:</strong> Decisions can only be based on verified attributes meeting confidence thresholds.</p>
+<p><strong>Why separate contexts:</strong> Different benefits have different rules, different change cycles, and different policy ownership. Universal Credit eligibility rules change at a different pace than State Pension rules.</p>
+<blockquote>
+<p><strong>See also:</strong> Paper 6, Part Four presents the complete bounded context catalogue with team ownership assignments, aggregate-to-microservice mappings, and inter-service API contracts. The descriptions above establish the domain model foundations; Paper 6 covers the implementation specifics.</p>
+</blockquote>
+<h3 id="43-the-chicken-and-egg-problem-solved">4.3 The Chicken-and-Egg Problem Solved</h3>
+<p><strong>The Naive Approach (Why It Fails):</strong></p>
+<ol>
+<li>User claims to be "John Smith, born 1980-03-15"</li>
+<li>System tries to find existing identity matching those attributes</li>
+<li>User uploads evidence</li>
+<li>System tries to link evidence to found identity</li>
+</ol>
+<p><strong>Problem:</strong> What if there are three John Smiths born in March 1980? What if this is a new person? What if evidence contradicts claimed attributes?</p>
+<p><strong>The Correct Architecture: Claimed Identity as the Anchor</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    Auth["OneLogin Authentication"] --&gt; Claimed["Claimed Identity (UUID)"]
+    Claimed --&gt; Evidence["Evidence Gathering\n(multiple sources)"]
+    Evidence --&gt; Resolution["Resolution Engine"]
+
+    Resolution --&gt; Create["Create\n(new person)"]
+    Resolution --&gt; Merge["Merge\n(existing match)"]
+    Resolution --&gt; Split["Split/Ambiguous\n(fraud/unclear)"]
+
+    Create --&gt; Verified["Verified Identity"]
+    Merge --&gt; Verified
+    Split --&gt; Verified
+
+    Verified --&gt; C360["Customer360\n(attribute snapshot)"]
+    C360 --&gt; Eligibility["Eligibility Contexts\n(policy interpretation)"]
+
+    style Claimed fill:#fff9c4
+    style Resolution fill:#e3f2fd
+    style Verified fill:#c8e6c9
+    style C360 fill:#ffe0b2</code></pre>
+<p><strong>The Separation:</strong></p>
+<ol>
+<li>
+<p><strong>Claimed Identity</strong> is created when a user first authenticates—a digital anchor point for "this authentication session and all evidence gathered during it." Attributes are claimed but unverified.</p>
+</li>
+<li>
+<p><strong>Evidence is bound to the Claimed Identity</strong>, not a verified person. This avoids the circular dependency.</p>
+</li>
+<li>
+<p><strong>Resolution determines what this Claimed Identity represents:</strong> Merge (matches existing), Split (fraud), Create (new person), or Ambiguous (more evidence needed).</p>
+</li>
+<li>
+<p><strong>Verification establishes uniqueness</strong> within the identity domain with confidence scores.</p>
+</li>
+</ol>
+<p><strong>Evidence Preservation:</strong> When a Claimed Identity resolves, the evidence trail is preserved in full. If merged, all evidence joins the existing identity's history. If split, evidence is partitioned based on attribute correlation.</p>
+<h3 id="44-customer360-the-360-view-challenge">4.4 Customer360: The "360 View" Challenge</h3>
+<p>Different benefits define "customer" differently:</p>
+<table>
+<thead>
+<tr>
+<th>Benefit</th>
+<th>What Matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Universal Credit</td>
+<td>Household composition</td>
+</tr>
+<tr>
+<td>Pension Credit</td>
+<td>Retirement age</td>
+</tr>
+<tr>
+<td>Child Maintenance</td>
+<td>Parental relationships</td>
+</tr>
+</tbody>
+</table>
+<p>Even "address" is policy-dependent:
+- Is a care home your address during a brief stay?
+- If you work away 3 nights/week, which address counts?
+- Does "address" mean registered, main residence, or current stay?</p>
+<p><strong>The Solution: Verified Place Relationships, Not "Addresses"</strong></p>
+<p>Customer360 stores verified relationships to locations:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="p">:</span><span class="nt">person_sarah</span> <span class="kt">a</span> <span class="p">:</span><span class="nt">Person</span> <span class="p">;</span>
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>    <span class="p">:</span><span class="nt">hasPlaceRelationship</span> <span class="p">[</span>
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>        <span class="p">:</span><span class="nt">location</span> <span class="p">:</span><span class="nt">12_oak_road</span> <span class="p">;</span>
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>        <span class="p">:</span><span class="nt">relationshipType</span> <span class="p">:</span><span class="nt">RentedAccommodation</span> <span class="p">;</span>
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>        <span class="p">:</span><span class="nt">confidence</span> <span class="mf">0.91</span> <span class="p">;</span>
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>        <span class="p">:</span><span class="nt">verifiedDate</span> <span class="s">&quot;2025-03-15&quot;</span><span class="p">^^</span><span class="nn">xsd</span><span class="p">:</span><span class="nt">date</span>
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    <span class="p">]</span> <span class="p">;</span>
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    <span class="p">:</span><span class="nt">hasPlaceRelationship</span> <span class="p">[</span>
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>        <span class="p">:</span><span class="nt">location</span> <span class="p">:</span><span class="nt">care_home_sunrise</span> <span class="p">;</span>
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>        <span class="p">:</span><span class="nt">relationshipType</span> <span class="p">:</span><span class="nt">CareHomeResidence</span> <span class="p">;</span>
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>        <span class="p">:</span><span class="nt">confidence</span> <span class="mf">0.95</span> <span class="p">;</span>
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>        <span class="p">:</span><span class="nt">verifiedDate</span> <span class="s">&quot;2025-03-20&quot;</span><span class="p">^^</span><span class="nn">xsd</span><span class="p">:</span><span class="nt">date</span>
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>    <span class="p">]</span> <span class="p">.</span>
+</code></pre></div>
+<p><strong>Each Eligibility context interprets which places count:</strong>
+- Universal Credit sees "rented accommodation" and decides it's her main residence
+- Pension Credit sees "care home residence" and applies the 6-week rule</p>
+<p>Same verified relationships, different policy lenses.</p>
+<h3 id="45-context-relationships-in-the-identity-domain">4.5 Context Relationships in the Identity Domain</h3>
+<p><strong>Identity → Evidence:</strong> Anti-Corruption Layer. Evidence doesn't know Identity exists; Identity translates evidence into its model.</p>
+<p><strong>Eligibility → Customer360:</strong> Shared Kernel (read-only consumption). All eligibility contexts agree on Customer360 schema.</p>
+<p><strong>Business Subdomains → Platform Services:</strong> Open Host Service with API contracts. Business contexts call platform APIs but don't see implementation.</p>
+<hr />
+<h2 id="part-v-the-three-coordination-patterns">Part V: The Three Coordination Patterns</h2>
+<h3 id="51-pattern-1-internal-organisational-coordination">5.1 Pattern 1: Internal Organisational Coordination</h3>
+<p><strong>Scope:</strong> Within single organisation (e.g., DCS coordinating Universal Credit, Housing Benefit, Pension Credit)</p>
+<p>Pattern 1 is the highest-confidence deployment. A single organisation controls all services, all service-to-service calls are internal, and there are no cross-organisational trust boundaries to cross. For DWP, this covers coordination between Universal Credit, Housing Benefit, and Pension Credit — all under Secretary of State authority. The semantic translation challenge remains (each benefit uses slightly different income definitions) but governance is far simpler, and the distributed systems complexity is lower than cross-government patterns. This is the right place to pilot the architecture before extending to Pattern 2.</p>
+<p><strong>Technical Architecture:</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Org["Single Organisation"]
+        subgraph Store["Apache Jena Fuseki"]
+            RDF["RDF Triple Store\n500M - 2B triples"]
+        end
+
+        subgraph Services["10 Core Microservices"]
+            EI["Evidence\nIngestion"]
+            IR["Identity\nResolution"]
+            ST["Semantic\nTranslation"]
+            FD["Fraud\nDetection"]
+            AC["Award\nCalculation"]
+        end
+
+        subgraph Services2[" "]
+            IQ["Investigation\nQueue"]
+            NT["Notification"]
+            AU["Audit"]
+            EG["External\nGateway"]
+            DR["Data\nRetention"]
+        end
+
+        subgraph Kafka["Apache Kafka"]
+            Events["Event-Driven Coordination"]
+        end
+
+        RDF --- Services
+        Services --- Services2
+        Services2 --- Kafka
+    end
+
+    style Store fill:#e3f2fd
+    style Services fill:#e8f5e9
+    style Services2 fill:#e8f5e9
+    style Kafka fill:#fff3e0</code></pre>
+<p><strong>Scaling:</strong></p>
+<p>60 million citizens × 5-10 evidence pieces × 3-5 years retention = 500M-2B triples. A single Apache Jena node handles 50B triples—generous headroom.</p>
+<p><strong>Key Services:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Evidence Ingestion</td>
+<td>Routes incoming evidence to registration points</td>
+</tr>
+<tr>
+<td>Identity Resolution</td>
+<td>Fellegi-Sunter matching, cluster lifecycle</td>
+</tr>
+<tr>
+<td>Semantic Translation</td>
+<td>Bilateral vocabulary mappings, confidence adjustments</td>
+</tr>
+<tr>
+<td>Fraud Detection</td>
+<td>Pattern analysis, cross-evidence correlation</td>
+</tr>
+<tr>
+<td>Award Calculation</td>
+<td>Policy rule engines for eligibility</td>
+</tr>
+<tr>
+<td>Investigation Queue</td>
+<td>Manual review escalation</td>
+</tr>
+<tr>
+<td>Notification</td>
+<td>Decision explanations with provenance</td>
+</tr>
+<tr>
+<td>Audit Service</td>
+<td>Immutable log for appeals</td>
+</tr>
+<tr>
+<td>External Gateway</td>
+<td>X-Road endpoints for Pattern 2</td>
+</tr>
+<tr>
+<td>Data Retention</td>
+<td>GDPR compliance, right-to-erasure</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example Flow (Sarah's Housing Benefit):</strong></p>
+<ol>
+<li>Sarah authenticates at LoA3+ → registration point established</li>
+<li>Uploads payslip → Evidence Ingestion binds to authenticated session</li>
+<li>Identity Resolution takes fast track (pre-bound) → 0.98 cluster confidence</li>
+<li>Fraud Detection runs consistency checks</li>
+<li>Semantic Translation converts employer's income ontology → Housing Benefit ontology</li>
+<li>Award Calculation applies policy rules → 0.89 overall confidence</li>
+<li>Notification generates decision with full provenance</li>
+<li>Audit creates immutable record</li>
+</ol>
+<p><strong>Total time: ~6 seconds</strong></p>
+<h3 id="52-pattern-2-cross-government-coordination">5.2 Pattern 2: Cross-Government Coordination</h3>
+<p><strong>Scope:</strong> Between autonomous organisations (DCS ↔ HMRC, NHS, Councils)</p>
+<p><strong>Technical Challenge:</strong> Organisations control their own systems, no central database</p>
+<p><strong>Solution:</strong> X-Road federated query infrastructure (Estonian model)</p>
+<p>X-Road solves the fundamental problem of cross-government queries: how do you retrieve evidence from another organisation without exposing their internal systems, without creating a central data store that becomes a honeypot, and without writing bespoke integration for every organisational pair? The answer is a standardised security envelope — mutual TLS, cryptographic audit trail — that all organisations attach to their existing APIs. Estonia has operated this architecture for 20+ years across public and private sectors. The following shows how a DWP housing benefit decision triggers a HMRC employment data query across this infrastructure.</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph DCS["DCS"]
+        DCSInt["Internal\nSystems"]
+        DCSSem["Semantic\nTranslation"]
+        DCSSec["Security\nServer"]
+        DCSInt --&gt; DCSSem --&gt; DCSSec
+    end
+
+    subgraph HMRC["HMRC"]
+        HMRCSec["Security\nServer"]
+        HMRCSem["Semantic\nTranslation"]
+        HMRCInt["Internal\nSystems"]
+        HMRCSec --&gt; HMRCSem --&gt; HMRCInt
+    end
+
+    DCSSec &lt;--&gt;|"X-Road\nMutual TLS\nAccess Control"| HMRCSec
+
+    style DCS fill:#e3f2fd
+    style HMRC fill:#e8f5e9</code></pre>
+<p><strong>Query Flow:</strong></p>
+<ol>
+<li>DCS requests HMRC employment data for NINO AB123456C</li>
+<li>SPARQL query originates in DCS's semantic context</li>
+<li>X-Road authenticates request via mutual TLS</li>
+<li>X-Road checks authorisation against data sharing agreements</li>
+<li>HMRC receives query translated to their semantic context</li>
+<li>HMRC returns evidence with their confidence (0.91)</li>
+<li>DCS's semantic layer translates to internal ontology</li>
+<li>Confidence penalty applied (0.02 for translation)</li>
+<li>Final confidence for Housing Benefit: 0.89</li>
+</ol>
+<p><strong>Scaling Uncertainty:</strong></p>
+<p>Estonia operates with 30–50 organisations. UK Pattern 2 targets 100+ departments — a significant extrapolation. Estonia has never run X-Road at this scale, and the governance burden (semantic mappings, legal basis management, dispute resolution) grows non-linearly with participant count.</p>
+<p><strong>Recommendation:</strong> Treat 100+ organisations as an architectural risk requiring validation. Before committing to the pattern at scale, run a 6-month three-organisation proof of concept (DWP ↔ HMRC ↔ one local authority) specifically to validate governance burden and query performance under realistic conditions. The technical pattern is proven; the governance pattern at this scale is an assumption.</p>
+<p><strong>Key Governance:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Legal basis</td>
+<td>Every query requires explicit legal basis and purpose</td>
+</tr>
+<tr>
+<td>Citizen visibility</td>
+<td>Dashboards show all cross-gov data sharing</td>
+</tr>
+<tr>
+<td>Challenge rights</td>
+<td>Citizens can challenge both authorisation and accuracy</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-pattern-3-business-interactions-verifiable-credentials">5.3 Pattern 3: Business Interactions (Verifiable Credentials)</h3>
+<p><strong>Scope:</strong> Government → Citizen → Business verification</p>
+<p><strong>Technical Foundation:</strong> W3C Verifiable Credentials + Decentralised Identifiers (DIDs)</p>
+<p>The citizen identity challenge extends beyond government-to-government coordination. Landlords checking right-to-rent status, employers verifying right-to-work, banks confirming proof of address — all require businesses to accept a government assertion about a person. Today they do this through document sharing: slow, expensive, prone to fraud, and impossible to revoke once shared.</p>
+<p>Verifiable credentials change the dynamic. Government issues a cryptographically signed statement that citizens hold in a digital wallet. When a citizen needs to prove something to a business, they present the credential from their wallet. The business verifies the cryptographic signature mathematically — no API call to government, no government visibility into the transaction, no surveillance. The citizen decides what to share and can revoke future presentations at any time.</p>
+<p><strong>Flow:</strong></p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph Gov["Government (DCS)"]
+        Issuer["Credential\nIssuer"]
+        Crypto1["Cryptographic\nSignature"]
+    end
+
+    subgraph Citizen["Citizen"]
+        Wallet["Digital\nWallet"]
+        Storage["Local Storage\n(Citizen Control)"]
+    end
+
+    subgraph Business["Business (Landlord)"]
+        Verifier["Credential\nVerifier"]
+        SigCheck["Signature\nVerification\n(No Gov Callback)"]
+    end
+
+    Issuer --&gt;|"Issues\nCredential"| Wallet
+    Issuer --&gt; Crypto1
+    Wallet --&gt; Storage
+    Wallet --&gt;|"Presents\nCredential"| Verifier
+    Verifier --&gt; SigCheck
+
+    style Gov fill:#e3f2fd
+    style Citizen fill:#fff9c4
+    style Business fill:#e8f5e9</code></pre>
+<p><strong>1. Government Issues Credential:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="p">{</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="nt">&quot;@context&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;https://www.w3.org/2018/credentials/v1&quot;</span><span class="p">],</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;VerifiableCredential&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;HousingSupportCredential&quot;</span><span class="p">],</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="nt">&quot;issuer&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:uk:gov:dcs&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">  </span><span class="nt">&quot;issuanceDate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-03-27T14:23:00Z&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="nt">&quot;credentialSubject&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:citizen:sarah_miller&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">    </span><span class="nt">&quot;housingSupportStatus&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;recipient&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">    </span><span class="nt">&quot;validFrom&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-03-01&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="nt">&quot;validUntil&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;2025-12-31&quot;</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="p">},</span>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">  </span><span class="nt">&quot;proof&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">    </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ed25519Signature2020&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span><span class="nt">&quot;verificationMethod&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;did:uk:gov:dcs#key-1&quot;</span><span class="p">,</span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">    </span><span class="nt">&quot;proofValue&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;z3FXQjecWufY...&quot;</span>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>2. Citizen Stores in Wallet:</strong></p>
+<ul>
+<li>EU Digital Identity Wallet (mobile app)</li>
+<li>Biometric authentication</li>
+<li>Citizen decides what to share with whom</li>
+<li>Government has no visibility into sharing decisions</li>
+</ul>
+<p><strong>3. Business Verifies:</strong></p>
+<ul>
+<li>Landlord scans QR code</li>
+<li>Cryptographic signature verification (no government callback)</li>
+<li>Sees only what credential explicitly states</li>
+<li>Doesn't see benefit amounts, reasons, other benefits</li>
+</ul>
+<p><strong>Zero-Knowledge Proofs (Advanced):</strong></p>
+<p>Prove properties without revealing data:
+- "Income exceeds £25,000" without revealing £30,000 actual
+- "Over 18" without revealing exact birthdate</p>
+<p><strong>Scaling:</strong> Pattern 3 proven at 400+ million citizen scale (EU Digital Identity Wallet). Stateless verification—no central database required.</p>
+<p><strong>Key Properties:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Citizen control</td>
+<td>Sarah decides what to share; can revoke anytime</td>
+</tr>
+<tr>
+<td>Privacy by architecture</td>
+<td>Businesses see only what's presented</td>
+</tr>
+<tr>
+<td>Offline verification</td>
+<td>Cryptographic signatures work without network</td>
+</tr>
+<tr>
+<td>Selective disclosure</td>
+<td>Share predicates, not raw data</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="part-vi-security-operational-resilience">Part VI: Security &amp; Operational Resilience</h2>
+<h3 id="61-novel-security-threats">6.1 Novel Security Threats</h3>
+<h4 id="threat-1-semantic-manipulation">Threat 1: Semantic Manipulation</h4>
+<p><strong>Attack:</strong> Insider modifies HMRC-to-UC income mapping, changing "divide by 12" to "divide by 10"—systematic benefit overpayments that traditional security never detects.</p>
+<p><strong>Defence:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multi-party approval</td>
+<td>Source org + destination org + standards board</td>
+</tr>
+<tr>
+<td>Statistical validation</td>
+<td>Test against 1000 historical cases; flag 5%+ distribution shift</td>
+</tr>
+<tr>
+<td>Appeal rate monitoring</td>
+<td>2× spike triggers automatic rollback</td>
+</tr>
+<tr>
+<td>A/B testing</td>
+<td>5% → 25% → 100% rollout with monitoring</td>
+</tr>
+</tbody>
+</table>
+<h4 id="threat-2-confidence-threshold-gaming">Threat 2: Confidence Threshold Gaming</h4>
+<p><strong>Attack:</strong> Adversary submits 20 borderline applications, learns 0.75 threshold through pattern observation, calibrates forged evidence to score 0.76.</p>
+<p><strong>Defence:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Variable thresholds</td>
+<td>Base 0.75 + 0.05 first-time + 0.03 high-value + 0.10 fraud pattern + random ±0.02</td>
+</tr>
+<tr>
+<td>Evidence diversity</td>
+<td>Require 3+ independent sources across 2+ orgs</td>
+</tr>
+<tr>
+<td>Continuous calibration</td>
+<td>Monthly sampling; recalibrate if 5%+ divergence</td>
+</tr>
+</tbody>
+</table>
+<h4 id="threat-3-privacy-inference">Threat 3: Privacy Inference</h4>
+<p><strong>Attack:</strong> Analyst queries "all citizens with HMRC employment but NO disability claims"—reveals disability status through absence.</p>
+<p><strong>Defence:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Purpose-bound access</td>
+<td>Queries must declare purpose; monitored against actual use</td>
+</tr>
+<tr>
+<td>Pattern detection</td>
+<td>Flag high inference-potential queries</td>
+</tr>
+<tr>
+<td>Differential privacy</td>
+<td>Statistical noise on aggregates</td>
+</tr>
+</tbody>
+</table>
+<h4 id="threat-4-query-dos">Threat 4: Query DoS</h4>
+<p><strong>Attack:</strong> Craft query like "find all citizens with surname similar to 'Smith'"—O(n²) traversal exhausts resources.</p>
+<p><strong>Defence:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Control</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Computational budgets</td>
+<td>1M graph comparisons/user/day</td>
+</tr>
+<tr>
+<td>Query timeouts</td>
+<td>5-second maximum</td>
+</tr>
+<tr>
+<td>Rate limiting</td>
+<td>100 queries/minute</td>
+</tr>
+<tr>
+<td>Adversarial input detection</td>
+<td>Common names, generic postcodes → manual review</td>
+</tr>
+</tbody>
+</table>
+<h3 id="62-failure-modes-degradation">6.2 Failure Modes &amp; Degradation</h3>
+<h4 id="triple-store-unavailability">Triple Store Unavailability</h4>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Action</th>
+<th>Recovery Time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Immediate</td>
+<td>Failover to hot standby</td>
+<td>&lt;5 seconds</td>
+</tr>
+<tr>
+<td>Standby fails</td>
+<td>Redis cache serves 90% of queries</td>
+<td>Degraded</td>
+</tr>
+<tr>
+<td>All RDF fails</td>
+<td>PostgreSQL fallback (reduced confidence)</td>
+<td>Minutes</td>
+</tr>
+<tr>
+<td>Event queuing</td>
+<td>Kafka buffers; no evidence lost</td>
+<td>Until restoration</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Targets:</strong> 4-hour RTO, 1-hour RPO</p>
+<h4 id="ambiguous-identity-clustering">Ambiguous Identity Clustering</h4>
+<p>When confidence &lt; 0.75:
+- Manual review queue with all candidates
+- Request additional evidence from citizen
+- Caseworker decisions feed back into algorithm improvement</p>
+<h4 id="semantic-translation-errors">Semantic Translation Errors</h4>
+<table>
+<thead>
+<tr>
+<th>Detection</th>
+<th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Appeal rate monitoring</td>
+<td>Mapping-specific tracking</td>
+</tr>
+<tr>
+<td>Caseworker feedback</td>
+<td>"Report translation problem" functionality</td>
+</tr>
+<tr>
+<td>Automated sanity checks</td>
+<td>Flag 10× increases, unit conversion errors</td>
+</tr>
+<tr>
+<td>Version control</td>
+<td>Instant git rollback</td>
+</tr>
+</tbody>
+</table>
+<h4 id="contradictory-evidence">Contradictory Evidence</h4>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Confidence</td>
+<td>Higher confidence wins (0.92 HMRC &gt; 0.68 self-report)</td>
+</tr>
+<tr>
+<td>Recency</td>
+<td>Newer evidence weighted appropriately</td>
+</tr>
+<tr>
+<td>Source hierarchy</td>
+<td>Statutory &gt; self-reported; crypto &gt; manual</td>
+</tr>
+<tr>
+<td>Ambiguity</td>
+<td>Confidence within 0.1 → caseworker escalation</td>
+</tr>
+</tbody>
+</table>
+<h4 id="cascade-failures">Cascade Failures</h4>
+<p>Circuit breakers isolate patterns:
+- Pattern 2 (cross-gov) failing doesn't destroy Pattern 1 (internal)
+- Pattern 3 (credentials) continues on last-known-good state
+- Cached fallbacks accept stale data over total failure</p>
+<hr />
+<h2 id="part-vii-implementation-strategy">Part VII: Implementation Strategy</h2>
+<h3 id="71-phased-delivery">7.1 Phased Delivery</h3>
+<h4 id="phase-0-proof-of-concept-4-6-months">Phase 0: Proof of Concept (4-6 months)</h4>
+<p><strong>Scope:</strong> Single use case (housing benefit) with mocked external data</p>
+<p><strong>Delivers:</strong>
+- Evidence ingestion
+- Identity clustering (Fellegi-Sunter)
+- Semantic translation
+- Award calculation with confidence thresholds
+- Provenance-showing decision notices</p>
+<p><strong>Success Criteria:</strong>
+- End-to-end flow working
+- Sub-10-second processing
+- Confidence model validated against historical caseworker decisions</p>
+<h4 id="phase-1-mvp-pilot-12-18-months">Phase 1: MVP Pilot (12-18 months)</h4>
+<p><strong>Scope:</strong> Single benefit (housing support) with 2-3 real integrations (HMRC RTI, Council Tax, DVLA)</p>
+<p><strong>Adds:</strong>
+- Pattern 2 X-Road endpoints
+- Fraud detection
+- Caseworker review queues
+- Citizen-accessible audit trails</p>
+<p><strong>Scale:</strong> 2-3 local authorities, 50,000-100,000 citizens, parallel run with existing systems</p>
+<p><strong>Targets:</strong>
+- 80% auto-processing
+- 15% fewer document uploads
+- Appeals under 10%</p>
+<h4 id="phase-2-production-scale-18-24-months">Phase 2: Production Scale (18-24 months)</h4>
+<p><strong>Scope:</strong> Multiple benefits (all UC products, housing, pension credit) with 10+ integrations</p>
+<p><strong>Adds:</strong>
+- Verifiable credentials (EUDI)
+- ML fraud detection
+- Citizen dashboards
+- Complete appeal workflows</p>
+<p><strong>Scale:</strong> 60M citizens, 100M+ evidence pieces, 10M+ decisions annually</p>
+<p><strong>Targets:</strong>
+- 85%+ auto-processing
+- 50%+ fewer document uploads
+- Appeals below 5%</p>
+<h3 id="72-risk-mitigation">7.2 Risk Mitigation</h3>
+<p><strong>Technical Risks:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RDF performance at scale</td>
+<td>Prototype validates 2B triples on single node (Phase 0)</td>
+</tr>
+<tr>
+<td>Fellegi-Sunter accuracy</td>
+<td>Caseworker validation loop, continuous calibration</td>
+</tr>
+<tr>
+<td>Pattern 2 distributed queries</td>
+<td>Estonia consultation, incremental federation</td>
+</tr>
+<tr>
+<td>Semantic mapping governance</td>
+<td>Bilateral model, statistical validation</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Organisational Risks:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Department resistance</td>
+<td>Start internal (DCS only), prove value before federation</td>
+</tr>
+<tr>
+<td>Capability gaps</td>
+<td>Hire semantic web engineers, RDF training</td>
+</tr>
+<tr>
+<td>Governance conflicts</td>
+<td>Clear escalation paths, binding arbitration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="part-viii-key-technical-decisions">Part VIII: Key Technical Decisions</h2>
+<h3 id="81-why-rdf-over-relational">8.1 Why RDF Over Relational?</h3>
+<p><strong>Relational Databases Cannot:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Store provenance chains</td>
+<td>Exponential schema complexity</td>
+</tr>
+<tr>
+<td>Represent confidence as constraints</td>
+<td>SQL enforces boolean, not probability</td>
+</tr>
+<tr>
+<td>Model probabilistic identity</td>
+<td>Foreign keys require determinism</td>
+</tr>
+<tr>
+<td>Perform semantic translation</td>
+<td>Vocabularies embedded in code, not queryable</td>
+</tr>
+</tbody>
+</table>
+<p><strong>RDF Triple Stores Enable:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>First-class provenance</td>
+<td>Reification (assertions about assertions)</td>
+</tr>
+<tr>
+<td>Confidence as property</td>
+<td>Every assertion carries quantified confidence</td>
+</tr>
+<tr>
+<td>Flexible identity</td>
+<td>Multiple possible matches with explicit uncertainty</td>
+</tr>
+<tr>
+<td>Semantic reasoning</td>
+<td>SPARQL queries leverage ontological relationships</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Trade-offs:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Challenge</th>
+<th>Mitigation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Slower than SQL</td>
+<td>Caching + selective denormalisation</td>
+</tr>
+<tr>
+<td>Scarce expertise</td>
+<td>Training + consultants</td>
+</tr>
+<tr>
+<td>Less mature tooling</td>
+<td>Apache Jena (20+ years production-proven)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="82-why-probabilistic-identity-over-master-record">8.2 Why Probabilistic Identity Over Master Record?</h3>
+<p><strong>Master Record Fails When:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Condition</th>
+<th>UK Reality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No universal identifier</td>
+<td>UK has no birth-to-death ID like Estonia</td>
+</tr>
+<tr>
+<td>Identity requires evidence</td>
+<td>Circular dependency problem</td>
+</tr>
+<tr>
+<td>People change</td>
+<td>Marriage, divorce, relocation continuous</td>
+</tr>
+<tr>
+<td>Evidence arrives incomplete</td>
+<td>Must act before certainty</td>
+</tr>
+</tbody>
+</table>
+<p><strong>NINO Cannot Serve as Universal ID:</strong></p>
+<p>Internal documents describe NINO data quality as "unbelievable"—duplicate issuance, administrative errors, gaps for pre-1975 births. NINO was never designed for identity coordination.</p>
+<h3 id="83-why-semantic-translation-over-standardisation">8.3 Why Semantic Translation Over Standardisation?</h3>
+<p><strong>Standardisation Fails Because:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Reason</th>
+<th>Reality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No forcing function</td>
+<td>Departments won't abandon their systems</td>
+</tr>
+<tr>
+<td>Legitimate diversity</td>
+<td>Policy differences require semantic differences</td>
+</tr>
+<tr>
+<td>Governance doesn't scale</td>
+<td>Thousands of conflicts, no central authority</td>
+</tr>
+<tr>
+<td>Implementation degrades</td>
+<td>"Common services" become silos</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Semantic Translation Enables:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Benefit</th>
+<th>Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Organisational autonomy</td>
+<td>Each department keeps own vocabulary</td>
+</tr>
+<tr>
+<td>Bilateral agreements</td>
+<td>Only negotiate with orgs you actually share with</td>
+</tr>
+<tr>
+<td>Versioned evolution</td>
+<td>Support old mappings during transition</td>
+</tr>
+<tr>
+<td>Confidence tracking</td>
+<td>Translation uncertainty propagates through calculations</td>
+</tr>
+</tbody>
+</table>
+<h3 id="84-what-estonia-proved-and-didnt">8.4 What Estonia Proved (and Didn't)</h3>
+<p><strong>Proved:</strong>
+- X-Road secure distributed transport (20+ years)
+- Bilateral semantic agreements are manageable
+- Citizen trust from transparency (95% digital adoption)</p>
+<p><strong>Didn't Prove:</strong>
+- Probabilistic identity (Estonia has universal ID)
+- 50× scale (1.3M vs 67M citizens)
+- 100+ organisations (Estonia has 30-50)
+- Automated semantic translation at scale</p>
+<p>UK must solve additional challenges Estonia never faced.</p>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<h3 id="what-this-architecture-solves">What This Architecture Solves</h3>
+<p><strong>Problems Relational Databases Cannot Address:</strong>
+- Provenance tracking with who-when-how context
+- Confidence quantification through probabilistic reasoning
+- Semantic diversity requiring vocabulary translation
+- Identity without universal identifier</p>
+<p><strong>Problems Standardisation Cannot Address:</strong>
+- Organisational autonomy requirements
+- Legitimate semantic differences from policy
+- Governance scaling for thousands of conflicts
+- Implementation degradation over time</p>
+<p><strong>Problems Manual Coordination Cannot Address:</strong>
+- Citizen burden (6+ document uploads)
+- Processing latency (weeks vs seconds)
+- Error rates from inconsistent interpretation
+- Unsustainable cost at 10M+ annual decisions</p>
+<h3 id="the-realistic-assessment">The Realistic Assessment</h3>
+<p><strong>What's Proven:</strong>
+- RDF at scale (50B triples per node demonstrated)
+- Semantic translation operationally (Estonia 20+ years)
+- Probabilistic identity (Fellegi-Sunter academic standard)
+- Verifiable credentials (400M+ EU users)</p>
+<p><strong>What's Uncertain:</strong>
+- Distributed SPARQL at 100+ organisations
+- Governance for 1,000+ semantic mappings
+- Citizen adoption of credential wallets</p>
+<p><strong>What's Required:</strong>
+- Phased delivery proving each capability
+- Continuous validation through statistical testing
+- Department buy-in demonstrated through pilot value
+- Political commitment sustaining multi-year implementation</p>
+<h3 id="the-alternative">The Alternative</h3>
+<p>Continuing current approaches means persisting with demonstrated failure: citizens uploading documents six times, no evidence reuse, no provenance tracking, manual coordination at unsustainable cost.</p>
+<p><strong>Verdict:</strong> Evidence-based coordination proves architecturally sound through international precedents. Implementation appears realistic with phased validation. Alternatives remain unacceptable given current system failures.</p>
+<p>Sarah Miller's six document uploads aren't a UI problem—they're an architecture problem. This architecture solves it.</p>
+<hr />
+<h2 id="appendix-a-glossary">Appendix A: Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Assertion</strong></td>
+<td>A claim made by an organisation about a subject (X asserts Y about Z)</td>
+</tr>
+<tr>
+<td><strong>Evidence</strong></td>
+<td>Structured assertion with provenance, confidence, and semantic context</td>
+</tr>
+<tr>
+<td><strong>Triple</strong></td>
+<td>Subject-Predicate-Object statement in RDF</td>
+</tr>
+<tr>
+<td><strong>Identity Cluster</strong></td>
+<td>Probabilistic grouping of evidence about a person</td>
+</tr>
+<tr>
+<td><strong>Confidence</strong></td>
+<td>Quantified reliability score (0.0-1.0)</td>
+</tr>
+<tr>
+<td><strong>Semantic Translation</strong></td>
+<td>Mapping concepts between different vocabularies</td>
+</tr>
+<tr>
+<td><strong>Bilateral Mapping</strong></td>
+<td>Agreement between two organisations on concept translation</td>
+</tr>
+<tr>
+<td><strong>Fellegi-Sunter</strong></td>
+<td>Probabilistic record linkage algorithm</td>
+</tr>
+<tr>
+<td><strong>X-Road</strong></td>
+<td>Estonian federated query infrastructure</td>
+</tr>
+<tr>
+<td><strong>Verifiable Credential</strong></td>
+<td>W3C standard for cryptographically-signed claims</td>
+</tr>
+<tr>
+<td><strong>DID</strong></td>
+<td>Decentralised Identifier</td>
+</tr>
+<tr>
+<td><strong>Registration Point</strong></td>
+<td>Authenticated session binding evidence to claimed identity</td>
+</tr>
+<tr>
+<td><strong>Customer360</strong></td>
+<td>Shared kernel of verified attributes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="appendix-b-references">Appendix B: References</h2>
+<ul>
+<li>Estonia X-Road documentation: https://x-road.global/</li>
+<li>W3C Verifiable Credentials: https://www.w3.org/TR/vc-data-model/</li>
+<li>RDF 1.1 Primer: https://www.w3.org/TR/rdf11-primer/</li>
+<li>OWL 2 Web Ontology Language: https://www.w3.org/TR/owl2-overview/</li>
+<li>Fellegi-Sunter Model: Fellegi, I.P. and Sunter, A.B. (1969). "A Theory for Record Linkage"</li>
+<li>EU Digital Identity Wallet: https://digital-strategy.ec.europa.eu/en/policies/eudi-wallet-toolbox</li>
+</ul>
+<hr />
+<p><em>Paper 2 of 6 in the Architecting Modern Government Services series</em></p>
+<p><strong>Prerequisites:</strong> Paper 1 — Domain-Driven Design &amp; Clean Architecture for Enterprise Systems<br />
+<strong>Next:</strong> Paper 3 — LLM-Assisted Development with RAG and Guardrails<br />
+<strong>See also:</strong> Paper 4 — Automated LLM-Driven Development · Paper 5 — Getting Started · Paper 6 — DWP Case Study</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
