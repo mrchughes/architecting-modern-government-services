@@ -107,7 +107,9 @@ The product lines are not the right level to classify — they're too coarse. Yo
 >
 > There is a further complication: DWP's cohorts often lack the evidence that typical identity verification relies on. Many claimants do not have passports, driving licences, or credit histories. GOV.UK Verify demonstrated this gap clearly — populations with the greatest need for government services had the least verifiable digital footprint. This means DWP cannot simply adopt commodity identity solutions; it must build or commission capabilities that work for its actual population.
 >
-> Finally, benefits eligibility depends on verified *attributes* (age, residency, household composition) and verified *relationships* (partner, dependents, carers) — not just "is this the right person." Evidence and identity become inseparable. You cannot determine eligibility without knowing what you know about a person, how confident you are in that knowledge, and where that confidence came from. This makes DWP's Identity and Evidence subdomains more like **Core** than Generic in their complexity, even though they are shared across product lines. Paper 2 covers this in depth.
+> Finally, benefits eligibility depends on verified *attributes* (age, residency, household composition) and verified *relationships* (partner, dependents, carers) — not just "is this the right person." Evidence and identity become inseparable.
+>
+> **For this paper, we will set that complexity aside.** The rest of this document treats Identity and Evidence as Generic platform services to keep the DDD explanations clean. Paper 2 is where we get into the real model — claimed versus verified identity, evidence chains, confidence scoring, and how these interlock with eligibility. If you're here for DDD fundamentals, read on. If you're here for identity, skip to Paper 2.
 
 Notice that "Benefits" as a whole isn't classified — you can't invest in "Benefits" as if it were one thing. Eligibility needs your best engineers building differentiated logic. Claims needs solid engineering but doesn't warrant the same investment.
 
