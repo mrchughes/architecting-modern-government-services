@@ -101,6 +101,8 @@ The product lines are not the right level to classify — they're too coarse. Yo
 | Payments (cross-cutting) | **Generic** | Payment processing is standardised; use established patterns |
 | Compliance (within Benefits) | **Core** | Fraud detection rules and policy enforcement are unique to DWP's operating context |
 
+> **A note on Identity at DWP:** The table above classifies Identity as Generic because *basic* identity verification — "is this person who they claim to be?" — is a commodity problem. But DWP's relationship with identity is deeper than most organisations. Benefits eligibility depends on verified *attributes* (age, residency, household composition) and verified *relationships* (partner, dependents, carers) — not just "is this the right person." Evidence and identity become inseparable: you cannot determine eligibility without knowing what you know about a person, how confident you are in that knowledge, and where that confidence came from. This makes DWP's Identity and Evidence subdomains more like **Core** than Generic in their complexity, even though they are shared across product lines. Paper 2 covers this in depth.
+
 Notice that "Benefits" as a whole isn't classified — you can't invest in "Benefits" as if it were one thing. Eligibility needs your best engineers building differentiated logic. Claims needs solid engineering but doesn't warrant the same investment. Identity should probably use established patterns or third-party capabilities.
 
 #### Generic Subdomains Become Platform Services
