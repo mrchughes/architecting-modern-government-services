@@ -10,10 +10,19 @@
       --theme-color: #1a73e8;
       --sidebar-width: 280px;
     }
+    /* Give rendered Mermaid diagrams breathing room */
+    .mermaid { margin: 1.5em 0; overflow-x: auto; }
   </style>
 </head>
 <body>
   <div id="app"></div>
+
+  <!-- Mermaid pinned to v10 — load BEFORE docsify -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+  </script>
+
   <script>
     window.$docsify = {
       name: 'Architecting Modern Government Services',
@@ -37,9 +46,26 @@
         buttonText: 'Copy',
         errorText: 'Error',
         successText: 'Copied'
-      }
+      },
+      plugins: [
+        // After each page renders, convert mermaid code blocks into diagrams
+        function(hook) {
+          hook.doneEach(function() {
+            document.querySelectorAll('pre[data-lang="mermaid"]').forEach(function(pre) {
+              var code = pre.querySelector('code');
+              if (!code) return;
+              var div = document.createElement('div');
+              div.className = 'mermaid';
+              div.textContent = code.textContent;
+              pre.parentNode.replaceChild(div, pre);
+            });
+            mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+          });
+        }
+      ]
     }
   </script>
+
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify-copy-code@2/dist/docsify-copy-code.min.js"></script>
@@ -48,9 +74,5 @@
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/docsify/lib/plugins/zoom-image.min.js"></script>
-  <!-- Mermaid diagram support -->
-  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/docsify-mermaid@latest/dist/docsify-mermaid.js"></script>
-  <script>mermaid.initialize({ startOnLoad: false });</script>
 </body>
 </html>
