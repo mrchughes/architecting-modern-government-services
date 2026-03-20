@@ -4,7 +4,7 @@
 
 *Part 1 of the Architecting Modern Government Services Series*
 
-*Version 1.3 | March 2026*
+*Version 1.4 | March 2026*
 
 ---
 
@@ -16,6 +16,7 @@
 | 1.1 | Feb 2026 | Added Mermaid diagrams, clarified code-sharing patterns |
 | 1.2 | Mar 2026 | Added §1.3 subsection: legislation as boundary driver; legislative layers table; worked policy-to-domain-model example; EligibilityPolicy domain service pattern |
 | 1.3 | Mar 2026 | Rewrote §1.1 to clarify recursive subdomain decomposition; added two-level decomposition (product lines → functional subdomains); clarified Core/Supporting/Generic classification with consistent examples |
+| 1.4 | Mar 2026 | Added manufacturing analogy introduction to Part I — Ford/assembly line parallel to domain decomposition |
 
 ---
 
@@ -41,6 +42,14 @@ Each level of this hierarchy exists because human minds have limits, teams need 
 ---
 
 ## Part I: The Hierarchy of Boundaries
+
+Ford makes cars. DWP makes entitlement decisions. The engineering challenge is the same.
+
+Ford doesn't build "a car." It builds the Fiesta, Focus, Mustang — different products sharing a manufacturing capability. Each product decomposes into systems: powertrain, chassis, interior, electronics. Each system decomposes further: the powertrain becomes engine, transmission, exhaust; the engine becomes pistons, valves, gaskets. Some components are shared across products — the same entertainment system might appear in three models. Others are differentiators — the Mustang's V8 is why people buy it.
+
+No single engineer knows how to build an entire car. That's not a failure; it's the design. Ford invented the assembly line precisely because the complexity of a car exceeds any individual's cognitive capacity. Specialists own components. Interfaces between components are standardised. Teams work in parallel. The organisational structure mirrors the product structure — not by accident, but because that's how you build complex things at scale.
+
+This isn't a new paradigm. Software borrowed these ideas from manufacturing: componentisation, separation of concerns, interface contracts, platform thinking. Domain-Driven Design is the assembly line applied to business logic. What follows is how to apply it.
 
 ### 1.1 Domains and Subdomains
 
