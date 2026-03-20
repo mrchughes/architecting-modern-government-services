@@ -48,18 +48,18 @@
         successText: 'Copied'
       },
       plugins: [
-        // After each page renders, convert mermaid code blocks into diagrams
         function(hook) {
-          hook.doneEach(function() {
-            document.querySelectorAll('pre[data-lang="mermaid"]').forEach(function(pre) {
-              var code = pre.querySelector('code');
-              if (!code) return;
-              var div = document.createElement('div');
-              div.className = 'mermaid';
-              div.textContent = code.textContent;
-              pre.parentNode.replaceChild(div, pre);
+          // Intercept raw markdown BEFORE Docsify/Prism processes it.
+          // Replace ```mermaid fences with plain <div class="mermaid"> so the
+          // source is never HTML-entity-encoded by the syntax highlighter.
+          hook.beforeEach(function(content) {
+            return content.replace(/```mermaid\r?\n([\s\S]*?)```/g, function(_, diagram) {
+              return '<div class="mermaid">\n' + diagram + '</div>';
             });
-            mermaid.run({ nodes: document.querySelectorAll('.mermaid') });
+          });
+          // After the page is fully in the DOM, ask Mermaid to render every div.
+          hook.doneEach(function() {
+            mermaid.run({ nodes: document.querySelectorAll('.mermaid:not([data-processed])') });
           });
         }
       ]
