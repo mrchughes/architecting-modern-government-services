@@ -4,7 +4,7 @@
 
 *Part 2 of the Architecting Modern Government Services Series*
 
-*Version 1.1 | February 2026*
+*Version 1.2 | March 2026*
 
 ---
 
@@ -14,6 +14,7 @@
 |---------|------|--------|
 | 1.0 | Feb 2026 | Initial release |
 | 1.1 | Feb 2026 | Added Fellegi-Sunter primer, confidence calibration section, Mermaid diagrams |
+| 1.2 | Mar 2026 | Added §1.4 "The Institutional Reality" — why metadata stripping persists despite known costs; the perverse equilibrium of bad data vs no data |
 
 ---
 
@@ -169,6 +170,20 @@ The database has stripped away everything that makes evidence usable:
 Every downstream system must perform fresh verification because provenance is destroyed.
 
 **From a DDD perspective:** This is a modelling failure. Evidence isn't a fact to be stored—it's an assertion with context. The aggregate boundary is wrong: we need an `Evidence` aggregate that preserves the complete assertion, not just extracted data fields.
+
+#### The Institutional Reality
+
+This is not ignorance. Many government departments know exactly what they are losing when metadata is stripped. The problem is structural:
+
+1. **Legacy systems were never built to hold provenance.** A database schema designed in 1998 has columns for `income` and `employer`. It does not have columns for `assertion_source`, `verification_method`, `cryptographic_signature`, or `confidence_score`. Adding them is not a schema migration — it is a fundamental redesign of the data model, the APIs that consume it, and every downstream system that assumes the old shape.
+
+2. **Updating those systems costs millions.** For a large department, modernising one core system can run into eight or nine figures. Multiply that across dozens of legacy estates, each with decades of accumulated integrations, and the total cost is politically undeliverable. Leadership knows the data quality problem exists. They do not have the budget to fix it.
+
+3. **Receiving bad data is often better than receiving no data.** This is the uncomfortable trade-off. If DWP stopped accepting data feeds that lack provenance, it would lose visibility into employment, pensions, tax status, and dozens of other signals used to detect fraud and verify eligibility. The resulting increase in fraud and error would likely exceed the damage caused by processing unverified data. Departments continue receiving dubious data because the alternative is worse.
+
+4. **Metadata is often stripped at receipt, not transmission.** Even when the sending department provides rich context, the receiving system may discard it because there is nowhere to put it. The problem compounds: after a few hops through intermediary systems, the original provenance is irrecoverable.
+
+This creates a perverse equilibrium: everyone knows the data is unreliable, but no single actor can fix it unilaterally, and stopping the flow would cause more harm than continuing. The architecture described in this paper is designed to break that equilibrium — by making provenance preservation the *default* rather than an optional add-on, and by allowing incremental adoption without requiring every system to modernise simultaneously.
 
 ### 1.5 Summary: Three Root Causes and Their Solutions
 
