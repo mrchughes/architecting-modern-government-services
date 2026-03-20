@@ -97,13 +97,19 @@ The product lines are not the right level to classify — they're too coarse. Yo
 |-----------|----------------|-----------|
 | Eligibility (within Benefits) | **Core** | Complex policy rules that define what DWP does; unique to UK social security law |
 | Claims (within Benefits) | **Supporting** | Standard case management; necessary but not differentiating |
-| Identity (cross-cutting) | **Generic** | Identity verification is a commodity problem; many organisations solve it similarly |
+| Identity (cross-cutting) | **Generic*** | Identity verification is typically a commodity problem — but see the note below |
 | Payments (cross-cutting) | **Generic** | Payment processing is standardised; use established patterns |
 | Compliance (within Benefits) | **Core** | Fraud detection rules and policy enforcement are unique to DWP's operating context |
 
-> **A note on Identity at DWP:** The table above classifies Identity as Generic because *basic* identity verification — "is this person who they claim to be?" — is a commodity problem. But DWP's relationship with identity is deeper than most organisations. Benefits eligibility depends on verified *attributes* (age, residency, household composition) and verified *relationships* (partner, dependents, carers) — not just "is this the right person." Evidence and identity become inseparable: you cannot determine eligibility without knowing what you know about a person, how confident you are in that knowledge, and where that confidence came from. This makes DWP's Identity and Evidence subdomains more like **Core** than Generic in their complexity, even though they are shared across product lines. Paper 2 covers this in depth.
+> **A note on Identity at DWP:** The table marks Identity as Generic with an asterisk because DWP's identity problem is fundamentally different from most organisations. Most businesses need *account ownership*: "is this the same person who signed up?" Users can call themselves whatever they like — the system just needs to know they control the account. That is a commodity problem.
+>
+> DWP needs something harder: proof that a *real person exists*, and confidence that they are talking to *that specific person* — to a measurable level of trust. Few organisations need this. Fewer still disburse public money as a direct function of it. The stakes are categorically different.
+>
+> There is a further complication: DWP's cohorts often lack the evidence that typical identity verification relies on. Many claimants do not have passports, driving licences, or credit histories. GOV.UK Verify demonstrated this gap clearly — populations with the greatest need for government services had the least verifiable digital footprint. This means DWP cannot simply adopt commodity identity solutions; it must build or commission capabilities that work for its actual population.
+>
+> Finally, benefits eligibility depends on verified *attributes* (age, residency, household composition) and verified *relationships* (partner, dependents, carers) — not just "is this the right person." Evidence and identity become inseparable. You cannot determine eligibility without knowing what you know about a person, how confident you are in that knowledge, and where that confidence came from. This makes DWP's Identity and Evidence subdomains more like **Core** than Generic in their complexity, even though they are shared across product lines. Paper 2 covers this in depth.
 
-Notice that "Benefits" as a whole isn't classified — you can't invest in "Benefits" as if it were one thing. Eligibility needs your best engineers building differentiated logic. Claims needs solid engineering but doesn't warrant the same investment. Identity should probably use established patterns or third-party capabilities.
+Notice that "Benefits" as a whole isn't classified — you can't invest in "Benefits" as if it were one thing. Eligibility needs your best engineers building differentiated logic. Claims needs solid engineering but doesn't warrant the same investment.
 
 #### Generic Subdomains Become Platform Services
 
