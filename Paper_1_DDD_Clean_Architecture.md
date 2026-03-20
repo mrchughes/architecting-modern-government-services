@@ -4,7 +4,7 @@
 
 *Part 1 of the Architecting Modern Government Services Series*
 
-*Version 1.2 | March 2026*
+*Version 1.3 | March 2026*
 
 ---
 
@@ -15,6 +15,7 @@
 | 1.0 | Feb 2026 | Initial release |
 | 1.1 | Feb 2026 | Added Mermaid diagrams, clarified code-sharing patterns |
 | 1.2 | Mar 2026 | Added §1.3 subsection: legislation as boundary driver; legislative layers table; worked policy-to-domain-model example; EligibilityPolicy domain service pattern |
+| 1.3 | Mar 2026 | Rewrote §1.1 to clarify recursive subdomain decomposition; added two-level decomposition (product lines → functional subdomains); clarified Core/Supporting/Generic classification with consistent examples |
 
 ---
 
@@ -45,58 +46,107 @@ Each level of this hierarchy exists because human minds have limits, teams need 
 
 **A domain is a sphere of knowledge and activity—a problem space.** Consider the UK Department for Work and Pensions (DWP). DWP's domain is social security: providing financial support to citizens through benefits, pensions, and related services.
 
-A domain is NOT a bounded context—it's too large and has too much linguistic variation to have one consistent model. Terms like "claimant," "payment," and "assessment" mean different things in different parts of DWP. That's why domains must be decomposed.
+A domain is NOT a bounded context—it's too large and has too much linguistic variation to have one consistent model. Terms like "claimant," "payment," and "assessment" mean different things in different parts of DWP. That's why domains must be decomposed into **subdomains**.
 
-**A domain contains subdomains.** DWP's domain breaks down into distinct problem areas:
+#### Decomposition is Recursive
 
-- **Benefits** — Universal Credit, Housing Benefit
+Subdomains decompose further into smaller subdomains. This is where many teams get confused — they think decomposition is one step, not recursive.
+
+**First decomposition — product lines:** DWP's domain breaks down into distinct business areas:
+
+- **Benefits** — Universal Credit, Housing Benefit, and related payments
 - **Pensions** — State Pension, Pension Credit
-- **Child Maintenance** — child support calculations and enforcement
-- **Employment Support** — job seeker assistance
+- **Child Maintenance** — calculating and collecting payments between separated parents
+- **Employment Support** — helping job seekers find work
 
-These are subdomains—smaller, more focused problem spaces within the larger domain. Each subdomain has its own language, rules, and experts, and exists within the broader context of social security.
+Each of these is a subdomain. But each is still too large for one model. Benefits uses "claimant," Pensions uses "pensioner," Child Maintenance uses "paying parent" and "receiving parent." Even within a single product line, terms like "claim" mean different things in different contexts.
 
-**Subdomains are classified by strategic importance:**
+**Second decomposition — functional areas within a product line:** Take Benefits. It contains further subdomains:
 
-| Classification | Description | Example |
-|----------------|-------------|---------|
-| **Core** | Where the organisation differentiates—unique value | Eligibility determination (complex policy rules) |
-| **Supporting** | Necessary but not differentiating | Case management, appeals handling |
-| **Generic** | Commodity capabilities any organisation needs | Identity verification, payment processing |
+- **Eligibility** — Determining whether a citizen qualifies for a benefit
+- **Claims** — Managing the lifecycle of a benefit application
+- **Awards** — Calculating and managing the monetary entitlement
+- **Compliance** — Detecting and handling fraud, overpayments, and appeals
 
-**Generic subdomains become platform services.** When a generic subdomain serves multiple other subdomains, it makes sense to implement it once and share it. Identity verification isn't specific to Benefits or Pensions—both need it. So Identity becomes a **platform service**: a shared capability owned by a platform team, governed centrally, with strict compatibility requirements because changes affect all consumers.
+These are the subdomains you actually model. "Eligibility" has precise rules, a clear language, and distinct experts. So does "Claims." They are separate enough to warrant separate models.
 
-Platform services are still subdomains—they just happen to be shared and centrally governed. Identity has its own bounded contexts, aggregates, and microservices. What makes it a "platform service" is governance: it's shared, centrally owned, and changes require impact analysis across all consumers.
+**Cross-cutting subdomains serve all product lines.** Some capabilities are needed by Benefits, Pensions, Child Maintenance, and Employment Support equally:
+
+- **Identity** — Verifying who citizens are
+- **Evidence** — Storing and validating supporting documents
+- **Payments** — Issuing money to citizens
+- **Notifications** — Sending letters, emails, and alerts
+
+These are also subdomains — they have their own language, rules, and experts. They happen to be shared across product lines rather than owned by one.
+
+#### Strategic Classification: Core, Supporting, and Generic
+
+Every subdomain — at any level of decomposition — falls into one of three strategic categories. This classification determines how you invest in it:
+
+| Classification | What it means | Investment approach |
+|----------------|---------------|---------------------|
+| **Core** | Where the organisation creates unique value — this is what DWP does better than anyone else | Build in-house with your best people; differentiation lives here |
+| **Supporting** | Necessary but not differentiating — standard business operations | Build efficiently; don't over-engineer |
+| **Generic** | Commodity capabilities any organisation needs — no competitive advantage from doing it differently | Buy, use open-source, or build once and share |
+
+**How does this classification apply to DWP?**
+
+The product lines are not the right level to classify — they're too coarse. You classify the subdomains *within* them:
+
+| Subdomain | Classification | Rationale |
+|-----------|----------------|-----------|
+| Eligibility (within Benefits) | **Core** | Complex policy rules that define what DWP does; unique to UK social security law |
+| Claims (within Benefits) | **Supporting** | Standard case management; necessary but not differentiating |
+| Identity (cross-cutting) | **Generic** | Identity verification is a commodity problem; many organisations solve it similarly |
+| Payments (cross-cutting) | **Generic** | Payment processing is standardised; use established patterns |
+| Compliance (within Benefits) | **Core** | Fraud detection rules and policy enforcement are unique to DWP's operating context |
+
+Notice that "Benefits" as a whole isn't classified — you can't invest in "Benefits" as if it were one thing. Eligibility needs your best engineers building differentiated logic. Claims needs solid engineering but doesn't warrant the same investment. Identity should probably use established patterns or third-party capabilities.
+
+#### Generic Subdomains Become Platform Services
+
+When a generic subdomain serves multiple product lines, implement it once and share it. Identity isn't specific to Benefits or Pensions — both need it. So Identity becomes a **platform service**: a shared capability owned by a platform team, governed centrally, with strict compatibility requirements because changes affect all consumers.
+
+Platform services are still subdomains — they have bounded contexts, aggregates, and microservices. What makes them "platform" is governance: they're shared, centrally owned, and changes require impact analysis across all consumers.
 
 ```mermaid
 flowchart TB
     subgraph DWP["DWP Domain"]
-        subgraph Business["Business Subdomains"]
-            Benefits[Benefits]
+        subgraph Products["Product Lines"]
+            subgraph Benefits["Benefits"]
+                Eligibility[Eligibility]
+                Claims[Claims]
+                Awards[Awards]
+            end
             Pensions[Pensions]
             ChildMaint[Child Maintenance]
         end
         
-        subgraph Platform["Platform Services (Generic)"]
+        subgraph Platform["Platform Services (Generic Subdomains)"]
             Identity[Identity]
             Payments[Payments]
-            Notifications[Notifications]
+            Evidence[Evidence]
         end
         
-        Benefits --> Identity
-        Benefits --> Payments
-        Benefits --> Notifications
+        Eligibility --> Identity
+        Eligibility --> Evidence
+        Awards --> Payments
         Pensions --> Identity
         Pensions --> Payments
-        Pensions --> Notifications
         ChildMaint --> Identity
         ChildMaint --> Payments
-        ChildMaint --> Notifications
     end
     
-    style Business fill:#e1f5fe
+    style Products fill:#e1f5fe
     style Platform fill:#fff3e0
+    style Benefits fill:#bbdefb
 ```
+
+#### The Key Insight
+
+Subdomain decomposition is recursive. You don't stop at "Benefits" — you keep decomposing until you reach subdomains small enough to have one consistent language and one clear set of experts. That's when you've found the right level to design bounded contexts.
+
+The strategic classification (Core/Supporting/Generic) tells you *how much to invest* in each subdomain. Core subdomains get your best people and custom-built solutions. Generic subdomains get standardised solutions — build once and share, or buy off the shelf. This classification determines team structure, technology choices, and architectural governance.
 
 ### 1.2 Bounded Contexts
 
