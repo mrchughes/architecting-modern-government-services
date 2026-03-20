@@ -49,20 +49,23 @@
       },
       plugins: [
         function(hook) {
-          // Intercept raw markdown BEFORE Docsify/Prism processes it.
-          // Replace ```mermaid fences with plain <div class="mermaid"> so the
-          // source is never HTML-entity-encoded by the syntax highlighter.
-          hook.beforeEach(function(content) {
-            return content.replace(/```mermaid\r?\n([\s\S]*?)```/g, function(_, diagram) {
-              return '<div class="mermaid">\n' + diagram + '</div>';
-            });
-          });
-          // After the page is fully in the DOM, ask Mermaid to render every div.
           hook.doneEach(function() {
             mermaid.run({ nodes: document.querySelectorAll('.mermaid:not([data-processed])') });
           });
         }
-      ]
+      ],
+      markdown: {
+        renderer: {
+          // Override the code block renderer: mermaid fences become plain divs,
+          // never touching Prism, so the source is never HTML-entity-encoded.
+          code: function(code, lang) {
+            if (lang === 'mermaid') {
+              return '<div class="mermaid">' + code + '</div>';
+            }
+            return this.origin.code.apply(this, arguments);
+          }
+        }
+      }
     }
   </script>
 
