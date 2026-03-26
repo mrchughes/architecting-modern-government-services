@@ -242,7 +242,7 @@ flowchart TB
 
 The question "how many bounded contexts should we have?" is a design skill, not a formula. But reality leaves traces. Six signals reliably indicate where boundaries naturally exist—think of them as diagnostic cues an experienced architect learns to notice.
 
-**The first clue is who owns the rules.** In any organisation, certain people are authoritative for specific decisions. If different groups own the truth in different areas, those areas have fundamentally different sources of authority and should not share a model. In DWP, the fraud team owns identity resolution; policy teams own eligibility rules; frontline intake teams own evidence capture; finance owns payments. These are not coordination preferences—the rules themselves come from different places and change when different things happen in the world.
+**The first clue is who owns the rules.** In any organisation, certain people are authoritative for specific decisions. If different groups own the truth in different areas, those areas have fundamentally different sources of authority and should not share a model. In DWP, Team A owns identity resolution; Team B teams own eligibility rules; Team C own evidence capture; Team D owns payments. These are not coordination preferences—the rules themselves come from different places and change when different things happen in the world.
 
 **The second signal is a language clash.** The moment you find yourself saying "well, in *this* part of the system, 'person' means..." you have identified a bounded context boundary. Shared words with different meanings create models that cannot be precise. In DWP, "verified" means a statistical confidence score in the Identity context but "meets policy criteria for benefit entitlement" in the Eligibility context. Forcing these into one model means neither definition can be stated cleanly.
 
@@ -260,7 +260,7 @@ The question "how many bounded contexts should we have?" is a design skill, not 
 
 **The sixth signal is the cognitive load test.** Ask "can one team fully understand this model and reason about its edge cases without qualification?" If explaining the model requires "...except in this other part where things work differently," you have crossed a comprehension boundary. A bounded context should be entirely knowable by its team. When it isn't, reasoning about changes becomes unreliable, and the rate of unexpected failures increases.
 
-#### The Practical Heuristic
+#### A Practical Heuristic
 
 When deciding "should this be a new BC?" ask:
 
@@ -317,7 +317,7 @@ The practical implication: when a statutory instrument changes the UC taper rate
 
 Step two is to name it as a domain concept: `WorkCapabilityStatus`. This aggregate has states (not assessed, assessed limited, assessed fit for work, under appeal), governed transitions (reversion to "not assessed" is only possible at tribunal), and its own invariant: status can only be set by an authorised assessor, never by a claimant directly.
 
-Step three is to encapsulate the rules as a domain service — not spread across controllers or use-case handlers:
+Step three is to encapsulate the rules as a **domain service**. A domain service is stateless logic that doesn't naturally belong to any single entity or aggregate — it operates *on* domain objects rather than *being* one. Use cases (application layer) orchestrate workflows; domain services encode business rules that span multiple objects or represent pure policy logic. Here, the eligibility rules don't belong inside any one aggregate, so they live in a service:
 
 ```
 EligibilityPolicy (UC context)

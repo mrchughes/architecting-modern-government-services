@@ -315,7 +315,7 @@ The practical implication: when a statutory instrument changes the UC taper rate
 
 Step two is to name it as a domain concept: `WorkCapabilityStatus`. This aggregate has states (not assessed, assessed limited, assessed fit for work, under appeal), governed transitions (reversion to "not assessed" is only possible at tribunal), and its own invariant: status can only be set by an authorised assessor, never by a claimant directly.
 
-Step three is to encapsulate the rules as a domain service — not spread across controllers or use-case handlers:
+Step three is to encapsulate the rules as a **domain service**. A domain service is stateless logic that doesn't naturally belong to any single entity or aggregate — it operates *on* domain objects rather than *being* one. Use cases (application layer) orchestrate workflows; domain services encode business rules that span multiple objects or represent pure policy logic. Here, the eligibility rules don't belong inside any one aggregate, so they live in a service:
 
 ```
 EligibilityPolicy (UC context)
