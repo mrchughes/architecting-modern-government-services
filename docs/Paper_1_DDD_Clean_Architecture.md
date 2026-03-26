@@ -529,6 +529,16 @@ Two contexts agree on shared definitions for their overlap.
 
 Customer360 is a shared kernel across benefit contexts—they all agree on what "verified address" means, what confidence scores represent, and how person relationships are structured. Changes to shared kernel concepts require consensus from all participants.
 
+**What does this mean in practice?** A shared kernel is *shared code*, not just a shared agreement. Both contexts compile against the same types — literally the same classes, interfaces, and value objects. Typically this lives in a shared library (a NuGet package, Maven artifact, or npm module) that both services depend on.
+
+This is stronger than "we agree our ubiquitous languages will align." Language alignment is a social contract; shared kernel is a *compile-time* contract. If the `VerifiedAddress` type changes, both contexts get the change when they update their dependency. Neither can drift without the other noticing.
+
+The trade-off is coupling. Shared kernels create deployment coordination — you can't change the kernel without considering all consumers. This is why they should be *small*: core identity types, common value objects, shared event schemas. If your shared kernel grows to include business logic, you've likely merged two bounded contexts and should recognise that explicitly.
+
+**When to use it:** When the cost of translation is higher than the cost of coordination. If Benefits and Pensions both need to understand "verified address" and the definitions must be identical, maintaining two separate `VerifiedAddress` types with translation between them is pure overhead. Share the type.
+
+**When to avoid it:** When contexts need to evolve independently, or when "the same word" actually means subtly different things in each context. If Benefits' "verified" means "above 0.8 confidence" but Pensions' means "human-reviewed," don't force a shared kernel — use an anti-corruption layer and let each context define the term in its own language.
+
 #### Open Host Service (OHS)
 
 The supplier publishes a stable, well-documented API and maintains backward compatibility.
