@@ -590,11 +590,11 @@ flowchart TB
 
 **Supporting subdomains:**
 - **Benefit eligibility** (one per benefit type): Applying policy rules to identity clusters. Important but largely codifying existing regulations.
-- **Semantic translation:** Mapping between organisational vocabularies. Necessary infrastructure with well-understood patterns.
+- **Semantic translation:** Mapping between organisational vocabularies. Necessary plumbing with well-understood patterns.
 
-**Generic subdomains:**
-- **Document storage:** Commodity S3-style storage with retention policies.
-- **Biometric matching:** Vendor SDK integration for face/fingerprint/voice.
+**Generic subdomains** (buy or use commodity solutions):
+- **Document storage:** S3-style storage with retention policies.
+- **Biometric matching:** Vendor SDK for face/fingerprint/voice.
 - **Credential issuance:** W3C Verifiable Credentials library.
 - **Audit logging:** Append-only compliance logging.
 
@@ -602,45 +602,45 @@ flowchart TB
 
 A bounded context emerges where the same word means different things to different teams. Context boundaries follow linguistic boundaries, not architectural layers.
 
+**A note on terminology:** This section uses DDD strategic design concepts (bounded contexts, context relationships, subdomains). The internal structure of each context—aggregates, entities, value objects—is tactical design, covered below under "Core Aggregates."
+
 ```mermaid
 flowchart TB
-    subgraph Core["Evidence-Based Identity Context (one BC)"]
-        direction TB
-        EV["Evidence Gathering\\n(module)"]
-        CL["Cluster Management\\n(module)"]
-        BS["Binding Sessions\\n(module)"]
+    subgraph Core["Evidence-Based Identity\\n(Core Subdomain \u2192 one BC)"]
+        CORE_INNER[" "]
     end
     
-    subgraph Benefits["Benefit Contexts (separate BCs)"]
+    subgraph Benefits["Benefit Eligibility\\n(Supporting Subdomains \u2192 separate BCs)"]
         UC["Universal Credit"]
         HB["Housing Benefit"]
         PIP["PIP"]
     end
     
-    subgraph Generic["Generic Infrastructure (NOT BCs)"]
+    subgraph Generic["Generic Subdomains\\n(libraries/vendor, not BCs)"]
         DOC["Document Storage"]
-        BIO["Biometric Services"]
+        BIO["Biometric Matching"]
         CRED["Credential Issuance"]
     end
     
     Core -->|"Published\\nLanguage"| UC
     Core -->|"Published\\nLanguage"| HB
     Core -->|"Published\\nLanguage"| PIP
-    Generic -.->|"SDK/API"| Core
+    Generic -.->|"library\\ncalls"| Core
     
     style Core fill:#e8f5e9
     style Benefits fill:#fff3e0
     style Generic fill:#e3f2fd
+    style CORE_INNER fill:#e8f5e9,stroke:#e8f5e9
 ```
 
-**Reading the diagram:**
-- **Green box:** One bounded context with three internal modules (same ubiquitous language throughout)
-- **Orange boxes:** Separate bounded contexts, each with its own ubiquitous language ("income" means different things)
-- **Blue box:** Commodity infrastructure—not bounded contexts, just libraries and services
-- **Solid arrows:** Context integration via Published Language
-- **Dashed arrow:** Technical dependency, not a context relationship
+**Reading this context map:**
+- **Green:** Core subdomain implemented as one bounded context. Internal structure (aggregates, services) not shown—that's tactical design.
+- **Orange:** Supporting subdomains, each a separate bounded context with its own ubiquitous language ("income" means different things in UC vs HB).
+- **Blue:** Generic subdomains implemented via libraries and vendor services. No domain language of their own; not bounded contexts.
+- **Solid arrows:** Context integration pattern (Published Language from core to benefits).
+- **Dashed arrow:** Technical dependency only—no domain semantics crossing.
 
-#### Evidence-Based Identity Context (Core)
+#### Evidence-Based Identity Context (Core Subdomain)
 
 This is **one bounded context**, not five. The language is unified: caseworkers and domain experts talk about "checking documents," "matching the face," "proving who someone is," and "linking records together." These are different operations but share a ubiquitous language.
 
