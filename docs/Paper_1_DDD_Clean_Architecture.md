@@ -354,9 +354,15 @@ Inside a BC, objects reference each other freely, transactions make sense, invar
 
 **The consistency test:** Ask "Can a business invariant break if these two services disagree for 5 seconds?" If yes, they belong in the same BC service.
 
-**What people wrongly do:** Split into "read service" vs "write service," or "API service" vs "processing service," or "validation service" vs "rules service" — and treat them as separate microservices that both own parts of the same model. That's not microservices; that's distributed layers. You've taken what should be internal code modules (a validation layer, a rules engine, a data access layer) and spread them across a network, adding latency and failure modes without gaining any domain isolation.
+#### The Distributed Layers Antipattern
 
-The legitimate splits above (point 2) are different: the "API gateway" or "background worker" doesn't own the domain model — it's infrastructure that *calls* the BC service. The BC service still owns all the business logic and data. If your split means two services both need to understand the domain rules or share the same database, you haven't split a BC — you've just made your single BC harder to deploy and debug.
+A common mistake is splitting by technical layer: "read service" vs "write service," "validation service" vs "rules service," "API service" vs "processing service."
+
+The tell: both services need to understand the same domain rules, or both connect to the same database. You haven't separated domain concerns — you've taken code that used to be a function call and made it a network call. Same coupling, more latency, more failure modes.
+
+**Contrast with legitimate infrastructure splits.** An API gateway that routes requests to your BC service doesn't know eligibility rules — it just forwards traffic. A background worker that retries failed jobs doesn't validate claims — it just calls your BC service and handles the response. These are fine because they don't own domain logic; they're plumbing.
+
+The test: if you deleted the "second service" and moved its code into the first as a module, would anything change except deployment mechanics? If the domain model stays identical, you never had two services — you had one service deployed awkwardly.
 
 ### 1.5 Aggregates
 
