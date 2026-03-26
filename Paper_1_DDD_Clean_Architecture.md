@@ -122,6 +122,8 @@ The product lines are not the right level to classify — they're too coarse. Yo
 
 Notice that "Benefits" as a whole isn't classified — you can't invest in "Benefits" as if it were one thing. Eligibility needs your best engineers building differentiated logic. Claims needs solid engineering but doesn't warrant the same investment.
 
+**Note:** This paper is about DDD not DWP.  Many will argue Claims is a differentiator, AME Payments are not commodity.  That's for another paper, but of you approach this methodologically using techniques like event storming, the model will appear.
+
 #### Generic Subdomains Become Platform Services
 
 When a generic subdomain serves multiple product lines, implement it once and share it. Identity isn't specific to Benefits or Pensions — both need it. So Identity becomes a **platform service**: a shared capability owned by a platform team, governed centrally, with strict compatibility requirements because changes affect all consumers.
@@ -181,7 +183,7 @@ In DDD terms, a model is not just a database schema or data structure—it's a *
 
 **Entities** — Objects with identity that persist over time. A `Claimant`, an `EligibilityDecision`. The critical distinction from value objects: two entities with identical data are still different if they have different IDs. A Claimant with ID 12345 is not the same person as a Claimant with ID 67890, even if they have the same name and address.
 
-**Aggregates** — Clusters of entities and value objects that form consistency boundaries. Think of these like a parent class that owns and controls access to child entities through composition (not inheritance). An `EligibilityDecision` aggregate includes the decision entity, its evidence entities, and its rule value objects—they must change together. The aggregate root (`EligibilityDecision`) is the only entry point; nothing outside can directly modify the child entities.
+**Aggregates** — Clusters of entities and value objects that form consistency boundaries. Think of these like a parent class that owns and controls access to child entities through composition (not inheritance). An `EligibilityDecision` aggregate includes the decision entity, its evidence entities, and its rule value objects—they must change together. One entity is the **aggregate root**—the single entry point that controls all access. Nothing outside the aggregate can directly modify child entities; all changes go through the root. In this example, `EligibilityDecision` is the root—you can't add evidence or change rule results except by calling methods on the decision itself.
 
 **Invariants** — Business rules that must always be true. "An EligibilityDecision cannot be approved without minimum evidence confidence." Invariants are enforced by the aggregate root—nothing outside the aggregate can directly modify its internals in ways that would violate the rules.
 
