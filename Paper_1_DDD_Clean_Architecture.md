@@ -755,6 +755,8 @@ The dependency flows *inward*: `PostgresClaimRepository` depends on `ClaimReposi
 
 The domain depends on *the contract being satisfied*, not on *any specific implementation*. That's the inversion: the infrastructure must conform to the domain's expectations, not the other way around.
 
+**Put simply: outer layers depend on inner layers specifying what they want.** The domain says "I need something that can save and retrieve claims." The infrastructure layer says "I'll provide that using Postgres." The domain doesn't know or care about the second part.
+
 This is why you can swap Postgres for DynamoDB without touching business logic. The infrastructure layer changes; the core doesn't.
 
 **This is dependency inversion**, and it's the mechanism that makes everything else possible.
