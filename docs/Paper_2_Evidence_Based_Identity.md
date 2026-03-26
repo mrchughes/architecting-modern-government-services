@@ -418,9 +418,11 @@ Traditional systems would store an `IdentityRecord` table or an `IdentityCluster
 |-------|---------|
 | Assertions (immutable) | Cluster hypotheses |
 | Binding events (immutable) | Cluster confidence scores |
-| Decisions made (audit trail) | Cluster membership probabilities |
+| Decision events (with frozen hypothesis) | Cluster membership probabilities |
 
 If you find yourself designing a database table for identity clusters with CRUD operations, you've slipped back into the old paradigm. Assertions have CRUD (well, just CR—they're immutable). Clusters don't. Clusters are query results.
+
+**But what about audit?** When a decision is made—"yes, this is Sarah Miller" or "yes, eligible for UC"—we capture that moment by embedding the cluster hypothesis in an immutable **decision event**. The hypothesis is frozen at decision time. Two years later at tribunal, we can show exactly what the system believed when it decided. The current graph might look different (new assertions, higher confidence), but the decision record preserves the point-in-time state.
 
 **The neural network analogy (from the addendum):** The assertion graph functions cognitively like a neural network—nodes are entities, edges are weighted relationships, intelligence emerges from traversing weighted paths. But unlike a neural network, the graph is **explainable**: every clustering decision can be traced to specific assertions, specific match scores, specific binding events. We get the power of probabilistic reasoning with the auditability of explicit rules.
 
@@ -764,7 +766,7 @@ This is where the paradigm shift bites. Traditional DDD would model `IdentityClu
 | Binding events | **Stored** (immutable events) | They happened during sessions |
 | Identity clusters | **Computed** | Working hypotheses over graph |
 | Cluster snapshots | **Cached** (read model) | Performance optimization |
-| Eligibility decisions | **Stored** (events) | Audit trail |
+| Decision events | **Stored** (immutable events) | Audit trail — captures cluster hypothesis at decision time |
 
 **Aggregates (What We Store):**
 
@@ -800,6 +802,38 @@ BindingSession
     - Binding events are immutable once recorded
 ```
 
+**DecisionEvent** (Aggregate Root)
+When a decision is made based on an ephemeral cluster hypothesis, we capture that moment for audit.
+
+```
+DecisionEvent
+├── decisionId: DecisionId
+├── decidedAt: Timestamp
+├── decisionType: IdentityConfirmation | EligibilityDetermination | FraudFlag
+├── outcome: Approved | Rejected | ReferToHuman | Pending
+├── clusterHypothesisSnapshot: ClusterHypothesis (embedded, immutable)
+├── confidenceAtDecision: ConfidenceScore
+├── policyRulesApplied: List<RuleId>
+├── decidedBy: SystemId | CaseworkerId
+└── invariants:
+    - Immutable after creation
+    - Cluster hypothesis is frozen at decision time
+    - References assertions by ID (assertions themselves are immutable)
+```
+
+**Why DecisionEvent matters:**
+
+Clusters are ephemeral — computed on demand, never stored as living entities. But when a decision is made ("yes, this is Sarah Miller with confidence 0.89" or "yes, this person is eligible for UC"), that moment must be captured:
+
+- **What assertions were in the cluster at decision time?**
+- **What were the membership probabilities?**
+- **What was the overall confidence?**
+- **What policy rules were applied?**
+
+If challenged at tribunal two years later, we can reconstruct exactly what the system believed when it made the decision — even if the current cluster looks different because new assertions have arrived.
+
+The cluster hypothesis embedded in DecisionEvent is a **frozen snapshot**, not a reference to a living entity. The current cluster might have confidence 0.94 now, but the decision was made when it was 0.78. The audit trail preserves this.
+
 **Domain Services (What We Compute):**
 
 **ClusteringService**
@@ -817,8 +851,8 @@ ClusteringService
     - Flag contradictions for review
 ```
 
-**ClusterHypothesis** (Value Object — never stored)
-The output of clustering. Ephemeral. Computed on demand.
+**ClusterHypothesis** (Value Object)
+The output of clustering. Ephemeral when computed; frozen when embedded in a DecisionEvent.
 
 ```
 ClusterHypothesis
@@ -828,11 +862,19 @@ ClusterHypothesis
 ├── contradictions: List<Contradiction>
 ├── computedAt: Timestamp
 └── characteristics:
-    - NOT an aggregate — no lifecycle, no identity
+    - NOT an aggregate — no lifecycle, no identity of its own
     - Blurry boundaries (membership is probabilistic)
     - Multiple hypotheses can coexist for same assertions
-    - Gets clearer or blurrier as graph changes
+    - Computed ephemerally by ClusteringService
+    - Frozen as snapshot when embedded in DecisionEvent
 ```
+
+**The lifecycle:**
+1. **Computed** — ClusteringService traverses graph, produces ClusterHypothesis
+2. **Evaluated** — Rules engine checks hypothesis against policy thresholds
+3. **Decision made** — Outcome determined (approved, rejected, refer)
+4. **Frozen** — ClusterHypothesis embedded in immutable DecisionEvent
+5. **Graph continues** — New assertions arrive, new hypotheses computed, old decision stands
 
 **Read Models (What We Cache):**
 
