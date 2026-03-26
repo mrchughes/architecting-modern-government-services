@@ -32,18 +32,30 @@ Evidence-based coordination using RDF triples, semantic translation, and probabi
 
 ### The DDD Foundation
 
-This paper applies Domain-Driven Design principles from Paper 1 to the identity coordination problem:
+This paper applies Domain-Driven Design principles from Paper 1 to the identity coordination problem. The core insight is that everything reduces to **assertions in a graph**:
 
-| DDD Concept | Identity Application |
-|-------------|---------------------|
-| Bounded Contexts | Evidence (assertions with provenance), Trust (issuer reliability), Resolution (correlation and confidence computation), Eligibility (policy decisions) |
-| Emergent Output | Identity is not a domain; it is the pattern of correlated attributes that emerges from Resolution |
-| Shared Kernel | Assertion schema (how to express claims with confidence, not canonical facts) |
-| Semantic Translation | Bilateral vocabulary mappings with confidence penalties |
-| Aggregates | Evidence Item, Attribute Correlation (same attribute corroborated cross-source), Identity Cluster (correlated attributes constituting a person) |
-| Anti-Corruption Layer | Policy-specific confidence thresholds for consuming correlated attributes |
+| Concept | Description |
+|---------|-------------|
+| Assertion | The fundamental unit: an asserter makes a claim about an assertee with provenance and confidence |
+| Asserter | Who makes the claim (HMRC, DVLA, a vouching person); asserters are themselves identity nodes in the graph |
+| Assertee | Who the claim is about, referenced by attributes (NINO, name+DOB) not by pre-existing identity |
+| Binding | How assertions connect to physical presence: biometric (face, voice), knowledge (secrets), documentary (tokens), social (vouches) |
 
-**Core insight:** Identity is a function of corroborating evidence. Attributes corroborated across independent sources constitute identity; the attributes are the primary key, not a property of some pre-existing identity entity.
+**Identity and eligibility are both rule-applications on this assertion graph:**
+
+| Rule Type | Question | Output |
+|-----------|----------|--------|
+| Identity rules | Do bound assertions constitute a unique person not already in the system? | Identity cluster with confidence |
+| Eligibility rules | Do assertions bound to this cluster meet policy thresholds? | Entitlement decision |
+
+| DDD Concept | Application |
+|-------------|-------------|
+| Bounded Contexts | Assertions (capture with provenance), Trust (asserter reliability), Binding (connecting to physical/cluster), Rules (identity and eligibility policy engines) |
+| The Graph | Assertions, asserters, and clusters form a probabilistic graph; confidence propagates through edges |
+| Shared Kernel | Assertion schema (asserter, assertee reference, claim, provenance, confidence) |
+| Aggregates | Assertion, Identity Cluster (bound assertions passing identity rules), Binding Event (biometric/knowledge/social connection) |
+
+**Core insight:** Identity is not ontologically special. It is one rule-application among several. When someone claims a benefit, we ask: (1) do bound assertions constitute a unique person? (2) is this claimant bound to that person? (3) do assertions bound to that cluster meet eligibility rules? All three are rules applied to the same assertion graph.
 
 ### Implementation Reality
 
@@ -558,117 +570,153 @@ This creates virtuous cycles where well-verified community members become anchor
 
 *This section explicitly frames the architecture using DDD concepts from Paper 1.*
 
-### 4.1 The Identity Domain Landscape
+### 4.1 The Assertion Graph
 
-Identity coordination is not one domain—it's a **federation of bounded contexts**, each with its own model, language, and rules. Identity itself is not a context; it is the emergent output of Resolution.
+The foundation is a probabilistic graph of assertions. Every piece of information is modelled as:
+
+```
+Asserter → (claim with confidence) → Assertee
+```
+
+- **Asserter:** The entity making the claim (HMRC, DVLA, a bank, a vouching person). Asserters are themselves identity nodes in the graph; their assertions carry weight because their identity carries weight.
+- **Assertee:** The subject of the claim, referenced by attributes (NINO, name+DOB, address) not by a pre-existing identity record.
+- **Claim:** The assertion content (employment status, income, relationship, residence).
+- **Confidence:** Quality assessment (source reliability × verification strength × identifier binding).
+
+**Binding** connects assertions to something we can authenticate:
+- **Biometric binding:** Face match, fingerprint, voice recognition connects to physical presence
+- **Knowledge binding:** Demonstrating secrets (NINO, password, memorable information) that only the assertee would know
+- **Documentary binding:** Possession of physical tokens (passport, driving licence)
+- **Social binding:** Vouches from asserters whose identity is already established
+
+**Identity and eligibility are both rule-applications on this graph:**
 
 ```mermaid
 flowchart TB
-    subgraph Domain[\"Identity Coordination Domain\"]
-        subgraph Platform[\"Platform Services (Generic)\"]
-            EvBC[\"Evidence\\nBC\"]
-            TrustBC[\"Trust\\nBC\"]
-            ResBC[\"Resolution\\nBC\"]
-        end
-        
-        EvBC --> C360
-        TrustBC --> C360
-        ResBC --> C360
-        
-        C360[\"Customer360\\n(Shared Kernel)\\nCorroborated Attrs\"]
-        
-        C360 --> UCBC
-        C360 --> PensionBC
-        C360 --> HousingBC
-        
-        subgraph Business[\"Business Subdomains (Core)\"]
-            UCBC[\"UC Eligibility\\nBC (Benefits)\"]
-            PensionBC[\"Pension Eligibility\\nBC (Pensions)\"]
-            HousingBC[\"Housing Eligibility\\nBC (Housing)\"]
-        end
+    subgraph Graph[\"Assertion Graph\"]
+        A1[\"Asserter: HMRC\"] -->|claims income| C1[\"Cluster: AB123456C\"]
+        A2[\"Asserter: DVLA\"] -->|claims address| C1
+        A3[\"Asserter: Vouching Person\"] -->|vouches for| C1
     end
     
-    style Platform fill:#e3f2fd
-    style Business fill:#e8f5e9
-    style C360 fill:#fff9c4
+    C1 --> IR[\"Identity Rules\"]
+    C1 --> ER[\"Eligibility Rules\"]
+    
+    IR --> ID[\"Identity Cluster\\n(stable/emerging/ambiguous)\"]
+    ER --> EL[\"Eligibility Decision\"]
+    
+    style Graph fill:#e3f2fd
+    style IR fill:#fff9c4
+    style ER fill:#fff9c4
 ```
 
 ### 4.2 Key Bounded Contexts
 
-#### Evidence Bounded Context (Platform Service — Generic Subdomain)
+#### Assertions Bounded Context (Platform Service — Generic Subdomain)
 
-This context models evidence ingestion, classification, and storage.
+This context captures assertions with full provenance. Every assertion records who made the claim, about whom (by reference attributes), what was claimed, and with what verification.
 
 **Core Aggregates:**
 
 | Aggregate | Description |
 |-----------|-------------|
-| Evidence Item | Type, source, collection metadata, raw content |
+| Assertion | Asserter, assertee reference, claim content, provenance, confidence |
+| Asserter Identity | The identity node of the claiming entity (institution or person) |
+| Raw Evidence | Original document/data before attribute extraction |
 | Extracted Attributes | OCR/AI-processed data from evidence |
-| Authenticity Score | Validation results and confidence |
 
-**Microservices:** `evidence-ingestion-service`, `evidence-validation-service`
+**Microservices:** `assertion-ingestion-service`, `assertion-validation-service`
 
 **Key Invariants:**
-- Evidence is immutable once ingested (add metadata, never alter original)
-- Evidence is independent of identity—linked, not owned
+- Assertions are immutable once ingested (add metadata, never alter original)
+- Assertions reference assertees by attributes, not by identity ID
+- Asserter must be a known identity node (institution or person) with established trust
 
-**Why this separation matters:** Evidence arrives from multiple channels, needs OCR and AI processing, and operates at high volume. Keeping evidence independent means that when fraud is detected and an identity splits, the evidence remains intact and can be relinked to the correct identity.
+**Why this separation matters:** Assertions arrive from multiple channels and multiple asserters. Keeping assertions independent of identity clusters means that when fraud is detected and a cluster splits, assertions remain intact and can be rebound to the correct cluster.
 
-#### Trust & Provenance Bounded Context (Platform Service)
+#### Binding Bounded Context (Platform Service — Core)
 
-This context models issuer trust, credential validation, and verification methods.
+This context models how assertions connect to physical presence or existing clusters. Binding is the central operation that makes identity possible.
 
 **Core Aggregates:**
 
 | Aggregate | Description |
 |-----------|-------------|
-| Issuer | Trusted organisations (HMRC, banks, utilities) |
-| Trust Tier | Issuer classification and reliability scores |
-| Verification Capability | What an issuer can verify |
-| Cryptographic Key | For digital credential validation |
+| Binding Event | A verified connection between assertions and a claimant |
+| Biometric Binding | Face match, fingerprint, voice recognition with liveness detection |
+| Knowledge Binding | Demonstration of secrets (NINO, memorable info) |
+| Documentary Binding | Possession of physical tokens with verification |
+| Social Binding | Vouches from established identity nodes |
 
-**Microservices:** `issuer-trust-service`
+**Microservices:** `binding-service`, `biometric-verification-service`
 
 **Key Invariants:**
-- Issuers must be validated before their evidence is trusted
-- Trust tiers are immutable for evidence already issued
+- Binding requires a live session (not just data)
+- Binding confidence degrades over time without re-verification
+- Multiple binding types strengthen overall confidence (multiplicative)
 
-**Why this matters:** This forms a security boundary with centralised trust policy reusable across all subdomains.
+**Why this matters:** Without binding, assertions float unconnected. The same NINO appears in many assertions; binding establishes that THIS claimant, present NOW, is the assertee referenced by those assertions.
 
-#### Resolution Bounded Context (Platform Service — Generic Subdomain)
+#### Trust Bounded Context (Platform Service)
 
-This context computes identity clusters by correlating evidence. Identity is the emergent output, not a pre-existing entity.
+This context models asserter trust and verification methods. Asserters are themselves identity nodes; their assertions carry weight because their identity carries weight.
+
+**Core Aggregates:**
+
+| Aggregate | Description |
+|-----------|-------------|
+| Asserter Identity | The identity node of claiming entity (institution or person) |
+| Trust Tier | Asserter classification and reliability scores |
+| Verification Capability | What this asserter can credibly assert |
+| Cryptographic Key | For digital credential validation |
+| Vouch History | Track record of accuracy for vouching persons |
+
+**Microservices:** `trust-service`
+
+**Key Invariants:**
+- Asserters must be established identity nodes before their assertions carry weight
+- Institutional asserters (HMRC, DVLA) have pre-established trust tiers
+- Person asserters (vouching individuals) build trust through vouch accuracy over time
+
+**Why this matters:** An assertion from HMRC carries weight because HMRC is a known, trusted asserter. A vouch from a community member carries weight because that person has an established identity with a history of accurate vouching. The asserter's identity is part of the graph.
+
+#### Identity Rules Bounded Context (Platform Service — Core)
+
+This context applies identity rules to bound assertions. Identity is the output of rule application, not a pre-existing entity.
 
 **Core Aggregates:**
 
 | Aggregate | Description | States |
 |-----------|-------------|--------|
-| Identity Cluster | Correlated attributes with confidence scores | Emerging, Stable, Ambiguous, Fraudulent |
-| Evidence Link | Connecting evidence to clusters with match confidence | |
-| Resolution Decision | Create/Merge/Split/Enrich with full audit trails | |
-| Attribute Correlation | Same attribute corroborated across sources | |
+| Identity Cluster | Bound assertions passing identity rules | Emerging, Stable, Ambiguous, Fraudulent |
+| Assertion Binding | Connecting assertions to clusters with confidence | |
+| Rule Decision | Create/Merge/Split/Enrich with full audit trails | |
+| Attribute Correlation | Same attribute asserted by multiple asserters | |
 
-**Microservices:** `identity-resolution-service`
+**Microservices:** `identity-rules-service`
 
-**Trust Computation:** match_confidence × issuer_trust × authenticity × freshness × independence
+**Identity Rules Applied:**
+- Do bound assertions constitute a unique person?
+- Is this claimant (via binding) the assertee referenced in those assertions?
+- Do corroborating assertions strengthen or contradict the cluster?
+- Does graph analysis suggest fraud (circular vouching, temporal clustering)?
 
-**Key Invariant:** Identity clusters emerge from corroborated attributes. The attributes are the primary key; identity is the pattern they form.
+**Key Invariant:** Identity clusters emerge from bound assertions. The attributes are the primary key; identity is the pattern they form.
 
-**Resolution Operations:** Create (new cluster from uncorrelated evidence), Merge (evidence correlates with existing cluster), Split (fraud detected, cluster separates), Enrich (additional evidence strengthens correlations).
+**Rule Operations:** Create (new cluster from unmatched assertions), Merge (assertions correlate with existing cluster), Split (contradictions detected), Enrich (additional assertions strengthen cluster).
 
-**Critical insight:** Evidence is never "owned by" an identity cluster; it is linked with confidence scores. Attributes corroborated across independent sources constitute identity. This enables detection of fraud patterns when evidence suggests clusters should be split, merged, or flagged.
+**Critical insight:** Assertions are never "owned by" a cluster; they are bound with confidence scores. This enables detection of fraud patterns when assertions suggest clusters should be split, merged, or flagged.
 
 #### Customer360 (Shared Kernel)
 
-A special bounded context providing read models of corroborated attributes with confidence scores; snapshots of identity clusters, relationships, and evidence trails.
+A read model providing snapshots of stable identity clusters with bound assertions and confidence scores.
 
-**Core Aggregates:** Customer Profile (read-only, populated from Evidence and Resolution contexts)
+**Core Aggregates:** Cluster Snapshot (read-only, populated from Assertions, Binding, and Identity Rules contexts)
 
 **Governance:** Co-owned by all consuming subdomains; changes require cross-domain approval.
 
-**Critical Limitation:** Customer360 provides corroborated relationships with confidence scores but does NOT define what those relationships mean for policy purposes. It answers:
-- ✓ "What corroborated relationships exist with what confidence?"
+**Critical Limitation:** Customer360 provides bound assertions with confidence scores but does NOT define what those assertions mean for policy purposes. It answers:
+- ✓ "What assertions are bound to this cluster with what confidence?"
 - ✗ "What does this mean for eligibility?"
 
 The second question belongs in Eligibility contexts.
@@ -678,27 +726,28 @@ The second question belongs in Eligibility contexts.
 | Category | Content |
 |----------|---------|
 | Identity Cluster | Corroborated name, DOB, NINO with confidence scores |
-| Place Relationships | Person-to-location associations with confidence |
-| Person Relationships | Parent/child, spouse, household member with confidence |
+| Bound Assertions | All assertions linked to this cluster with binding confidence |
+| Place Relationships | Person-to-location assertions with confidence |
+| Person Relationships | Parent/child, spouse, household member assertions with confidence |
 | Contact Preferences | Communication channels |
-| Evidence History | Complete provenance chain |
+| Assertion History | Complete provenance chain |
 
-#### Eligibility Bounded Contexts (Core Subdomains — One Per Benefit)
+#### Eligibility Rules Bounded Contexts (Core Subdomains — One Per Benefit)
 
-Each benefit has its own Eligibility bounded context modelling policy rules.
+Each benefit has its own Eligibility context applying policy rules to bound assertions.
 
 **Core Aggregates:**
 
 | Aggregate | Description |
 |-----------|-------------|
-| Eligibility Request | Application with claimed circumstances |
+| Eligibility Request | Claim session with binding to identity cluster |
 | Policy Rule Set | Versioned eligibility rules |
 | Decision Result | Approved/denied with reasoning |
 | Decision Audit Trail | Complete history |
 
 **Microservices:** `universal-credit-eligibility-service`, `pension-credit-eligibility-service`, etc.
 
-**Key Invariant:** Decisions can only be based on corroborated attributes meeting confidence thresholds.
+**Key Invariant:** Eligibility rules are applied to bound assertions meeting confidence thresholds. Eligibility is a rule-application, parallel to identity, operating on the same assertion graph.
 
 **Why separate contexts:** Different benefits have different rules, different change cycles, and different policy ownership. Universal Credit eligibility rules change at a different pace than State Pension rules.
 
@@ -713,44 +762,49 @@ Each benefit has its own Eligibility bounded context modelling policy rules.
 3. User uploads evidence
 4. System tries to link evidence to found identity
 
-**Problem:** What if there are three John Smiths born in March 1980? What if this is a new person? What if evidence contradicts claimed attributes?
+**Problem:** What if there are three John Smiths born in March 1980? What if this is a new person? What if assertions contradict claimed attributes?
 
-**The Correct Architecture: Claimed Identity as the Anchor**
+**The Correct Architecture: Binding Session as the Anchor**
 
 ```mermaid
 flowchart TB
-    Auth["OneLogin Authentication"] --> Claimed["Claimed Identity (UUID)"]
-    Claimed --> Evidence["Evidence Gathering\n(multiple sources)"]
-    Evidence --> Resolution["Resolution Engine"]
+    Auth["OneLogin Authentication"] --> Session["Binding Session (UUID)"]
+    Session --> Assertions["Assertion Gathering\\n(multiple asserters)"]
+    Session --> Binding["Binding Events\\n(biometric/knowledge/social)"]
     
-    Resolution --> Create["Create\n(new cluster)"]
-    Resolution --> Merge["Merge\n(existing cluster)"]
-    Resolution --> Split["Split/Ambiguous\n(fraud/unclear)"]
+    Assertions --> Rules["Identity Rules"]
+    Binding --> Rules
+    
+    Rules --> Create["Create\\n(new cluster)"]
+    Rules --> Merge["Merge\\n(existing cluster)"]
+    Rules --> Split["Split/Ambiguous\\n(fraud/unclear)"]
     
     Create --> Stable["Stable Identity Cluster"]
     Merge --> Stable
     Split --> Stable
     
-    Stable --> C360["Customer360\n(attribute snapshot)"]
-    C360 --> Eligibility["Eligibility Contexts\n(policy interpretation)"]
+    Stable --> C360["Customer360\\n(cluster snapshot)"]
+    C360 --> Eligibility["Eligibility Rules\\n(policy application)"]
     
-    style Claimed fill:#fff9c4
-    style Resolution fill:#e3f2fd
+    style Session fill:#fff9c4
+    style Rules fill:#e3f2fd
     style Stable fill:#c8e6c9
     style C360 fill:#ffe0b2
 ```
 
 **The Separation:**
 
-1. **Claimed Identity** is created when a user first authenticates—a digital anchor point for "this authentication session and all evidence gathered during it." Attributes are claimed but not yet corroborated.
+1. **Binding Session** is created when a user authenticates—a digital anchor for "this claimant, present now, gathering assertions and establishing binding."
 
-2. **Evidence is bound to the Claimed Identity**, not a pre-existing person. This avoids the circular dependency.
+2. **Assertions are gathered** from multiple asserters (HMRC, DVLA, vouching persons). Each assertion references an assertee by attributes, not by identity.
 
-3. **Resolution determines what this evidence represents:** Merge (correlates with existing cluster), Split (fraud), Create (new cluster), or Ambiguous (more evidence needed).
+3. **Binding events** connect the physical claimant to those assertions: biometric (face match), knowledge (demonstrating secrets), documentary (presenting tokens), social (vouches from established identities).
 
-4. **Verification establishes uniqueness** within the identity domain with confidence scores.
+4. **Identity Rules determine** what these bound assertions represent: Merge (correlates with existing cluster), Split (fraud), Create (new cluster), or Ambiguous (more evidence needed).
 
-**Evidence Preservation:** When a Claimed Identity resolves, the evidence trail is preserved in full. If merged, all evidence joins the existing identity's history. If split, evidence is partitioned based on attribute correlation.
+5. **Eligibility Rules then apply** to the bound assertions in that cluster.
+
+**Assertion Preservation:** When assertions bind to a cluster, the provenance trail is preserved. If clusters merge, all assertions join. If clusters split, assertions partition based on which assertee-reference they correlate with.
 
 ### 4.4 Customer360: The "360 View" Challenge
 
@@ -793,11 +847,15 @@ Customer360 stores corroborated relationships to locations:
 
 Same corroborated relationships, different policy lenses.
 
-### 4.5 Context Relationships in the Identity Domain
+### 4.5 Context Relationships
 
-**Resolution → Evidence:** Anti-Corruption Layer. Evidence doesn't know Resolution exists; Resolution translates evidence into identity clusters.
+**Identity Rules → Assertions:** Anti-Corruption Layer. Assertions don't know Identity Rules exist; Identity Rules consume assertions and produce clusters.
 
-**Eligibility → Customer360:** Shared Kernel (read-only consumption). All eligibility contexts agree on Customer360 schema.
+**Identity Rules → Binding:** Dependency. Identity rules require binding events to connect assertions to claimants.
+
+**Eligibility Rules → Customer360:** Shared Kernel (read-only consumption). All eligibility contexts agree on Customer360 schema.
+
+**Trust → Assertions:** Dependency. Every assertion's confidence depends on its asserter's trust score.
 
 **Business Subdomains → Platform Services:** Open Host Service with API contracts. Business contexts call platform APIs but don't see implementation.
 
@@ -1355,19 +1413,23 @@ Sarah Miller's six document uploads aren't a UI problem—they're an architectur
 
 | Term | Definition |
 |------|------------|
-| **Assertion** | A claim made by an organisation about a subject (X asserts Y about Z) |
-| **Evidence** | Structured assertion with provenance, confidence, and semantic context |
+| **Assertion** | A claim made by an asserter about an assertee: who claims what about whom, with provenance and confidence |
+| **Asserter** | The entity making a claim (HMRC, DVLA, a vouching person); asserters are themselves identity nodes |
+| **Assertee** | The subject of a claim, referenced by attributes (NINO, name+DOB) not by pre-existing identity |
+| **Binding** | Connecting assertions to physical presence: biometric, knowledge, documentary, or social |
+| **Identity Cluster** | Bound assertions passing identity rules; the pattern of correlated attributes constituting a person |
+| **Identity Rules** | Rules applied to bound assertions to determine if they constitute a unique person |
+| **Eligibility Rules** | Policy rules applied to bound assertions to determine entitlement |
+| **Confidence** | Quantified reliability score (0.0-1.0), product of source trust, verification strength, and binding quality |
 | **Triple** | Subject-Predicate-Object statement in RDF |
-| **Identity Cluster** | Probabilistic grouping of evidence about a person |
-| **Confidence** | Quantified reliability score (0.0-1.0) |
 | **Semantic Translation** | Mapping concepts between different vocabularies |
 | **Bilateral Mapping** | Agreement between two organisations on concept translation |
 | **Fellegi-Sunter** | Probabilistic record linkage algorithm |
 | **X-Road** | Estonian federated query infrastructure |
 | **Verifiable Credential** | W3C standard for cryptographically-signed claims |
 | **DID** | Decentralised Identifier |
-| **Registration Point** | Authenticated session binding evidence to claimed identity |
-| **Customer360** | Shared kernel of corroborated attributes with confidence scores |
+| **Binding Session** | Authenticated session where assertions are gathered and binding established |
+| **Customer360** | Read model of stable identity clusters with bound assertions and confidence scores |
 
 ---
 
