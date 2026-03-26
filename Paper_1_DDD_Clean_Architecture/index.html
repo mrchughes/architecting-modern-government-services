@@ -1,0 +1,3796 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A six-paper series on DDD, evidence-based identity, and LLM-assisted development for government services">
+      
+      
+      
+        <link rel="canonical" href="https://mrchughes.github.io/architecting-modern-government-services/Paper_1_DDD_Clean_Architecture/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../Paper_2_Evidence_Based_Identity/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>1 — DDD & Clean Architecture - Architecting Modern Government Services</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#domain-driven-design-clean-architecture-for-enterprise-systems" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Architecting Modern Government Services" class="md-header__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Architecting Modern Government Services
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              1 — DDD & Clean Architecture
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Papers
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Architecting Modern Government Services" class="md-nav__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Architecting Modern Government Services
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — DDD & Clean Architecture
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — DDD & Clean Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-the-hierarchy-of-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: The Hierarchy of Boundaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: The Hierarchy of Boundaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-domains-and-subdomains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Domains and Subdomains
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.1 Domains and Subdomains">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decomposition-is-recursive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decomposition is Recursive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategic-classification-core-supporting-and-generic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategic Classification: Core, Supporting, and Generic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generic-subdomains-become-platform-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generic Subdomains Become Platform Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-key-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Key Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-bounded-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Bounded Contexts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.2 Bounded Contexts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Model?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapping-subdomains-to-bounded-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapping Subdomains to Bounded Contexts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-how-to-identify-bounded-context-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 How to Identify Bounded Context Boundaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.3 How to Identify Bounded Context Boundaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-practical-heuristic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Practical Heuristic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-you-know-when-boundaries-are-right" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Do You Know When Boundaries Are Right?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applying-the-signals-legislation-as-a-boundary-driver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying the Signals: Legislation as a Boundary Driver
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-bounded-contexts-and-microservice-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Bounded Contexts and Microservice Count
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 Bounded Contexts and Microservice Count">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#legitimate-reasons-for-multiple-microservices-per-bc-rare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legitimate Reasons for Multiple Microservices per BC (Rare)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-distributed-layers-antipattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Distributed Layers Antipattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-aggregates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Aggregates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.5 Aggregates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-multiple-aggregates-must-cooperate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Multiple Aggregates Must Cooperate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-external-data-for-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using External Data for Decisions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-the-complete-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 The Complete Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-context-relationships-and-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Context Relationships and Communication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Context Relationships and Communication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-technical-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Technical Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-intra-context-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Intra-Context Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-inter-context-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Inter-Context Communication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Inter-Context Communication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#anti-corruption-layer-acl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Corruption Layer (ACL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Kernel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-host-service-ohs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Host Service (OHS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customer-supplier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customer-Supplier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conformist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conformist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partnership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partnership
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-dwp-context-map-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The DWP Context Map in Practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-why-microservices-dont-share-domain-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Why Microservices Don't Share Domain Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-clean-architecture-within-microservices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Clean Architecture Within Microservices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Clean Architecture Within Microservices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-core-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The Core Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-what-is-a-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 What is a Dependency?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-the-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-the-rule-and-how-we-enforce-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 The Rule and How We Enforce It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-layer-by-layer-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Layer-by-Layer Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.5 Layer-by-Layer Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-domain-entities-pure-business-logic-with-zero-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1: Domain (Entities): Pure business logic with zero dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-application-use-cases-defines-interfaces-orchestrates-domain-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2: Application (Use Cases): Defines interfaces, orchestrates domain logic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-infrastructure-concrete-implementations-of-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3: Infrastructure: Concrete implementations of interfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-interface-adapters-translate-between-external-world-and-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4: Interface Adapters: Translate between external world and use cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-wiring-composition-root-dependency-injection-at-application-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5: Wiring (Composition Root): Dependency injection at application startup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-why-architects-should-care" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Why Architects Should Care
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-testing-strategy-at-each-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: Testing Strategy at Each Tier
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: Testing Strategy at Each Tier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-domain-rule-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Domain Rule Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-contract-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Contract Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-unit-and-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Unit and Integration Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-infrastructure-contract-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Infrastructure Contract Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-end-to-end-journey-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 End-to-End Journey Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-v-governance-and-team-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part V: Governance and Team Alignment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part V: Governance and Team Alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-conways-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Conway's Law
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-team-alignment-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Team Alignment Principles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-platform-teams-vs-domain-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Platform Teams vs Domain Teams
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-decision-rights-and-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Decision Rights and Escalation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-hierarchy-provides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Hierarchy Provides
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-go-from-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to Go From Here
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A: Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-b-quick-reference-diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix B: Quick Reference Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix B: Quick Reference Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-complete-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Complete Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-relationship-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Relationship Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-pyramid-for-ddd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Pyramid for DDD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_2_Evidence_Based_Identity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Evidence-Based Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_3_LLM_RAG_Guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — LLM RAG & Guardrails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_4_Automated_LLM_Development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 — Automated LLM Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_5_Getting_Started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5 — Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_6_Case_Study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6 — Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-the-hierarchy-of-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: The Hierarchy of Boundaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: The Hierarchy of Boundaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-domains-and-subdomains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Domains and Subdomains
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.1 Domains and Subdomains">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#decomposition-is-recursive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decomposition is Recursive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strategic-classification-core-supporting-and-generic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strategic Classification: Core, Supporting, and Generic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#generic-subdomains-become-platform-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Generic Subdomains Become Platform Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-key-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Key Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-bounded-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Bounded Contexts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.2 Bounded Contexts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Model?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mapping-subdomains-to-bounded-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapping Subdomains to Bounded Contexts
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-how-to-identify-bounded-context-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 How to Identify Bounded Context Boundaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.3 How to Identify Bounded Context Boundaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-practical-heuristic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Practical Heuristic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-you-know-when-boundaries-are-right" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Do You Know When Boundaries Are Right?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applying-the-signals-legislation-as-a-boundary-driver" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applying the Signals: Legislation as a Boundary Driver
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-bounded-contexts-and-microservice-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Bounded Contexts and Microservice Count
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.4 Bounded Contexts and Microservice Count">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#legitimate-reasons-for-multiple-microservices-per-bc-rare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legitimate Reasons for Multiple Microservices per BC (Rare)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-distributed-layers-antipattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Distributed Layers Antipattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-aggregates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Aggregates
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1.5 Aggregates">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-multiple-aggregates-must-cooperate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Multiple Aggregates Must Cooperate
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-external-data-for-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using External Data for Decisions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-the-complete-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 The Complete Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-context-relationships-and-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: Context Relationships and Communication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: Context Relationships and Communication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-the-technical-mechanisms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 The Technical Mechanisms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-intra-context-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 Intra-Context Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-inter-context-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Inter-Context Communication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2.3 Inter-Context Communication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#anti-corruption-layer-acl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-Corruption Layer (ACL)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-kernel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Kernel
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-host-service-ohs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Host Service (OHS)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customer-supplier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customer-Supplier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conformist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conformist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#partnership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Partnership
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-dwp-context-map-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The DWP Context Map in Practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-why-microservices-dont-share-domain-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 Why Microservices Don't Share Domain Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-clean-architecture-within-microservices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: Clean Architecture Within Microservices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: Clean Architecture Within Microservices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-the-core-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 The Core Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-what-is-a-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 What is a Dependency?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-the-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 The Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-the-rule-and-how-we-enforce-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 The Rule and How We Enforce It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-layer-by-layer-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Layer-by-Layer Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.5 Layer-by-Layer Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-domain-entities-pure-business-logic-with-zero-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1: Domain (Entities): Pure business logic with zero dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-application-use-cases-defines-interfaces-orchestrates-domain-logic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2: Application (Use Cases): Defines interfaces, orchestrates domain logic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-infrastructure-concrete-implementations-of-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3: Infrastructure: Concrete implementations of interfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-interface-adapters-translate-between-external-world-and-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4: Interface Adapters: Translate between external world and use cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-wiring-composition-root-dependency-injection-at-application-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5: Wiring (Composition Root): Dependency injection at application startup
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#36-why-architects-should-care" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.6 Why Architects Should Care
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-testing-strategy-at-each-tier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: Testing Strategy at Each Tier
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: Testing Strategy at Each Tier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-domain-rule-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Domain Rule Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-contract-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Contract Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-unit-and-integration-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Unit and Integration Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-infrastructure-contract-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Infrastructure Contract Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#45-end-to-end-journey-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.5 End-to-End Journey Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-v-governance-and-team-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part V: Governance and Team Alignment
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part V: Governance and Team Alignment">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-conways-law" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Conway's Law
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-team-alignment-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Team Alignment Principles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-platform-teams-vs-domain-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Platform Teams vs Domain Teams
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-decision-rights-and-escalation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Decision Rights and Escalation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conclusion">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-this-hierarchy-provides" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This Hierarchy Provides
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-to-go-from-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to Go From Here
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A: Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-b-quick-reference-diagrams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix B: Quick Reference Diagrams
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Appendix B: Quick Reference Diagrams">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-complete-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Complete Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-architecture-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Architecture Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#context-relationship-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Context Relationship Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-pyramid-for-ddd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Pyramid for DDD
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="domain-driven-design-clean-architecture-for-enterprise-systems">Domain-Driven Design &amp; Clean Architecture for Enterprise Systems</h1>
+<p><strong>A Foundational Reference for Solution Architects</strong></p>
+<p><em>Part 1 of the Architecting Modern Government Services Series</em></p>
+<p><em>Version 1.5 | March 2026</em></p>
+<hr />
+<h2 id="version-history">Version History</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>Feb 2026</td>
+<td>Initial release</td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>Feb 2026</td>
+<td>Added Mermaid diagrams, clarified code-sharing patterns</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Mar 2026</td>
+<td>Added §1.3 subsection: legislation as boundary driver; legislative layers table; worked policy-to-domain-model example; EligibilityPolicy domain service pattern</td>
+</tr>
+<tr>
+<td>1.3</td>
+<td>Mar 2026</td>
+<td>Rewrote §1.1 to clarify recursive subdomain decomposition; added two-level decomposition (product lines to functional subdomains); clarified Core/Supporting/Generic classification with consistent examples</td>
+</tr>
+<tr>
+<td>1.4</td>
+<td>Mar 2026</td>
+<td>Added manufacturing analogy introduction to Part I: Ford/assembly line parallel to domain decomposition</td>
+</tr>
+<tr>
+<td>1.5</td>
+<td>Mar 2026</td>
+<td>Added §1.5 "Using External Data for Decisions": three patterns for cross-context data; anti-corruption layer; Identity to Eligibility to Payments flow diagram</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<p>Complex systems require boundaries at multiple levels. Domain-Driven Design, microservices, and Clean Architecture each provide different types of boundaries that work together. Understanding this hierarchy is essential for building maintainable, evolvable systems, and for understanding where guardrails must be enforced when adopting AI-assisted development or implementing cross-organisational coordination.</p>
+<p>This paper presents the complete hierarchy from domain to deployment:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What it is</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Domain</strong></td>
+<td>The overall problem space</td>
+<td>DWP (Social Security)</td>
+</tr>
+<tr>
+<td><strong>Subdomain</strong></td>
+<td>A distinct problem area</td>
+<td>Benefits, Pensions, Identity</td>
+</tr>
+<tr>
+<td><strong>Bounded Context</strong></td>
+<td>A consistent model with precise language</td>
+<td>Eligibility Context, Claims Context</td>
+</tr>
+<tr>
+<td><strong>Aggregate</strong></td>
+<td>Entities that change together</td>
+<td>EligibilityDecision, ClaimHistory</td>
+</tr>
+<tr>
+<td><strong>Microservice</strong></td>
+<td>A deployment unit</td>
+<td>eligibility-decision-service</td>
+</tr>
+<tr>
+<td><strong>Clean Architecture</strong></td>
+<td>Code layers within a microservice</td>
+<td>Entities, Use Cases, Adapters</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The key insight:</strong> You're not designing services. You're discovering natural fault lines in reality. Microservices are the deployment reflection of those fault lines.</p>
+<p>Each level of this hierarchy exists because human minds have limits, teams need to work in parallel, businesses change and systems must evolve, and someone needs to understand what went wrong at 3am when production breaks. These structures exist for human comprehension, not computer efficiency.</p>
+<hr />
+<h2 id="part-i-the-hierarchy-of-boundaries">Part I: The Hierarchy of Boundaries</h2>
+<p>Ford makes cars. DWP makes entitlement decisions. The engineering challenge is the same.</p>
+<p>Ford doesn't build "a car." It builds the Fiesta, Focus, Mustang, different products sharing a manufacturing capability. Each product decomposes into systems: powertrain, chassis, interior, electronics. Each system decomposes further: the powertrain becomes engine, transmission, exhaust; the engine becomes pistons, valves, gaskets. Some components are shared across products; the same entertainment system might appear in three models. Others are differentiators; the Mustang's V8 is why people buy it. And when components aren't reused, the reason is usually non-functional, not functional: a bus engine could theoretically power a moped, same combustion, same output shaft, but good luck installing it.</p>
+<p>No single engineer knows how to build an entire car. That's not a failure; it's the design. Ford invented the assembly line precisely because the complexity of a car exceeds any individual's cognitive capacity. Specialists own components. Interfaces between components are standardised. Teams work in parallel. The organisational structure mirrors the product structure, not by accident, but because that's how you build complex things at scale.</p>
+<p>This isn't a new paradigm. Software borrowed these ideas from manufacturing: componentisation, separation of concerns, interface contracts, platform thinking. Domain-Driven Design is the assembly line applied to business logic. What follows is how to apply it.</p>
+<h3 id="11-domains-and-subdomains">1.1 Domains and Subdomains</h3>
+<p><strong>A domain is a sphere of knowledge and activity, a problem space.</strong> Consider the UK Department for Work and Pensions (DWP). DWP's domain is social security: providing financial support to citizens through benefits, pensions, and related services.</p>
+<p>A domain is NOT a bounded context; it's too large and has too much linguistic variation to have one consistent model. Terms like "claimant," "payment," and "assessment" mean different things in different parts of DWP. That's why domains must be decomposed into <strong>subdomains</strong>.</p>
+<h4 id="decomposition-is-recursive">Decomposition is Recursive</h4>
+<p>Subdomains decompose further into smaller subdomains. This is where many teams get confused; they think decomposition is one step, not recursive.</p>
+<p><strong>First decomposition, product lines:</strong> DWP's domain breaks down into distinct business areas:</p>
+<ul>
+<li><strong>Benefits</strong>: Universal Credit, Housing Benefit, and related payments</li>
+<li><strong>Pensions</strong>: State Pension, Pension Credit</li>
+<li><strong>Child Maintenance</strong>: calculating and collecting payments between separated parents</li>
+<li><strong>Employment Support</strong>: helping job seekers find work</li>
+</ul>
+<p>Each of these is a subdomain. But each is still too large for one model. Benefits uses "claimant," Pensions uses "pensioner," Child Maintenance uses "paying parent" and "receiving parent." Even within a single product line, terms like "claim" mean different things in different contexts.</p>
+<p><strong>Second decomposition, functional areas within a product line:</strong> Take Benefits. It contains further subdomains:</p>
+<ul>
+<li><strong>Eligibility</strong>: Determining whether a citizen qualifies for a benefit</li>
+<li><strong>Claims</strong>: Managing the lifecycle of a benefit application</li>
+<li><strong>Awards</strong>: Calculating and managing the monetary entitlement</li>
+<li><strong>Compliance</strong>: Detecting and handling fraud, overpayments, and appeals</li>
+</ul>
+<p>These are the subdomains you actually model. "Eligibility" has precise rules, a clear language, and distinct experts. So does "Claims." They are separate enough to warrant separate models.</p>
+<p><strong>Cross-cutting subdomains serve all product lines.</strong> Some capabilities are needed by Benefits, Pensions, Child Maintenance, and Employment Support equally:</p>
+<ul>
+<li><strong>Identity</strong>: Verifying who citizens are</li>
+<li><strong>Evidence</strong>: Storing and validating supporting documents</li>
+<li><strong>Payments</strong>: Issuing money to citizens</li>
+<li><strong>Notifications</strong>: Sending letters, emails, and alerts</li>
+</ul>
+<p>These are also subdomains; they have their own language, rules, and experts. They happen to be shared across product lines rather than owned by one.</p>
+<h4 id="strategic-classification-core-supporting-and-generic">Strategic Classification: Core, Supporting, and Generic</h4>
+<p>Every subdomain, at any level of decomposition, falls into one of three strategic categories. This classification determines how you invest in it:</p>
+<table>
+<thead>
+<tr>
+<th>Classification</th>
+<th>What it means</th>
+<th>Investment approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Core</strong></td>
+<td>Where the organisation creates unique value; this is what DWP does better than anyone else</td>
+<td>Build in-house with your best people; differentiation lives here</td>
+</tr>
+<tr>
+<td><strong>Supporting</strong></td>
+<td>Necessary but not differentiating; standard business operations</td>
+<td>Build efficiently; don't over-engineer</td>
+</tr>
+<tr>
+<td><strong>Generic</strong></td>
+<td>Commodity capabilities any organisation needs; no competitive advantage from doing it differently</td>
+<td>Buy, use open-source, or build once and share</td>
+</tr>
+</tbody>
+</table>
+<p><strong>How does this classification apply to DWP?</strong></p>
+<p>The product lines are not the right level to classify; they're too coarse. You classify the subdomains <em>within</em> them:</p>
+<table>
+<thead>
+<tr>
+<th>Subdomain</th>
+<th>Classification</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Eligibility (within Benefits)</td>
+<td><strong>Core</strong></td>
+<td>Complex policy rules that define what DWP does; unique to UK social security law</td>
+</tr>
+<tr>
+<td>Claims (within Benefits)</td>
+<td><strong>Supporting</strong></td>
+<td>Standard case management; necessary but not differentiating</td>
+</tr>
+<tr>
+<td>Identity (cross-cutting)</td>
+<td><strong>Generic</strong>*</td>
+<td>Identity verification is typically a commodity problem, but see the note below</td>
+</tr>
+<tr>
+<td>Payments (cross-cutting)</td>
+<td><strong>Generic</strong></td>
+<td>Payment processing is standardised; use established patterns</td>
+</tr>
+<tr>
+<td>Compliance (within Benefits)</td>
+<td><strong>Core</strong></td>
+<td>Fraud detection rules and policy enforcement are unique to DWP's operating context</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>A note on Identity at DWP:</strong> The table marks Identity as Generic with an asterisk because DWP's identity problem is fundamentally different from most organisations. Most businesses need <em>account ownership</em>: "is this the same person who signed up?" Users can call themselves whatever they like; the system just needs to know they control the account. That is a commodity problem.</p>
+<p>DWP needs something harder: proof that a <em>real person exists</em>, and confidence that they are talking to <em>that specific person</em>, to a measurable level of trust. Few organisations need this. Fewer still disburse public money as a direct function of it. The stakes are categorically different.</p>
+<p>There is a further complication: DWP's cohorts often lack the evidence that typical identity verification relies on. Many claimants do not have passports, driving licences, or credit histories. GOV.UK Verify demonstrated this gap clearly; populations with the greatest need for government services had the least verifiable digital footprint. This means DWP cannot simply adopt commodity identity solutions; it must build or commission capabilities that work for its actual population.</p>
+<p>Finally, benefits eligibility depends on verified <em>attributes</em> (age, residency, household composition) and verified <em>relationships</em> (partner, dependents, carers), not just "is this the right person." Evidence and identity become inseparable.</p>
+<p><strong>For this paper, we will set that complexity aside.</strong> The rest of this document treats Identity and Evidence as Generic platform services to keep the DDD explanations clean. Paper 2 is where we get into the real model: claimed versus verified identity, evidence chains, confidence scoring, and how these interlock with eligibility. If you're here for DDD fundamentals, read on. If you're here for identity, skip to Paper 2.</p>
+</blockquote>
+<p>Notice that "Benefits" as a whole isn't classified; you can't invest in "Benefits" as if it were one thing. Eligibility needs your best engineers building differentiated logic. Claims needs solid engineering but doesn't warrant the same investment.</p>
+<p><strong>Note:</strong> This paper is about DDD not DWP.  Many will argue Claims is a differentiator, AME Payments are not commodity.  That's for another paper, but of you approach this methodologically using techniques like event storming, the model will appear.</p>
+<h4 id="generic-subdomains-become-platform-services">Generic Subdomains Become Platform Services</h4>
+<p>When a generic subdomain serves multiple product lines, implement it once and share it. Identity isn't specific to Benefits or Pensions; both need it. So Identity becomes a <strong>platform service</strong>: a shared capability owned by a platform team, governed centrally, with strict compatibility requirements because changes affect all consumers.</p>
+<p>Platform services are still subdomains; they have bounded contexts, aggregates, and microservices. What makes them "platform" is governance: they're shared, centrally owned, and changes require impact analysis across all consumers.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph DWP["DWP Domain"]
+        subgraph Products["Product Lines"]
+            subgraph Benefits["Benefits"]
+                Eligibility[Eligibility]
+                Claims[Claims]
+                Awards[Awards]
+            end
+            Pensions[Pensions]
+            ChildMaint[Child Maintenance]
+        end
+
+        subgraph Platform["Platform Services (Generic Subdomains)"]
+            Identity[Identity]
+            Payments[Payments]
+            Evidence[Evidence]
+        end
+
+        Eligibility --&gt; Identity
+        Eligibility --&gt; Evidence
+        Awards --&gt; Payments
+        Pensions --&gt; Identity
+        Pensions --&gt; Payments
+        ChildMaint --&gt; Identity
+        ChildMaint --&gt; Payments
+    end
+
+    style Products fill:#e1f5fe
+    style Platform fill:#fff3e0
+    style Benefits fill:#bbdefb</code></pre>
+<h4 id="the-key-insight">The Key Insight</h4>
+<p>Subdomain decomposition is recursive. You don't stop at "Benefits"; you keep decomposing until you reach subdomains small enough to have one consistent language and one clear set of experts. That's when you've found the right level to design bounded contexts.</p>
+<p>The strategic classification (Core/Supporting/Generic) tells you <em>how much to invest</em> in each subdomain. Core subdomains get your best people and custom-built solutions. Generic subdomains get standardised solutions: build once and share, or buy off the shelf. This classification determines team structure, technology choices, and architectural governance.</p>
+<h3 id="12-bounded-contexts">1.2 Bounded Contexts</h3>
+<p><strong>A subdomain is a problem space; it exists in the business whether we build software or not.</strong> Benefits eligibility is a subdomain because DWP has eligibility rules to apply.</p>
+<p><strong>A bounded context is a solution space; it's how we choose to model that problem in software.</strong> The domain (DWP) is too large with too much linguistic variation to be one model: Benefits uses "claimant," Pensions uses "pensioner," Child Maintenance uses "paying parent." You decompose the domain into subdomains, then create a model for each subdomain (or part of a subdomain) within a bounded context.</p>
+<h4 id="what-is-a-model">What is a Model?</h4>
+<p>In DDD terms, a model is not just a database schema or data structure; it's a <strong>domain model</strong>: the software representation of business concepts with their rules and relationships. A model includes:</p>
+<p><strong>Value Objects</strong>: Immutable descriptors without identity. Think of these like user-defined types: a <code>Money</code> type that bundles amount and currency together, an <code>Address</code> type, a <code>DateOfBirth</code> type. Two value objects with identical data are equal.</p>
+<p><strong>Entities</strong>: Objects with identity that persist over time. A <code>Claimant</code>, an <code>EligibilityDecision</code>. The critical distinction from value objects: two entities with identical data are still different if they have different IDs. A Claimant with ID 12345 is not the same person as a Claimant with ID 67890, even if they have the same name and address.</p>
+<p><strong>Aggregates</strong>: Clusters of entities and value objects that form consistency boundaries. Think of these like a parent class that owns and controls access to child entities through composition (not inheritance). An <code>EligibilityDecision</code> aggregate includes the decision entity, its evidence entities, and its rule value objects; they must change together. One entity is the <strong>aggregate root</strong>, the single entry point that controls all access. Nothing outside the aggregate can directly modify child entities; all changes go through the root. In this example, <code>EligibilityDecision</code> is the root; you can't add evidence or change rule results except by calling methods on the decision itself.</p>
+<p><strong>Invariants</strong>: Business rules that must always be true. "An EligibilityDecision cannot be approved without minimum evidence confidence." Invariants are enforced by the aggregate root; nothing outside the aggregate can directly modify its internals in ways that would violate the rules.</p>
+<p><strong>Ubiquitous Language</strong>: The precise shared vocabulary used by developers and domain experts. A dictionary.e.g. a wiki, of terms with exact definitions that everyone uses consistently, from business architects naming value streams to software engineers naming classes.  They all use the same names so there is no misunderstanding.</p>
+<p><strong>A model, then, is the complete collection:</strong> all the value objects, entities, aggregates, invariants, and the ubiquitous language that defines them. It's how we encapsulate business logic: entities know their own rules, aggregates enforce their invariants through controlled access, and the language provides precise shared understanding.</p>
+<p><strong>The bounded context is where that model applies consistently.</strong> Within the Eligibility bounded context, "claimant" means one precise thing, "assessment" follows specific rules, and every term in the ubiquitous language has exactly one definition. If you find that "claim" means something different in eligibility determination versus payment processing, that's a signal you need separate bounded contexts, separate models with their own consistent language.</p>
+<h4 id="mapping-subdomains-to-bounded-contexts">Mapping Subdomains to Bounded Contexts</h4>
+<p>The relationship isn't always 1:1:</p>
+<ul>
+<li><strong>Simple subdomains</strong> often map 1:1 to bounded contexts (Identity subdomain to one Identity bounded context)</li>
+<li><strong>Complex subdomains</strong> may need multiple bounded contexts (Benefits subdomain to separate Eligibility, Claims, and Awards contexts if the language diverges enough)</li>
+<li><strong>Closely related simple subdomains</strong> might share a bounded context (rare, but possible)</li>
+</ul>
+<p><strong>When does a subdomain need multiple bounded contexts instead of being split into multiple subdomains?</strong></p>
+<p>If the problem areas share the same business experts, change together for business reasons, and sit in the same part of the organisation, but use sufficiently different language or rules that unifying them creates confusion, that's when you keep them as one subdomain but model them with separate contexts.</p>
+<p>For example, Benefits might be one subdomain from an organisational perspective (one directorate, one budget, shared policy experts), but Eligibility uses such different language and rules from Claims processing that forcing them into one model would create the "god-model" antipattern. The subdomain boundary reflects business structure; the bounded context boundary reflects linguistic clarity.  <strong>Forcing standardisation rarely works.</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Problem["Benefits Subdomain (Problem Space)"]
+        BenefitsProblem["Benefits"]
+    end
+
+    Problem --&gt;|"is modelled by"| Solution
+
+    subgraph Solution["Solution Space"]
+        subgraph EligBC["Eligibility Bounded Context"]
+            EligDecision["EligibilityDecision\nAggregate"]
+            ClaimHistory["ClaimHistory\nAggregate"]
+        end
+
+        subgraph ClaimsBC["Claims Bounded Context"]
+            Claim["Claim\nAggregate"]
+        end
+    end
+
+    EligDecision --&gt; EligService["eligibility-decision-service"]
+    ClaimHistory --&gt; EligService
+    Claim --&gt; ClaimsService["claims-service"]
+
+    style Problem fill:#ffebee
+    style Solution fill:#e8f5e9
+    style EligBC fill:#e3f2fd
+    style ClaimsBC fill:#fff8e1</code></pre>
+<p><em>The diagram shows aggregates becoming services, deployment units that own their aggregate's data and logic. Section 1.5 explains this relationship fully.</em></p>
+<h3 id="13-how-to-identify-bounded-context-boundaries">1.3 How to Identify Bounded Context Boundaries</h3>
+<p>The question "how many bounded contexts should we have?" is a design skill, not a formula. But reality leaves traces. Six signals reliably indicate where boundaries naturally exist; think of them as diagnostic cues an experienced architect learns to notice.</p>
+<p><strong>The first clue is who owns the rules.</strong> In any organisation, certain people are authoritative for specific decisions. If different groups own the truth in different areas, those areas have fundamentally different sources of authority and should not share a model. In DWP, Team A owns identity resolution; Team B teams own eligibility rules; Team C own evidence capture; Team D owns payments. These are not coordination preferences; the rules themselves come from different places and change when different things happen in the world.</p>
+<p><strong>The second signal is a language clash.</strong> The moment you find yourself saying "well, in <em>this</em> part of the system, 'person' means..." you have identified a bounded context boundary. Shared words with different meanings create models that cannot be precise. In DWP, "verified" means a statistical confidence score in the Identity context but "meets policy criteria for benefit entitlement" in the Eligibility context. Forcing these into one model means neither definition can be stated cleanly.</p>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>In Identity BC</th>
+<th>In Eligibility BC</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Person"</td>
+<td>Graph-resolved entity</td>
+<td>Applicant in a case</td>
+</tr>
+<tr>
+<td>"Address"</td>
+<td>Evidence-backed fact</td>
+<td>Declared residence</td>
+</tr>
+<tr>
+<td>"Verified"</td>
+<td>Confidence score</td>
+<td>Meets policy criteria</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The third signal is different change drivers.</strong> Ask "why would this logic change?" and count the distinct answers. Identity scoring changes when fraud patterns evolve. Residency rules change when legislation updates. Evidence types change when new document formats become acceptable. Credential formats change when standards bodies publish new specifications. Different change drivers mean different business pressures, different teams pushing changes, and different deployment cadences, all of which compound into coupling problems when areas share a model.</p>
+<p><strong>The fourth signal is incompatible invariants.</strong> Every bounded context enforces rules that must always hold true. Identity must resolve to exactly one graph node per real human. Evidence is append-only once stored. Eligibility decisions are versioned by policy effective date. Payment records carry double-entry balance integrity. When invariants come from different domains of authority, enforcing them in a single model forces constant compromise. Each context can enforce its rules cleanly only when separated from others with conflicting consistency requirements.</p>
+<p><strong>The fifth signal is a data lifecycle mismatch.</strong> Evidence is append-only historical record. Identity is continuously merged and deduplicated. Eligibility lives in case-based snapshots. Credentials are versioned and revocable. When storage and access patterns differ this fundamentally, a shared model must accommodate every lifecycle variant simultaneously; the storage layer becomes a tangle of special cases. Separate bounded contexts can adopt the storage pattern each data type actually needs.</p>
+<p><strong>The sixth signal is the cognitive load test.</strong> Ask "can one team fully understand this model and reason about its edge cases without qualification?" If explaining the model requires "...except in this other part where things work differently," you have crossed a comprehension boundary. A bounded context should be entirely knowable by its team. When it isn't, reasoning about changes becomes unreliable, and the rate of unexpected failures increases.</p>
+<h4 id="a-practical-heuristic">A Practical Heuristic</h4>
+<p>When deciding "should this be a new BC?" ask:</p>
+<ol>
+<li>Would merging these models force awkward compromises in meaning?</li>
+<li>Do different people own the rules?</li>
+<li>Do they change for different reasons?</li>
+<li>Would I version their rules independently?</li>
+<li>Would different teams naturally work on them?</li>
+</ol>
+<p><strong>If 3+ are yes, split.</strong></p>
+<p><strong>Why this matters for microservices:</strong> Every BC boundary is a distributed systems tax: network calls, eventual consistency, failure handling, messaging, monitoring. You don't split for purity; you split when semantic independence outweighs the distributed cost. The signals above tell you when it does.</p>
+<blockquote>
+<p><strong>See also:</strong> Paper 4, Section 2 shows how these six signals can be automated into domain manifest generation. Paper 6, Part Two applies them to discover the full DWP bounded context map.</p>
+</blockquote>
+<h4 id="how-do-you-know-when-boundaries-are-right">How Do You Know When Boundaries Are Right?</h4>
+<p>Boundaries are hypotheses, not facts. You propose them based on the signals above, then validate them through implementation. Here's how to know if you got it wrong:</p>
+<p><strong>Signs your boundaries are too narrow (too many contexts):</strong>
+- Every user action requires coordinating multiple services
+- You're building lots of sagas for what feel like simple operations
+- Teams constantly need to coordinate releases
+- "We can't do X until the Y team deploys their change"</p>
+<p><strong>Signs your boundaries are too wide (not enough contexts):</strong>
+- Teams step on each other working in the same codebase
+- The ubiquitous language has asterisks ("*except in the payment flow")
+- Changes in one area unexpectedly break another area
+- New team members take months to understand the model</p>
+<p><strong>Signs your boundaries are in the wrong place:</strong>
+- You keep needing to share entities between services
+- One service is always calling another for "just one more thing"
+- Data that changes together lives in different services</p>
+<p><strong>What to do about it:</strong> Boundaries can be refactored. It's expensive but not impossible. If you see these signals early, adjust before the cost compounds. If you're unsure, start with fewer, larger bounded contexts and split when pain emerges; it's easier to split a monolith than to merge microservices.</p>
+<h4 id="applying-the-signals-legislation-as-a-boundary-driver">Applying the Signals: Legislation as a Boundary Driver</h4>
+<p>For government systems, there is a boundary source that pre-empts discovery: <strong>legislation itself</strong>. Acts of Parliament, statutory instruments, and regulations are not just compliance requirements; they are a pre-existing boundary map. Each act encodes distinct rules, terms, and change cadences. Understanding that structure gives architects a head start on decomposition that years of event-storming might otherwise only approximate.</p>
+<p>At DWP, legislation stratifies naturally into DDD-relevant tiers:</p>
+<table>
+<thead>
+<tr>
+<th>Legislative Layer</th>
+<th>Examples</th>
+<th>DDD Interpretation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Core administration acts (e.g. Social Security Administration Act 1992)</td>
+<td>Claims processing, payment machinery, decisions</td>
+<td>Platform / shared bounded contexts, stable, centrally governed</td>
+</tr>
+<tr>
+<td>Product-specific statutes (Welfare Reform Act; SSCA 1992 benefits provisions)</td>
+<td>UC rules, PIP assessment criteria, ESA work capability</td>
+<td>Product bounded contexts, change with policy, team-owned</td>
+</tr>
+<tr>
+<td>Statutory instruments and regulations</td>
+<td>Income thresholds, taper rates, assessment criteria</td>
+<td>Domain logic <em>within</em> a product context, frequently updated</td>
+</tr>
+</tbody>
+</table>
+<p>The practical implication: when a statutory instrument changes the UC taper rate, that change belongs inside the UC Eligibility context's <code>EntitlementPolicy</code> domain service. It does not touch Claims, Payments, or the State Pension Eligibility context. Legislation-as-boundary-map lets you identify which team owns which change before a line of code is written.</p>
+<p><strong>Translating a policy statement into a domain model</strong> follows a consistent three-step pattern. Take the statutory concept: <em>"a person has limited capability for work."</em> Step one is to extract the policy intent, what must be <em>true</em> at a point in time. Here: the claimant's health condition is assessed as preventing normal employment. This is not an attribute of a <code>Person</code> entity; it is a <em>status</em> with its own lifecycle, evidence requirements, and appeal rights.</p>
+<p>Step two is to name it as a domain concept: <code>WorkCapabilityStatus</code>. This aggregate has states (not assessed, assessed limited, assessed fit for work, under appeal), governed transitions (reversion to "not assessed" is only possible at tribunal), and its own invariant: status can only be set by an authorised assessor, never by a claimant directly.</p>
+<p>Step three is to encapsulate the rules as a <strong>domain service</strong>. A domain service is stateless logic that doesn't naturally belong to any single entity or aggregate; it operates <em>on</em> domain objects rather than <em>being</em> one. Use cases (application layer) orchestrate workflows; domain services encode business rules that span multiple objects or represent pure policy logic.</p>
+<p>Why not make this an aggregate? Because aggregates own state; they persist, they have identity, they enforce invariants on <em>their own data</em>. The eligibility rules don't own data; they evaluate the current state of other aggregates (<code>WorkCapabilityStatus</code>, income records, residency records) and return a decision. They're pure functions, not stateful objects.</p>
+<p>Why not an "aggregate of aggregates"? Because that breaks the model. Each aggregate has exactly one root that controls all access. If you nest aggregates, you either have two roots (which one controls access?) or you have one root controlling another root (which means the inner one isn't really an aggregate; it's just an entity). Aggregates are <em>peers</em> that communicate through domain events, not a hierarchy where one contains another.</p>
+<p>Here, the eligibility rules don't belong inside any one aggregate, so they live in a service:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>EligibilityPolicy (UC context)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a> |-- WorkCapabilityRule       (Work Capability Assessment Regulations)
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a> |-- IncomeRule               (Universal Credit Regulations 2013)
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a> +-- ResidencyRule            (Habitual Residence Test guidance)
+</code></pre></div>
+<p>Each rule class maps to a distinct legislative instrument. When parliament amends the income thresholds, only <code>IncomeRule</code> changes. When the Work Capability Assessment is reformed, only <code>WorkCapabilityRule</code> changes. Nothing else moves.</p>
+<p>This also makes the language signal (Signal 2) structurally precise: UC income and ESA income use the same English word but are defined in two separate statutory instruments with different counting rules, different permitted deductions, and different taper mathematics. That linguistic divergence is not an implementation quirk; it reflects two different legal regimes. Sharing one income model across UC and ESA is therefore not a simplification; it is a category error dressed as one.</p>
+<blockquote>
+<p><strong>The governing principle:</strong> Treat legislation as <em>policy source code</em>: it defines what must be true, your domain model defines how it works, and your bounded context is where that definition is held consistently. Legislation provides the constraints and the terminology; DDD provides the structure and the behaviour. The craft is in the translation between them.</p>
+</blockquote>
+<h3 id="14-bounded-contexts-and-microservice-count">1.4 Bounded Contexts and Microservice Count</h3>
+<p><strong>The default rule: 1 BC = 1 microservice.</strong></p>
+<p>A bounded context is one domain model, one ubiquitous language, one consistency boundary, one set of invariants. Splitting that across multiple services creates a distributed monolith.</p>
+<p>Inside a BC, objects reference each other freely, transactions make sense, invariants can be enforced synchronously, and the model evolves together. If you split it, you trade strong consistency for network hops, simple reasoning for eventual consistency headaches, and ACID invariants for saga complexity.</p>
+<h4 id="legitimate-reasons-for-multiple-microservices-per-bc-rare">Legitimate Reasons for Multiple Microservices per BC (Rare)</h4>
+<ol>
+<li>
+<p><strong>Scale characteristics radically differ:</strong> 99% reads vs heavy ML scoring job vs massive batch processing. You might split into a core BC service (owns model + writes) and a stateless compute service (pure function processing), but the second one doesn't own the model; it's infrastructure-ish.</p>
+</li>
+<li>
+<p><strong>Technical isolation, not domain isolation:</strong> Separate public API gateway service, background worker service, or event projector service. These are delivery mechanics, not BC splits. Still logically one BC.</p>
+</li>
+<li>
+<p><strong>Team size pressure (Conway's Law):</strong> If a BC becomes too large for one team, you might internally modularize into multiple deployables, but this is a scaling compromise, not ideal DDD. Usually a smell that the BC might actually hide multiple subdomains.</p>
+</li>
+</ol>
+<p><strong>The consistency test:</strong> Ask "Can a business invariant break if these two services disagree for 5 seconds?" If yes, they belong in the same BC service.</p>
+<h4 id="the-distributed-layers-antipattern">The Distributed Layers Antipattern</h4>
+<p>A common mistake is splitting by technical layer: "read service" vs "write service," "validation service" vs "rules service," "API service" vs "processing service."</p>
+<p>The tell: both services need to understand the same domain rules, or both connect to the same database. You haven't separated domain concerns; you've taken code that used to be a function call and made it a network call. Same coupling, more latency, more failure modes.</p>
+<p><strong>Contrast with legitimate infrastructure splits.</strong> An API gateway that routes requests to your BC service doesn't know eligibility rules; it just forwards traffic. A background worker that retries failed jobs doesn't validate claims; it just calls your BC service and handles the response. These are fine because they don't own domain logic; they're plumbing.</p>
+<p>The test: if you deleted the "second service" and moved its code into the first as a module, would anything change except deployment mechanics? If the domain model stays identical, you never had two services; you had one service deployed awkwardly.</p>
+<h3 id="15-aggregates">1.5 Aggregates</h3>
+<p><strong>Bounded contexts contain aggregates.</strong> An aggregate is a consistency boundary, a cluster of entities that must change together to maintain invariants.</p>
+<p>The Eligibility bounded context might contain:
+- An <code>EligibilityDecision</code> aggregate (the decision with its rules and evidence)
+- A <code>ClaimHistory</code> aggregate (the timeline of claims and changes)</p>
+<p>Each aggregate has a root entity that controls access, and invariants are enforced within the aggregate boundary.</p>
+<p><strong>Aggregates typically become microservices.</strong> A microservice is a deployment unit, something that deploys, scales, and fails independently. Microservices align with aggregates because aggregates define transactional boundaries. The <code>eligibility-decision-service</code> owns the <code>EligibilityDecision</code> aggregate; the <code>claim-history-service</code> owns <code>ClaimHistory</code>. Multiple microservices can exist within one bounded context.</p>
+<h4 id="when-multiple-aggregates-must-cooperate">When Multiple Aggregates Must Cooperate</h4>
+<p>Aggregates guarantee that their internal rules hold true at a moment in time. But what if a business process needs multiple aggregates to change together, yet they can't be one aggregate due to size, locking, or scalability?</p>
+<p>You shift from <strong>state consistency</strong> to <strong>process consistency</strong> using domain events and sagas.</p>
+<p>An aggregate finishes a valid state change and emits a fact: <code>IdentityVerified</code>, <code>EvidenceValidated</code>, <code>ResidencyRecorded</code>. These are past-tense domain events announcing "this became true."</p>
+<p>A saga (or process manager) coordinates the business flow. When Identity verifies a person, the EligibilityDetermination saga hears the event, loads the EligibilityCase aggregate, and calls <code>markIdentityCheckPassed()</code>. The eligibility aggregate updates itself and emits its own event. The saga continues until all conditions are satisfied.</p>
+<p>No giant transaction, just process coordination over time.</p>
+<p><strong>The principle:</strong>
+- <strong>If it must be true at the same instant: same aggregate</strong>
+- <strong>If it must become true eventually: saga</strong></p>
+<p>Aggregates protect truth at a moment. Sagas protect truth across time. This is how complex business processes work in distributed systems without distributed transactions.</p>
+<h4 id="using-external-data-for-decisions">Using External Data for Decisions</h4>
+<p>Sagas coordinate <em>when</em> things happen. But there's a different question: when an aggregate needs data from another context to make a decision, how does it get that data?</p>
+<p>Consider Eligibility. To decide entitlement, it needs:
+- Identity confidence (is this a verified person?)
+- Evidence status (do the documents support the claim?)
+- Residency confirmation (do they live where they say?)</p>
+<p>These facts live in other bounded contexts. Eligibility doesn't own them. Three patterns exist:</p>
+<p><strong>1. Query at decision time.</strong> Eligibility calls the Identity service when it needs to check verification status. Simple, but creates runtime coupling: if Identity is down, Eligibility can't decide. Also tempts you to use Identity's model directly, leaking their language into yours.</p>
+<p><strong>2. Maintain a local projection.</strong> Eligibility subscribes to <code>IdentityVerified</code>, <code>EvidenceValidated</code> events and builds its own read model. When decision time comes, it queries its local copy. No runtime dependency, but the data is eventually consistent; there's a window where Identity knows something Eligibility doesn't yet.</p>
+<p><strong>3. Pass data as parameters.</strong> The use case (application layer) gathers what's needed from other contexts and passes it to the domain. The aggregate receives value objects, not references. This keeps the domain pure but pushes coordination complexity to the application layer.</p>
+<p>DWP typically uses pattern 2 for high-volume decisions and pattern 3 for complex cases requiring human review.</p>
+<p><strong>The critical rule: translate into your language.</strong> Eligibility doesn't store Identity's <code>VerificationResult</code> object. It stores the fact in its own terms: "verified to threshold X" or "requires manual review." This is the anti-corruption layer: you take external data and translate it into your bounded context's ubiquitous language.</p>
+<p>But for audit, you need more than the value; you need <em>provenance</em>. Which event did this come from? When did we receive it? What version of Identity's model produced it? This means the translated data isn't a pure value object; it's an entity (or part of one) with identity and timestamp:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>ReceivedIdentityConfidence
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  |-- confidenceLevel: ConfidenceLevel     (the translated value)
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>  |-- sourceEventId: EventId               (which event we consumed)
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>  |-- receivedAt: Timestamp                (when we recorded it)
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>  +-- sourceContextVersion: String         (Identity&#39;s schema version)
+</code></pre></div>
+<p>When the <code>EligibilityDecision</code> aggregate records its decision, it references the <code>ReceivedIdentityConfidence</code> it used. Audit can now trace: "This decision used identity confidence from event X, received at time Y, when Identity was running schema version Z." If a dispute arises, you can determine exactly what data the decision was based on.</p>
+<p>The same applies downstream. Payments doesn't understand eligibility rules. It receives an <code>EntitlementAmount</code>, a fact stated in payment terms, with its own provenance chain. If eligibility logic changes, Payments is unaffected as long as the contract ("here's what to pay") remains stable.</p>
+<pre class="mermaid"><code>flowchart LR
+    subgraph Identity["Identity Context"]
+        IV["IdentityVerified event"]
+    end
+
+    subgraph Eligibility["Eligibility Context"]
+        IC["ReceivedIdentityConfidence\n(with provenance)"]
+        ED["EligibilityDecision"]
+        EA["EntitlementAmount"]
+    end
+
+    subgraph Payments["Payments Context"]
+        PO["PaymentOrder"]
+    end
+
+    IV --&gt;|"translated + tracked"| IC
+    IC --&gt; ED
+    ED --&gt;|"emits"| EA
+    EA --&gt;|"translated + tracked"| PO</code></pre>
+<p>This is why bounded contexts work: each context owns its language, translates at the boundaries, and never lets external models leak in. The coupling is in the <em>contracts</em> (events, APIs), not the <em>models</em>.</p>
+<h3 id="16-the-complete-hierarchy">1.6 The Complete Hierarchy</h3>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>What it is</th>
+<th>Relationship</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Domain</strong></td>
+<td>The overall problem space</td>
+<td>Contains subdomains</td>
+<td>DWP (Social Security)</td>
+</tr>
+<tr>
+<td><strong>Subdomain</strong></td>
+<td>A distinct problem area</td>
+<td>Modelled by bounded context(s)</td>
+<td>Benefits, Pensions, Identity</td>
+</tr>
+<tr>
+<td><strong>Bounded Context</strong></td>
+<td>A consistent model with precise language</td>
+<td>Contains aggregates</td>
+<td>Eligibility Context, Claims Context</td>
+</tr>
+<tr>
+<td><strong>Aggregate</strong></td>
+<td>Entities that change together</td>
+<td>Implemented by microservice</td>
+<td>EligibilityDecision, ClaimHistory</td>
+</tr>
+<tr>
+<td><strong>Microservice</strong></td>
+<td>A deployment unit</td>
+<td>Structured by Clean Architecture</td>
+<td>eligibility-decision-service</td>
+</tr>
+<tr>
+<td><strong>Clean Architecture</strong></td>
+<td>Code layers within a microservice</td>
+<td>(see Part III)</td>
+<td>Entities, Use Cases, Adapters</td>
+</tr>
+</tbody>
+</table>
+<p>The value of maintaining these as separate concepts is that <strong>they change for different reasons and at different rates:</strong></p>
+<ul>
+<li>Business organisation evolves slowly; you don't restructure your subdomains monthly</li>
+<li>Models evolve as understanding deepens; bounded contexts might split or merge as you learn more</li>
+<li>Deployment decisions evolve with technical needs; you might split a microservice for scalability without changing your domain understanding</li>
+</ul>
+<p>When these concepts are conflated, you get fragile systems. If you assume one domain equals one bounded context equals one microservice, you either end up with microservices that are too large (because domains are big) or you fracture your domain model across deployment units that should share understanding.</p>
+<blockquote>
+<p><strong>See also:</strong> Paper 6, Part Four applies this hierarchy to DWP, walking through each level from domain to microservice for the complete government services case study.</p>
+</blockquote>
+<hr />
+<h2 id="part-ii-context-relationships-and-communication">Part II: Context Relationships and Communication</h2>
+<h3 id="21-the-technical-mechanisms">2.1 The Technical Mechanisms</h3>
+<p><strong>The technical mechanisms are the same everywhere:</strong> microservices communicate using REST APIs, gRPC, message queues, event streams, or GraphQL whether they're in the same bounded context or different ones. The HTTP calls look identical. The JSON payloads flow the same way. The technical plumbing doesn't change.</p>
+<p><strong>What changes is the semantic handling.</strong></p>
+<h3 id="22-intra-context-communication">2.2 Intra-Context Communication</h3>
+<p><strong>Within a bounded context:</strong> Microservices share the same model and ubiquitous language.</p>
+<p>The <code>eligibility-decision-service</code> and <code>eligibility-rules-service</code> (both in Eligibility Context) can exchange messages directly. When one sends a <code>ClaimSubmitted</code> event containing a <code>Claimant</code> object, the other understands exactly what that means, same definitions, same rules, same language. No translation needed.</p>
+<p>They use DTOs (Data Transfer Objects) for wire format, but no conceptual translation is required. Both services are implementing slices of the same bounded context. The DTO is just serialisation for transport; it's not translating between different conceptual models.</p>
+<h3 id="23-inter-context-communication">2.3 Inter-Context Communication</h3>
+<p><strong>Across bounded contexts:</strong> Microservices have different models and languages, so they need agreements about how to handle the semantic differences at their boundaries.</p>
+<p>This is where DDD context relationships come in:</p>
+<h4 id="anti-corruption-layer-acl">Anti-Corruption Layer (ACL)</h4>
+<p>The consuming context translates the supplier's model into its own language.</p>
+<p>When Eligibility calls Customer360, it receives "Customer Profile" data but translates it into "Claimant" through an ACL. Customer360 can change its internal model without breaking Eligibility because the ACL absorbs the difference.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="c1"># Eligibility&#39;s Anti-Corruption Layer</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">IdentityACL</span><span class="p">:</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">translate_to_claimant</span><span class="p">(</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>        <span class="bp">self</span><span class="p">,</span> 
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        <span class="n">response</span><span class="p">:</span> <span class="n">IdentityVerificationResponse</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ClaimantVerificationStatus</span><span class="p">:</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>        <span class="k">return</span> <span class="n">ClaimantVerificationStatus</span><span class="p">(</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>            <span class="n">claimant_id</span><span class="o">=</span><span class="n">UUID</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">identity_id</span><span class="p">),</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>            <span class="n">identity_verified</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">verification_level</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;HIGH&quot;</span><span class="p">,</span> <span class="s2">&quot;VERIFIED&quot;</span><span class="p">],</span>
+<a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>            <span class="n">current_address</span><span class="o">=</span><span class="n">Address</span><span class="p">(</span>
+<a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>                <span class="n">line1</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">primary_place</span><span class="p">[</span><span class="s1">&#39;address_line_1&#39;</span><span class="p">],</span>
+<a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>                <span class="n">postcode</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">primary_place</span><span class="p">[</span><span class="s1">&#39;postcode&#39;</span><span class="p">]</span>
+<a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>            <span class="p">),</span>
+<a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>            <span class="n">can_receive_payments</span><span class="o">=</span><span class="n">response</span><span class="o">.</span><span class="n">verification_level</span> <span class="o">==</span> <span class="s2">&quot;VERIFIED&quot;</span>
+<a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>        <span class="p">)</span>
+</code></pre></div>
+<h4 id="shared-kernel">Shared Kernel</h4>
+<p>Two contexts agree on shared definitions for their overlap.</p>
+<p>Customer360 is a shared kernel across benefit contexts; they all agree on what "verified address" means, what confidence scores represent, and how person relationships are structured. Changes to shared kernel concepts require consensus from all participants.</p>
+<p><strong>What does this mean in practice?</strong> A shared kernel is <em>shared code</em>, not just a shared agreement. Both contexts compile against the same types, literally the same classes, interfaces, and value objects. Typically this lives in a shared library (a NuGet package, Maven artifact, or npm module) that both services depend on.</p>
+<p>This is stronger than "we agree our ubiquitous languages will align." Language alignment is a social contract; shared kernel is a <em>compile-time</em> contract. If the <code>VerifiedAddress</code> type changes, both contexts get the change when they update their dependency. Neither can drift without the other noticing.</p>
+<p>The trade-off is coupling. Shared kernels create deployment coordination; you can't change the kernel without considering all consumers. This is why they should be <em>small</em>: core identity types, common value objects, shared event schemas. If your shared kernel grows to include business logic, you've likely merged two bounded contexts and should recognise that explicitly.</p>
+<p><strong>Why shared code, not a shared service?</strong> A shared service owns data and you call it at runtime. A shared kernel shares <em>definitions</em>, not <em>state</em>. Each context still owns its own copy of addresses; it just uses the same <code>VerifiedAddress</code> type to represent them. Benefits has its addresses; Pensions has its addresses; they're stored separately, governed separately, but described identically.</p>
+<p>This matters because:
+- No runtime dependency: if the Identity service is down, Benefits can still work with the <code>VerifiedAddress</code> objects it already has
+- Type safety at compile time: mismatches are caught before deployment, not in production logs
+- Each context remains autonomous: it owns its data, just agrees on vocabulary</p>
+<p>If you find yourself wanting a shared service that <em>stores</em> the shared data, that's not a shared kernel; that's a separate bounded context (like Customer360) with a Customer-Supplier or OHS relationship to its consumers.</p>
+<p><strong>When to use it:</strong> When the cost of translation is higher than the cost of coordination. If Benefits and Pensions both need to understand "verified address" and the definitions must be identical, maintaining two separate <code>VerifiedAddress</code> types with translation between them is pure overhead. Share the type.</p>
+<p><strong>When to avoid it:</strong> When contexts need to evolve independently, or when "the same word" actually means subtly different things in each context. If Benefits' "verified" means "above 0.8 confidence" but Pensions' means "human-reviewed," don't force a shared kernel; use an anti-corruption layer and let each context define the term in its own language.</p>
+<h4 id="open-host-service-ohs">Open Host Service (OHS)</h4>
+<p>The supplier publishes a stable, well-documented API and maintains backward compatibility.</p>
+<p>Customer360 is an OHS; it defines its interface, versions it carefully, and doesn't break consumers without migration paths.</p>
+<h4 id="customer-supplier">Customer-Supplier</h4>
+<p>The contexts coordinate but the supplier has more power. They discuss changes, but the supplier ultimately decides what to provide.</p>
+<h4 id="conformist">Conformist</h4>
+<p>The downstream context accepts the upstream model without translation; riskier but simpler when the upstream model fits well.</p>
+<h4 id="partnership">Partnership</h4>
+<p>Two contexts evolve together, coordinating closely and sharing responsibility for the interface between them.</p>
+<h4 id="the-dwp-context-map-in-practice">The DWP Context Map in Practice</h4>
+<p>The six patterns above combine in a real architecture. The following context map shows how DWP's principal bounded contexts relate. Each edge is labelled with its relationship type, which determines how integration is designed, tested, and maintained.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Platform["Platform Services"]
+        Identity["Identity Platform (Open Host Service)"]
+        CX360["Customer360 (Shared Kernel)"]
+        Payments["Payments (Customer-Supplier)"]
+        Notif["Notifications (Open Host Service)"]
+    end
+
+    subgraph Business["Business Contexts"]
+        Benefits["Benefits Context"]
+        Pensions["Pensions Context"]
+        ChildMaint["Child Maintenance"]
+        Fraud["Fraud Detection"]
+    end
+
+    Benefits --&gt;|"ACL: translates to Claimant"| Identity
+    Pensions --&gt;|"ACL: translates to Pensioner"| Identity
+    ChildMaint --&gt;|"ACL: translates to Party"| Identity
+
+    Benefits &lt;-.-&gt;|"Shared Kernel"| CX360
+    Pensions &lt;-.-&gt;|"Shared Kernel"| CX360
+
+    Benefits --&gt;|"drives requirements"| Payments
+
+    Benefits --&gt;|"Conformist: accepts model"| Notif
+    Pensions --&gt;|"Conformist: accepts model"| Notif
+
+    Identity &lt;--&gt;|"Partnership: co-evolve"| Fraud
+
+    style Platform fill:#fff3e0
+    style Business fill:#e3f2fd</code></pre>
+<p>Each relationship type carries different obligations. Anti-corruption layers give consuming contexts independence but require ongoing translation maintenance. The shared kernel (Customer360) provides consistency between Benefits and Pensions but requires consensus for changes; neither team can alter shared definitions unilaterally. The conformist relationships to Notifications are a pragmatic choice: the notification model is simple enough that translation overhead is not warranted. The Identity–Fraud partnership reflects that fraud signal logic co-evolves with identity resolution and is too tightly coupled to manage via a customer-supplier dependency.</p>
+<blockquote>
+<p><strong>See also:</strong> Paper 6, Part Four presents the complete bounded context catalogue derived from this map, with team ownership and inter-service contract details.</p>
+</blockquote>
+<h3 id="24-why-microservices-dont-share-domain-code">2.4 Why Microservices Don't Share Domain Code</h3>
+<p>This is where many people get stuck: <strong>if microservices are in the same bounded context, why don't they share the domain entity code?</strong></p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph BC["Eligibility Bounded Context"]
+        subgraph Spec["Ubiquitous Language Specification"]
+            ClaimantSpec["'Claimant' Definition:\n- Identity attributes\n- Location info\n- Household details\n- Claims data\n- Verification status\n- Applicable rules"]
+        end
+
+        subgraph EligService["eligibility-decision-service"]
+            EligClaimant["Claimant Entity:\n- ID, DOB, Address\n- Household composition\n- Verification status\n+ calculateEligibility()\n+ applyPolicy()"]
+        end
+
+        subgraph HistService["claim-history-service"]
+            HistClaimant["Claimant Entity:\n- ID, Name only\n+ recordClaimEvent()\n+ getHistory()"]
+        end
+
+        Spec -.-&gt;|"conceptually defines"| EligClaimant
+        Spec -.-&gt;|"conceptually defines"| HistClaimant
+    end
+
+    subgraph Shared["What IS Shared"]
+        Contracts["Event Contracts (DTOs)\nClaimSubmittedEvent"]
+        Language["Terminology\n'Claimant' means same thing"]
+    end
+
+    subgraph NotShared["What is NOT Shared"]
+        DomainCode["Domain Entity Code"]
+        BusinessRules["Business Rule Implementations"]
+        Schemas["Database Schemas"]
+    end
+
+    EligService --&gt;|publishes| Contracts
+    HistService --&gt;|consumes| Contracts
+
+    style BC fill:#e3f2fd
+    style Shared fill:#e8f5e9
+    style NotShared fill:#ffebee</code></pre>
+<p>Here's the crucial insight: <strong>A bounded context defines the complete model, the full specification of all concepts, attributes, rules, and language that exist in that problem space. Each microservice implements only the slice of that model relevant to the aggregate it owns.</strong></p>
+<p>Think of the bounded context as the authoritative dictionary and grammar for a language, while each microservice is a conversation using that language for a specific purpose.</p>
+<p>Consider the Eligibility Bounded Context. The ubiquitous language specification defines "Claimant" <strong>completely:</strong>
+- Identity attributes (ID, name, date of birth, National Insurance number)
+- Location information (current address, previous addresses, residency status)
+- Household details (relationships, household composition, dependents)
+- Claims data (claim history, active claims, eligibility decisions)
+- Verification status (confidence scores, evidence links)
+- Rules that apply (eligibility thresholds that vary by benefit type)</p>
+<p>This is the complete conceptual model, what "Claimant" means in the Eligibility Context.</p>
+<p>Now, two microservices implement different parts:</p>
+<p><strong>The eligibility-decision-service</strong> owns the <code>EligibilityDecision</code> aggregate, so its internal <code>Claimant</code> entity includes the fields needed to calculate eligibility: ID, date of birth, address, household composition, and verification status. It implements methods like <code>calculateEligibility()</code>, <code>applyPolicy()</code>, and <code>checkThresholds()</code> because these are the invariants its aggregate must enforce.</p>
+<p><strong>The claim-history-service</strong> owns the <code>ClaimHistory</code> aggregate, so its internal <code>Claimant</code> entity includes just ID and name, enough to identify whose history this is. It implements <code>recordClaimEvent()</code> and <code>getHistory()</code> because those are its aggregate's invariants.</p>
+<p><strong>Why not share one unified Claimant domain class in a library?</strong></p>
+<p>Because that creates code coupling that destroys the benefits of microservices:
+- When <code>eligibility-decision-service</code> adds household income fields to support new policy rules, <code>claim-history-service</code> must redeploy even though it doesn't use those fields
+- Database schema changes become coordinated releases across all services
+- You can't optimise each service's internal model for its specific aggregate needs
+- Testing requires the shared library to be stable, so changes become slow and risky</p>
+<p><strong>What they do share:</strong>
+- Conceptual understanding: both know what "Claimant" means in domain terms
+- Contracts: when <code>eligibility-decision-service</code> sends a <code>ClaimSubmittedEvent</code>, it includes a lightweight DTO with the fields <code>claim-history-service</code> needs (claimant ID, claim ID, timestamp). This is a data contract, not a domain entity
+- Language: both use the same terminology when discussing requirements with domain experts</p>
+<p><strong>What they don't share:</strong>
+- Domain entity implementations
+- Business rule code
+- Database schemas</p>
+<p>Each has its own internal classes optimised for its aggregate. Each implements the rules relevant to its invariants. Each owns its own data store.</p>
+<p>This is how you get both conceptual integrity (one consistent model for the bounded context) and implementation independence (each microservice evolves its internals without coordinating releases).</p>
+<hr />
+<h2 id="part-iii-clean-architecture-within-microservices">Part III: Clean Architecture Within Microservices</h2>
+<p>Within a microservice, Clean Architecture creates boundaries between layers. This is where many developers need the most help, so let's be explicit about what Clean Architecture actually means and why it matters.</p>
+<h3 id="31-the-core-principle">3.1 The Core Principle</h3>
+<p>Clean Architecture isn't about drawing circles on a whiteboard. It's about protecting business truth from technical chaos.</p>
+<p>Frameworks change. Databases change. UIs change. Cloud vendors change. <strong>Your business rules should not.</strong></p>
+<p>Clean Architecture is the structure that makes that separation real.</p>
+<p><strong>The big idea in one sentence:</strong> All dependencies point inward, toward the business. Never the other way around. Your core business rules do not know what database you use, what web framework you use, or whether requests come from REST, GraphQL, CLI, or events. The outside world depends on the core. The core depends on nothing.</p>
+<h3 id="32-what-is-a-dependency">3.2 What is a Dependency?</h3>
+<p>In software, if code in module A calls code in module B, or imports from module B, or needs module B to compile or run, then A depends on B.</p>
+<p>Dependencies create connections. When B changes, A might break. When you test A, you need B available. Dependencies accumulate into coupling, and coupling makes systems rigid and fragile.</p>
+<p><strong>Why does this matter?</strong></p>
+<p>Because the direction of dependencies determines what breaks what:
+- If your business logic depends on your database, then changing databases forces you to rewrite business rules
+- If your entities depend on your web framework, then framework upgrades risk breaking core domain logic
+- Bad dependency direction creates systems where technical changes cause business changes</p>
+<p>Clean Architecture reverses this. Your core business logic doesn't depend on anything external; it defines interfaces for what it needs, and the external world implements those interfaces.</p>
+<p>Consider persistence. Your use case needs to save a claim. Instead of calling Postgres directly, it calls a <code>ClaimRepository</code> interface that lives <em>inside</em> the core:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>// Defined in the core layer - the domain owns this contract
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>interface ClaimRepository {
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    save(claim: Claim): void
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    findById(id: ClaimId): Claim
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>}
+</code></pre></div>
+<p>The infrastructure layer provides the implementation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>// Defined in the infrastructure layer - implements the domain&#39;s contract
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>class PostgresClaimRepository implements ClaimRepository {
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    save(claim: Claim): void { /* SQL here */ }
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>    findById(id: ClaimId): Claim { /* SQL here */ }
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>}
+</code></pre></div>
+<p>The dependency flows <em>inward</em>: <code>PostgresClaimRepository</code> depends on <code>ClaimRepository</code> (it has to implement that interface). The core doesn't depend on Postgres at all; it defines what it needs and trusts something will provide it. At runtime, dependency injection wires the implementation to the interface.</p>
+<p><strong>"But doesn't the domain still depend on <em>something</em> implementing the interface?"</strong> Yes, at runtime, someone must provide an implementation. But there's a crucial difference between <em>compile-time</em> and <em>runtime</em> dependency:</p>
+<ul>
+<li><strong>Compile-time</strong>: Can the domain code compile without knowing about Postgres? Yes. The domain only references the interface it owns.</li>
+<li><strong>Test-time</strong>: Can you test the domain without a real database? Yes. Pass in a fake <code>InMemoryClaimRepository</code> that implements the same interface.</li>
+<li><strong>Change-time</strong>: If you switch from Postgres to DynamoDB, does the domain code change? No. Only the infrastructure layer changes.</li>
+</ul>
+<p>The domain depends on <em>the contract being satisfied</em>, not on <em>any specific implementation</em>. That's the inversion: the infrastructure must conform to the domain's expectations, not the other way around.</p>
+<p><strong>Put simply: outer layers depend on inner layers specifying what they want.</strong> The domain says "I need something that can save and retrieve claims." The infrastructure layer says "I'll provide that using Postgres." The domain doesn't know or care about the second part.</p>
+<p>This is why you can swap Postgres for DynamoDB without touching business logic. The infrastructure layer changes; the core doesn't.</p>
+<p><strong>This is dependency inversion</strong>, and it's the mechanism that makes everything else possible.</p>
+<h3 id="33-the-layers">3.3 The Layers</h3>
+<p>Think of it like a castle with thick inner walls protecting the crown jewels.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Outer["Frameworks &amp; Drivers (Outermost)"]
+        direction TB
+        FW["FastAPI, DynamoDB, Web Servers, External APIs"]
+
+        subgraph Adapters["Interface Adapters"]
+            AD["Controllers, Presenters, Gateways, Repository Impls"]
+
+            subgraph UseCases["Use Cases"]
+                UC["Application Workflows, Orchestration"]
+
+                subgraph Entities["Domain (Innermost)"]
+                    ENT["Entities, Value Objects, Domain Services, Invariants"]
+                end
+            end
+        end
+    end
+
+    FW -.-&gt;|depends on| AD
+    AD -.-&gt;|depends on| UC
+    UC -.-&gt;|depends on| ENT
+
+    style Outer fill:#ffebee
+    style Adapters fill:#fff3e0
+    style UseCases fill:#e8f5e9
+    style Entities fill:#e3f2fd</code></pre>
+<p><strong>Dependencies point INWARD only</strong></p>
+<p><strong>The layers, from most stable to most volatile:</strong></p>
+<p><strong>Entities (innermost)</strong> contain core business concepts and invariants, the fundamental truths of your domain. A <code>Refund</code> entity knows that you can't refund more than the original payment. It doesn't know whether it's stored in DynamoDB or Postgres, whether it arrived via HTTP or a message queue.</p>
+<p>This layer also includes <strong>domain services</strong>, stateless logic that spans multiple entities. The <code>EligibilityPolicy</code> from §1.3 lives here: it evaluates rules across <code>WorkCapabilityStatus</code>, income records, and residency, pure domain logic that doesn't belong inside any single entity. Domain services are part of the domain model, not application orchestration.</p>
+<p><strong>Use Cases</strong> (sometimes called Interactors or Application Services) orchestrate workflows and cause side effects. The <code>ProcessRefund</code> use case loads data, calls domain logic, persists changes, emits events. It depends on repository and event bus interfaces.</p>
+<p><strong>The distinction:</strong> Domain services are <em>pure</em>: give them inputs, get outputs, no side effects, no dependencies on persistence or messaging. Use cases are <em>impure</em>: they load, save, publish, and coordinate. Both contain business logic, but domain services answer questions ("Is this claimant eligible?") while use cases make things happen ("Process this eligibility application and record the outcome").</p>
+<p>The same eligibility rules apply whether you're processing a new claim, re-evaluating after a change of circumstances, or running a batch recalculation. The domain service is reused; the use cases for each scenario are different because they coordinate different workflows.</p>
+<p><strong>Interface Adapters</strong> translate between the use cases and the outside world. Controllers receive HTTP requests and translate them into use case inputs. Presenters translate use case outputs into HTTP responses. Repository adapters implement the repository interfaces that use cases depend on, translating domain objects to and from database formats.</p>
+<p><strong>Frameworks and Drivers (outermost)</strong> contain the actual technical implementations: FastAPI, DynamoDB SDK, SNS client, web servers. These are plugins, not foundations. They're the most volatile layer, the easiest to replace, and the least important to your business.</p>
+<h3 id="34-the-rule-and-how-we-enforce-it">3.4 The Rule and How We Enforce It</h3>
+<p>Before looking at code, understand the single rule and how we maintain it.</p>
+<p><strong>The rule: Inner layers never import outer layers. Always.</strong></p>
+<p>This is not "when convenient" or "where it makes sense"; it's absolute. The question is how we maintain it when code in one layer needs to call code in another.</p>
+<p><strong>Why does outer need to call inner?</strong></p>
+<p>A controller receives an HTTP request. It needs to invoke business logic. The controller is outer, the use case is inner. The controller imports and calls the use case:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Controller --imports--&gt; UseCase --calls--&gt; UseCase.execute()
+</code></pre></div>
+<p>Import direction: outer to inner. Rule satisfied.</p>
+<p><strong>Why does inner need to call outer?</strong></p>
+<p>A use case processes a refund. It needs to save to a database. But the database adapter lives in the outer layer (infrastructure). The use case can't import it; that would be inner importing outer, breaking the rule.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>UseCase --imports--&gt; DynamoRefundRepository    BREAKS THE RULE
+</code></pre></div>
+<p>If we did this, changing from DynamoDB to Postgres means editing business logic code. The inner layer becomes coupled to infrastructure choices.</p>
+<p><strong>How do we let inner call outer without importing it?</strong></p>
+<p>The inner layer defines <em>what it needs</em> as an interface. The outer layer implements that interface:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>│         Inner Layer (Use Case)                      │
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>│  ┌──────────────────────────────────────────────┐   │
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>│  │ interface RefundRepository:                  │   │
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>│  │   save(refund)                               │   │
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>│  │   get_original_amount(payment_id)            │   │
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>│  │                                              │   │
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>│  │ UseCase calls this interface                 │   │
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>│  │ (doesn&#39;t know or care what implements it)    │   │
+<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>│  └──────────────────────────────────────────────┘   │
+<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>└─────────────────────────────────────────────────────┘
+<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>                           ↑
+<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>                           │ imports and implements
+<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>                           │
+<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>┌─────────────────────────────────────────────────────┐
+<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>│         Outer Layer (Infrastructure)                │
+<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>│  ┌──────────────────────────────────────────────┐   │
+<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>│  │ class DynamoRefundRepository(RefundRepository)│  │
+<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>│  │   def save(refund): boto3.put_item(...)      │   │
+<a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>│  └──────────────────────────────────────────────┘   │
+<a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>└─────────────────────────────────────────────────────┘
+</code></pre></div>
+<p>Now look at the import directions:
+- Use case imports <code>RefundRepository</code> interface, but that interface lives <em>in its own layer</em>. Inner to inner.
+- <code>DynamoRefundRepository</code> imports <code>RefundRepository</code> to implement it. Outer to inner.</p>
+<p><strong>Both</strong> import arrows point inward. At runtime, the use case calls DynamoDB. At compile time, nothing in the inner layer knows DynamoDB exists.</p>
+<p>Swap DynamoDB for Postgres by writing a new <code>PostgresRefundRepository</code> that implements the same interface. Zero changes to use case code.</p>
+<p><strong>This is called Dependency Inversion</strong>: the compile-time dependency points the opposite direction to the runtime call.</p>
+<p><strong>Summary:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>Runtime call</th>
+<th>Compile-time import</th>
+<th>How</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controller to UseCase</td>
+<td>Outer calls inner</td>
+<td>Outer imports inner</td>
+<td>Just import</td>
+</tr>
+<tr>
+<td>UseCase to Database</td>
+<td>Inner calls outer</td>
+<td>Inner imports... inner</td>
+<td>Define interface in inner layer, outer implements it</td>
+</tr>
+</tbody>
+</table>
+<p>The rule is always enforced. The technique differs based on call direction. When outer calls inner, importing satisfies the rule directly. When inner calls outer, we restructure so the interface lives in the inner layer.</p>
+<p>With that clear, here's the code:</p>
+<h3 id="35-layer-by-layer-implementation">3.5 Layer-by-Layer Implementation</h3>
+<p>Here's how the layers work together in Python with dependency injection:</p>
+<h4 id="layer-1-domain-entities-pure-business-logic-with-zero-dependencies">Layer 1: Domain (Entities): Pure business logic with zero dependencies</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">Refund</span><span class="p">:</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Domain entity - has identity (payment_id uniquely identifies this refund)&quot;&quot;&quot;</span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">payment_id</span> <span class="o">=</span> <span class="n">payment_id</span>  <span class="c1"># Identity</span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">=</span> <span class="n">amount</span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">reason</span> <span class="o">=</span> <span class="n">reason</span>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">validate_against_payment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">original_amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">        </span><span class="sd">&quot;&quot;&quot;Business invariant enforced by the entity&quot;&quot;&quot;</span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">amount</span> <span class="o">&gt;</span> <span class="n">original_amount</span><span class="p">:</span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Refund </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">amount</span><span class="si">}</span><span class="s2"> exceeds payment </span><span class="si">{</span><span class="n">original_amount</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Key points:</strong> The <code>Refund</code> entity has <strong>identity</strong> (payment_id), contains the <strong>business invariant</strong> (can't refund more than original), and has <strong>zero imports</strong> from any other layer. It doesn't know about databases, HTTP, or AWS. This is pure domain logic.</p>
+<h4 id="layer-2-application-use-cases-defines-interfaces-orchestrates-domain-logic">Layer 2: Application (Use Cases): Defines interfaces, orchestrates domain logic</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="c1"># Use case defines the interfaces it needs (dependency inversion)</span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">RefundRepository</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface defined by use case layer - infrastructure will implement&quot;&quot;&quot;</span>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refund</span><span class="p">:</span> <span class="n">Refund</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>        <span class="k">pass</span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_original_payment_amount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a>        <span class="k">pass</span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a><span class="k">class</span><span class="w"> </span><span class="nc">EventBus</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface defined by use case layer&quot;&quot;&quot;</span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a>    <span class="nd">@abstractmethod</span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>        <span class="k">pass</span>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a>
+<a id="__codelineno-9-20" name="__codelineno-9-20" href="#__codelineno-9-20"></a><span class="k">class</span><span class="w"> </span><span class="nc">ProcessRefundUseCase</span><span class="p">:</span>
+<a id="__codelineno-9-21" name="__codelineno-9-21" href="#__codelineno-9-21"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Use case orchestrates business workflow&quot;&quot;&quot;</span>
+<a id="__codelineno-9-22" name="__codelineno-9-22" href="#__codelineno-9-22"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">repo</span><span class="p">:</span> <span class="n">RefundRepository</span><span class="p">,</span> <span class="n">event_bus</span><span class="p">:</span> <span class="n">EventBus</span><span class="p">):</span>
+<a id="__codelineno-9-23" name="__codelineno-9-23" href="#__codelineno-9-23"></a>        <span class="c1"># Dependencies point to INTERFACES (abstractions), not concrete implementations</span>
+<a id="__codelineno-9-24" name="__codelineno-9-24" href="#__codelineno-9-24"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_repo</span> <span class="o">=</span> <span class="n">repo</span>  
+<a id="__codelineno-9-25" name="__codelineno-9-25" href="#__codelineno-9-25"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span> <span class="o">=</span> <span class="n">event_bus</span>
+<a id="__codelineno-9-26" name="__codelineno-9-26" href="#__codelineno-9-26"></a>
+<a id="__codelineno-9-27" name="__codelineno-9-27" href="#__codelineno-9-27"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">amount</span><span class="p">:</span> <span class="n">Decimal</span><span class="p">,</span> <span class="n">reason</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Refund</span><span class="p">:</span>
+<a id="__codelineno-9-28" name="__codelineno-9-28" href="#__codelineno-9-28"></a>        <span class="c1"># Step 1: Get original payment to validate (calls interface method)</span>
+<a id="__codelineno-9-29" name="__codelineno-9-29" href="#__codelineno-9-29"></a>        <span class="n">original_amount</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_repo</span><span class="o">.</span><span class="n">get_original_payment_amount</span><span class="p">(</span><span class="n">payment_id</span><span class="p">)</span>
+<a id="__codelineno-9-30" name="__codelineno-9-30" href="#__codelineno-9-30"></a>
+<a id="__codelineno-9-31" name="__codelineno-9-31" href="#__codelineno-9-31"></a>        <span class="c1"># Step 2: Create domain entity and enforce invariant</span>
+<a id="__codelineno-9-32" name="__codelineno-9-32" href="#__codelineno-9-32"></a>        <span class="n">refund</span> <span class="o">=</span> <span class="n">Refund</span><span class="p">(</span><span class="n">payment_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+<a id="__codelineno-9-33" name="__codelineno-9-33" href="#__codelineno-9-33"></a>        <span class="n">refund</span><span class="o">.</span><span class="n">validate_against_payment</span><span class="p">(</span><span class="n">original_amount</span><span class="p">)</span>  <span class="c1"># Domain logic</span>
+<a id="__codelineno-9-34" name="__codelineno-9-34" href="#__codelineno-9-34"></a>
+<a id="__codelineno-9-35" name="__codelineno-9-35" href="#__codelineno-9-35"></a>        <span class="c1"># Step 3: Persist and notify (calls interface methods)</span>
+<a id="__codelineno-9-36" name="__codelineno-9-36" href="#__codelineno-9-36"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_repo</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">refund</span><span class="p">)</span>
+<a id="__codelineno-9-37" name="__codelineno-9-37" href="#__codelineno-9-37"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_event_bus</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span><span class="s2">&quot;RefundProcessed&quot;</span><span class="p">,</span> <span class="p">{</span>
+<a id="__codelineno-9-38" name="__codelineno-9-38" href="#__codelineno-9-38"></a>            <span class="s2">&quot;payment_id&quot;</span><span class="p">:</span> <span class="n">payment_id</span><span class="p">,</span> 
+<a id="__codelineno-9-39" name="__codelineno-9-39" href="#__codelineno-9-39"></a>            <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+<a id="__codelineno-9-40" name="__codelineno-9-40" href="#__codelineno-9-40"></a>        <span class="p">})</span>
+<a id="__codelineno-9-41" name="__codelineno-9-41" href="#__codelineno-9-41"></a>
+<a id="__codelineno-9-42" name="__codelineno-9-42" href="#__codelineno-9-42"></a>        <span class="k">return</span> <span class="n">refund</span>
+</code></pre></div>
+<p><strong>Key points:</strong> The use case <strong>depends on abstractions</strong> (<code>RefundRepository</code>, <code>EventBus</code> interfaces) that it defines itself; these are contracts that specify "I need these operations" without saying how they're implemented. The use case is saying "I need something that can save a refund and get payment amounts, but I don't care if it's DynamoDB, PostgreSQL, or an in-memory store; you implement it, just satisfy this contract."</p>
+<p>It knows nothing about DynamoDB, SNS, or HTTP. It orchestrates domain entities and calls interface methods. <strong>Dependency direction: use case depends on interfaces (contracts owned by use case); infrastructure implements them.</strong></p>
+<h4 id="layer-3-infrastructure-concrete-implementations-of-interfaces">Layer 3: Infrastructure: Concrete implementations of interfaces</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">decimal</span><span class="w"> </span><span class="kn">import</span> <span class="n">Decimal</span>
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">DynamoRefundRepository</span><span class="p">(</span><span class="n">RefundRepository</span><span class="p">):</span>
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Infrastructure implementation - depends inward on interface&quot;&quot;&quot;</span>
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dynamo_client</span><span class="p">):</span>
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">dynamo_client</span>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">refund</span><span class="p">:</span> <span class="n">Refund</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>        <span class="c1"># Knows about DynamoDB, translates domain entity to database format</span>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">put_item</span><span class="p">(</span><span class="n">TableName</span><span class="o">=</span><span class="s2">&quot;refunds&quot;</span><span class="p">,</span> <span class="n">Item</span><span class="o">=</span><span class="p">{</span>
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>            <span class="s2">&quot;payment_id&quot;</span><span class="p">:</span> <span class="n">refund</span><span class="o">.</span><span class="n">payment_id</span><span class="p">,</span>
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>            <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">refund</span><span class="o">.</span><span class="n">amount</span><span class="p">),</span>
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>            <span class="s2">&quot;reason&quot;</span><span class="p">:</span> <span class="n">refund</span><span class="o">.</span><span class="n">reason</span>
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>        <span class="p">})</span>
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">get_original_payment_amount</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payment_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Decimal</span><span class="p">:</span>
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>        <span class="c1"># Database-specific query logic</span>
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">get_item</span><span class="p">(</span><span class="n">TableName</span><span class="o">=</span><span class="s2">&quot;payments&quot;</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">payment_id</span><span class="p">})</span>
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>        <span class="k">return</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Item&quot;</span><span class="p">][</span><span class="s2">&quot;amount&quot;</span><span class="p">])</span>
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a><span class="k">class</span><span class="w"> </span><span class="nc">SnsEventBus</span><span class="p">(</span><span class="n">EventBus</span><span class="p">):</span>
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Infrastructure implementation - depends inward on interface&quot;&quot;&quot;</span>
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sns_client</span><span class="p">):</span>
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span> <span class="o">=</span> <span class="n">sns_client</span>
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">publish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>        <span class="c1"># Knows about SNS, handles AWS-specific publishing</span>
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_client</span><span class="o">.</span><span class="n">publish</span><span class="p">(</span>
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>            <span class="n">TopicArn</span><span class="o">=</span><span class="s2">&quot;arn:aws:sns:us-east-1:123456789:refunds&quot;</span><span class="p">,</span>
+<a id="__codelineno-10-31" name="__codelineno-10-31" href="#__codelineno-10-31"></a>            <span class="n">Message</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<a id="__codelineno-10-32" name="__codelineno-10-32" href="#__codelineno-10-32"></a>        <span class="p">)</span>
+</code></pre></div>
+<p><strong>Key points:</strong> Infrastructure classes implement the interfaces defined by the use case layer. <strong>They depend inward</strong> (import <code>RefundRepository</code> interface and <code>Refund</code> entity), never the other way around. These classes contain all the technical details: AWS SDK calls, database queries, serialisation.</p>
+<p>You can swap DynamoDB for PostgreSQL by creating a <code>PostgresRefundRepository</code> that implements the same interface; use case code doesn't change.</p>
+<h4 id="layer-4-interface-adapters-translate-between-external-world-and-use-cases">Layer 4: Interface Adapters: Translate between external world and use cases</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="k">class</span><span class="w"> </span><span class="nc">RefundController</span><span class="p">:</span>
+<a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Controller translates HTTP requests into use case calls&quot;&quot;&quot;</span>
+<a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">use_case</span><span class="p">:</span> <span class="n">ProcessRefundUseCase</span><span class="p">):</span>
+<a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>        <span class="bp">self</span><span class="o">.</span><span class="n">_use_case</span> <span class="o">=</span> <span class="n">use_case</span>  <span class="c1"># Depends on concrete use case</span>
+<a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>
+<a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">handle_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request_body</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>        <span class="c1"># Translate from HTTP format (strings, dicts) to domain types</span>
+<a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>        <span class="n">payment_id</span> <span class="o">=</span> <span class="n">request_body</span><span class="p">[</span><span class="s2">&quot;payment_id&quot;</span><span class="p">]</span>
+<a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>        <span class="n">amount</span> <span class="o">=</span> <span class="n">Decimal</span><span class="p">(</span><span class="n">request_body</span><span class="p">[</span><span class="s2">&quot;amount&quot;</span><span class="p">])</span>
+<a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        <span class="n">reason</span> <span class="o">=</span> <span class="n">request_body</span><span class="p">[</span><span class="s2">&quot;reason&quot;</span><span class="p">]</span>
+<a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>
+<a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>        <span class="c1"># Execute business logic through use case</span>
+<a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>        <span class="n">refund</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_use_case</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">payment_id</span><span class="p">,</span> <span class="n">amount</span><span class="p">,</span> <span class="n">reason</span><span class="p">)</span>
+<a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
+<a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>        <span class="c1"># Translate from domain entity back to HTTP response format</span>
+<a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>        <span class="k">return</span> <span class="p">{</span>
+<a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>            <span class="s2">&quot;status&quot;</span><span class="p">:</span> <span class="s2">&quot;success&quot;</span><span class="p">,</span> 
+<a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>            <span class="s2">&quot;refund_id&quot;</span><span class="p">:</span> <span class="n">refund</span><span class="o">.</span><span class="n">payment_id</span><span class="p">,</span>
+<a id="__codelineno-11-19" name="__codelineno-11-19" href="#__codelineno-11-19"></a>            <span class="s2">&quot;amount&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">refund</span><span class="o">.</span><span class="n">amount</span><span class="p">)</span>
+<a id="__codelineno-11-20" name="__codelineno-11-20" href="#__codelineno-11-20"></a>        <span class="p">}</span>
+</code></pre></div>
+<p><strong>Key points:</strong> Controllers handle translation between external formats (HTTP JSON) and internal domain types. They depend on use cases but don't contain business logic themselves.</p>
+<p><strong>"Why is the use case concrete but the repository abstract?"</strong> Because you don't usually need to swap use cases. There's one <code>ProcessRefundUseCase</code>; you're not going to have a <code>PostgresProcessRefundUseCase</code> vs <code>DynamoProcessRefundUseCase</code>. The business logic is the same regardless of infrastructure.</p>
+<p>Repositories are abstract because you <em>do</em> want to swap implementations: real database in production, in-memory fake in tests, different database technology in different deployments. The abstraction exists where variation exists.</p>
+<p>You <em>could</em> define a <code>ProcessRefundUseCaseInterface</code> and have the controller depend on it; useful if you want to mock the entire use case in controller tests. But it's optional, not required. Abstract where you need flexibility; concrete where you don't.</p>
+<p><strong>"How does the controller know the use case's interface?"</strong> By importing it. Outer layers can see and depend on inner layers; that's the <em>allowed</em> direction (see §3.4 Situation 1). The controller imports <code>ProcessRefundUseCase</code>, sees its <code>execute(payment_id, amount, reason)</code> signature, and calls it. The use case cannot import the controller; inner layers don't know what's outside.</p>
+<h4 id="layer-5-wiring-composition-root-dependency-injection-at-application-startup">Layer 5: Wiring (Composition Root): Dependency injection at application startup</h4>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">def</span><span class="w"> </span><span class="nf">create_app</span><span class="p">():</span>
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Application startup - this is where we wire everything together&quot;&quot;&quot;</span>
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="c1"># Create infrastructure implementations (outermost layer)</span>
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    <span class="n">dynamo_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;dynamodb&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    <span class="n">sns_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;sns&quot;</span><span class="p">)</span>
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="c1"># Inject concrete implementations that satisfy the interfaces</span>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    <span class="n">repo</span> <span class="o">=</span> <span class="n">DynamoRefundRepository</span><span class="p">(</span><span class="n">dynamo_client</span><span class="p">)</span>
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>    <span class="n">event_bus</span> <span class="o">=</span> <span class="n">SnsEventBus</span><span class="p">(</span><span class="n">sns_client</span><span class="p">)</span>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="c1"># Pass implementations to use case (which only knows about interfaces)</span>
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>    <span class="c1"># This is &quot;dependency injection&quot; - injecting actual implementations at runtime</span>
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    <span class="n">use_case</span> <span class="o">=</span> <span class="n">ProcessRefundUseCase</span><span class="p">(</span><span class="n">repo</span><span class="p">,</span> <span class="n">event_bus</span><span class="p">)</span>
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    <span class="c1"># Pass use case to controller</span>
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>    <span class="n">controller</span> <span class="o">=</span> <span class="n">RefundController</span><span class="p">(</span><span class="n">use_case</span><span class="p">)</span>
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>    <span class="k">return</span> <span class="n">controller</span>
+</code></pre></div>
+<p><strong>Key points:</strong> This is <strong>dependency injection</strong>; we're injecting the actual implementations at runtime. The framework (or composition root in simpler apps) constructs concrete implementations (DynamoDB, SNS) and passes them to components that only know about abstractions (RefundRepository, EventBus interfaces).</p>
+<p>The use case never imports DynamoDB; it receives an object that satisfies its RefundRepository interface. This is where everything gets wired together.</p>
+<p>The <strong>dependency direction is always inward</strong>: infrastructure depends on use case interfaces, controller depends on use case, use case depends on domain entities. The core (domain and use cases) never knows about the outer layers (infrastructure and frameworks).</p>
+<h3 id="36-why-architects-should-care">3.6 Why Architects Should Care</h3>
+<p>This structure provides <strong>controlled blast radius:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Change Type</th>
+<th>What Changes</th>
+<th>What Doesn't Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>New database</td>
+<td>Repository implementation</td>
+<td>Use cases, domain logic</td>
+</tr>
+<tr>
+<td>New UI</td>
+<td>Controller/presenter</td>
+<td>Use cases, domain logic</td>
+</tr>
+<tr>
+<td>REST to events</td>
+<td>Adapter layer</td>
+<td>Use cases, domain logic</td>
+</tr>
+<tr>
+<td>Business rule change</td>
+<td>Entity or use case</td>
+<td>Infrastructure, adapters</td>
+</tr>
+</tbody>
+</table>
+<p>Without this architecture, you get:
+- Business logic inside controllers
+- SQL scattered throughout the codebase
+- Framework upgrades breaking core logic
+- Impossible testing
+- Rewrites instead of refactors</p>
+<p><strong>The mental model to remember:</strong> Your business is the product. Everything else is a plugin. If you can delete your web framework tomorrow and still have your core logic intact, you've done it right.</p>
+<p><strong>The payoff:</strong> Want to swap DynamoDB for PostgreSQL? Write a new <code>PostgresRefundRepository</code>, change two lines in <code>create_app()</code> to inject the new implementation, and you're done. Use case and domain code unchanged. Want to test without AWS? Create <code>InMemoryRefundRepository</code> and <code>FakeEventBus</code>, inject those in your test setup. The architecture makes these changes trivial because dependencies point the right direction.</p>
+<blockquote>
+<p><strong>What Goes Wrong Without This</strong></p>
+<p>The failure mode is domain logic scattered through the wrong layers. A controller that contains a business rule ("don't allow claims from suspended accounts") cannot be tested without starting a web server. A use case that imports <code>boto3</code> directly cannot be tested without AWS credentials. A domain entity that inherits from an ORM base class cannot exist without a database connection.</p>
+<p><em>Before Clean Architecture:</em> Policy validation buried inside the FastAPI route handler. Raw SQL inside service functions. Business rules duplicated across three endpoints because there is no canonical home for them.</p>
+<p><em>After Clean Architecture:</em> Policy validation lives in the domain entity and is enforced by its invariant. The repository interface is owned by the use case layer. Each endpoint delegates immediately to a use case and translates the result; no logic leaks outward.</p>
+<p>The simplest diagnostic: can you run your domain and use-case tests without importing your web framework? If not, the architecture is already leaking.</p>
+</blockquote>
+<hr />
+<h2 id="part-iv-testing-strategy-at-each-tier">Part IV: Testing Strategy at Each Tier</h2>
+<p>With Clean Architecture in place, we can now discuss how to validate that each layer behaves correctly. The layered structure directly enables a layered testing strategy; each boundary creates a natural test seam. Understanding which tests belong at which level is essential for both confidence and efficiency.</p>
+<p>The hierarchy requires different testing strategies at each level. Understanding this hierarchy is essential for knowing what tests to write, when to run them, and what they're protecting.</p>
+<pre class="mermaid"><code>flowchart TB
+    E2E["🔺 End-to-End Journey Tests\\n(Use Sparingly - Critical business journeys only)"]
+    Domain["Domain Rule Tests\\n(BDD-style executable specifications)"]
+
+    subgraph Contract["Contract Tests"]
+        Provider["Provider Contract\\nTests"]
+        Consumer["Consumer Contract\\nTests"]
+    end
+
+    Unit["Unit Tests\\n(Fast, focused, deterministic)"]
+    Integration["Integration Tests\\n(Verify adapters work)"]
+    Infra["🔻 Infrastructure Contract Tests\\n(Helm, health checks, configuration)"]
+
+    E2E --&gt; Domain
+    Domain --&gt; Contract
+    Contract --&gt; Unit
+    Unit --&gt; Integration
+    Integration --&gt; Infra
+
+    style E2E fill:#ffcdd2
+    style Domain fill:#fff9c4
+    style Contract fill:#c8e6c9
+    style Unit fill:#bbdefb
+    style Integration fill:#e3f2fd
+    style Infra fill:#f5f5f5</code></pre>
+<h3 id="41-domain-rule-tests">4.1 Domain Rule Tests</h3>
+<p>These are executable specifications that encode business invariants as tests. They're written in business language and validate that domain rules hold true across all implementations.</p>
+<p>Example: "A refund amount cannot exceed the original payment amount."</p>
+<p>These tests run against any service in the domain and fail if the rule is violated anywhere. They're typically written in a BDD style (Given-When-Then) and live in the domain documentation, not in service code.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="k">Feature:</span><span class="nf"> Refund Processing</span>
+<a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>
+<a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a><span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Refund cannot exceed original payment</span>
+<a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="k">    Given </span><span class="nf">a payment of £</span><span class="s">100.00</span>
+<a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a><span class="nf">    </span><span class="k">When </span><span class="nf">a refund of £</span><span class="s">150.00</span><span class="nf"> is requested</span>
+<a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="nf">    </span><span class="k">Then </span><span class="nf">the refund is rejected</span>
+<a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a><span class="nf">    </span><span class="k">And </span><span class="nf">the error message indicates &quot;</span><span class="s">exceeds original payment</span><span class="nf">&quot;</span>
+</code></pre></div>
+<h3 id="42-contract-tests">4.2 Contract Tests</h3>
+<p>Contract tests ensure that services honour their promises to each other. They come in two flavours:</p>
+<p><strong>Provider contract tests</strong> verify that a service fulfils the contract it publishes. If the payment-processing service promises a <code>GET /payments/{id}</code> endpoint that returns specific fields, these tests verify the service actually does that.</p>
+<p><strong>Consumer contract tests</strong> work the other direction, verifying that a service can work with the contracts it depends on. If the refund-management service consumes payment data, these tests verify it can handle the actual shape of data the payment service provides.</p>
+<p>Contract tests run on every commit and must all pass before merge. They catch breaking changes before any consumer is affected.</p>
+<p><strong>Key insight:</strong> Contract tests don't test business logic; they test the boundary.</p>
+<h3 id="43-unit-and-integration-tests">4.3 Unit and Integration Tests</h3>
+<p>This is where most traditional testing happens.</p>
+<p><strong>Unit tests</strong> focus on domain logic and use cases without touching infrastructure; they test business rules, validation, state transitions, and workflows using test doubles for dependencies. Fast, focused, and deterministic.</p>
+<p><strong>Integration tests</strong> verify that infrastructure adapters work correctly: repositories actually store and retrieve data, message publishers actually send messages, HTTP clients actually call external APIs. These are slower and require real infrastructure (or realistic fakes), but they're essential for confidence.</p>
+<p>The Clean Architecture enables testing in isolation. Use cases can be tested without databases. Domain logic can be tested without web frameworks. This is where TDD shines: write the test, write the domain logic, wire up infrastructure last.</p>
+<h3 id="44-infrastructure-contract-tests">4.4 Infrastructure Contract Tests</h3>
+<p>These verify that your deployment infrastructure actually works as specified:
+- Does the Helm chart deploy successfully?
+- Do health checks work?
+- Are environment variables correctly configured?
+- Do sidecars start?</p>
+<p>These tests run in staging environments and catch configuration errors before production.</p>
+<h3 id="45-end-to-end-journey-tests">4.5 End-to-End Journey Tests</h3>
+<p>These test complete business workflows across multiple services: placing an order, processing payment, fulfilling shipment.</p>
+<p>They're valuable but expensive: slow to run, brittle, hard to maintain, and difficult to debug when they fail. Use them sparingly for critical business journeys only. They're not a substitute for contract tests; they're a final verification that everything works together.</p>
+<blockquote>
+<p><strong>See also:</strong> Paper 3, Part Three covers the CI pipeline that automates this testing strategy, enforcing boundary rules, running contract checks, and flagging architecture violations before merge. Paper 4, Part Two shows how that pipeline integrates with LLM-assisted service generation.</p>
+</blockquote>
+<hr />
+<h2 id="part-v-governance-and-team-alignment">Part V: Governance and Team Alignment</h2>
+<h3 id="51-conways-law">5.1 Conway's Law</h3>
+<p>Conway's Law states that organisations design systems that mirror their communication structure. This isn't just an observation; it's a law of organisational physics.</p>
+<p>If your team structure doesn't align with your architectural boundaries, you'll fight friction forever.</p>
+<h3 id="52-team-alignment-principles">5.2 Team Alignment Principles</h3>
+<p>Each bounded context should be owned by one team (or multiple teams if the context is large). Within a bounded context, each microservice should have a single owning team. Cross-team ownership of a single service creates coordination overhead and accountability confusion.</p>
+<p>For the Payments bounded context with three microservices (Payment Processing, Refund Management, Settlement Reconciliation), you have two options:</p>
+<p><strong>Option A: One team owns all three services</strong> if they're closely related and change together. This creates a "Payments Team" of 6-10 developers who understand the entire payment domain. They coordinate internally and present a unified interface to other teams.</p>
+<p><strong>Option B: Three teams own one service each</strong> if the services are complex enough to require specialisation and change independently. This creates a Payment Processing Team, a Refund Team, and a Settlement Team. They coordinate through contract meetings and share domain understanding through the bounded context glossary.</p>
+<h3 id="53-platform-teams-vs-domain-teams">5.3 Platform Teams vs Domain Teams</h3>
+<p><strong>Platform teams</strong> own generic subdomains, the shared services that cut across business areas:
+- Platform Identity Team (Identity subdomain)
+- Platform Payments Team (Payments subdomain)<br />
+- Platform Notifications Team (Notifications subdomain)
+- Developer Experience Team (RAG infrastructure, CI/CD, templates)
+- Architecture Team (domain boundaries, standards)</p>
+<p><strong>Domain teams</strong> own business subdomains:
+- Benefits Team
+- Pensions Team
+- Child Maintenance Team</p>
+<p>These differ in governance:</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Platform Service</th>
+<th>Business Subdomain Service</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Change impact</td>
+<td>Affects multiple business subdomains</td>
+<td>Affects only owning subdomain</td>
+</tr>
+<tr>
+<td>Breaking changes</td>
+<td>Require coordinated migration</td>
+<td>Contained within subdomain</td>
+</tr>
+<tr>
+<td>Testing burden</td>
+<td>Contract tests with all consumers</td>
+<td>Subdomain-specific tests</td>
+</tr>
+<tr>
+<td>SLA requirements</td>
+<td>Higher (downtime affects many)</td>
+<td>Aligned with subdomain needs</td>
+</tr>
+<tr>
+<td>Ownership</td>
+<td>Central platform team</td>
+<td>Subdomain team</td>
+</tr>
+</tbody>
+</table>
+<h3 id="54-decision-rights-and-escalation">5.4 Decision Rights and Escalation</h3>
+<p>Clear ownership means clear decision rights:</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Decision Rights</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service teams</td>
+<td>Internal implementation</td>
+<td>How we implement a use case</td>
+</tr>
+<tr>
+<td>Service leads</td>
+<td>Service-level architecture</td>
+<td>What aggregates we expose</td>
+</tr>
+<tr>
+<td>Solution architects</td>
+<td>Bounded context boundaries</td>
+<td>Cross-context contracts</td>
+</tr>
+<tr>
+<td>Enterprise architects</td>
+<td>Domain structure</td>
+<td>Strategic direction</td>
+</tr>
+</tbody>
+</table>
+<p>When decisions span boundaries, you need clear escalation paths:
+- If two teams disagree about a contract, escalate to solution architects
+- If two bounded contexts have overlapping concerns, escalate to enterprise architects</p>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<h3 id="what-this-hierarchy-provides">What This Hierarchy Provides</h3>
+<p>The hierarchy from domain to microservice to Clean Architecture layers isn't academic overhead. It provides:</p>
+<p><strong>Vocabulary for discussion</strong>: When architects say "bounded context boundary," everyone knows what that means and why it matters.</p>
+<p><strong>Natural fault lines</strong>: You're not inventing arbitrary service boundaries. You're discovering where reality already has seams.</p>
+<p><strong>Independent evolution</strong>: Different parts of the system can change at different rates without breaking each other.</p>
+<p><strong>Team scalability</strong>: Clear ownership means teams can work in parallel without constant coordination.</p>
+<p><strong>Comprehensibility</strong>: Any single piece of the system is understandable by one team. No god-models.</p>
+<h3 id="the-key-insights">The Key Insights</h3>
+<ol>
+<li>
+<p><strong>You're discovering, not designing.</strong> Microservices are the deployment reflection of natural fault lines in your problem space.</p>
+</li>
+<li>
+<p><strong>Boundaries exist for humans.</strong> The CPU doesn't care about separation of concerns. These structures exist because human minds have limits.</p>
+</li>
+<li>
+<p><strong>Different levels change at different rates.</strong> Don't conflate domains, bounded contexts, and microservices; they evolve independently.</p>
+</li>
+<li>
+<p><strong>1 BC = 1 microservice</strong> is the default. Split only when you have specific technical reasons.</p>
+</li>
+<li>
+<p><strong>Dependencies point inward.</strong> Your business logic is the product. Everything else is a plugin.</p>
+</li>
+<li>
+<p><strong>Contract tests are non-negotiable.</strong> They're how you get service independence without integration chaos.</p>
+</li>
+</ol>
+<h3 id="where-to-go-from-here">Where to Go From Here</h3>
+<p>This paper provides the foundational concepts. The companion papers in this series apply these principles to specific domains:</p>
+<ul>
+<li><strong>Paper 2: Evidence-Based Identity</strong>: Applies DDD to the identity coordination problem, showing how bounded contexts (Identity, Evidence, Trust, Resolution) model a complex government domain</li>
+<li><strong>Paper 3: LLM-Assisted Development with RAG and Guardrails</strong>: Shows how DDD boundaries become enforcement points for safe LLM assistance at scale; Part Three of Paper 3 covers the CI pipeline that flags boundary violations of the kind described here</li>
+<li><strong>Paper 4: Automated LLM-Driven Development</strong>: Covers how the six boundary signals in Section 1.3 feed into automated domain manifest generation; Paper 4, Section 2 shows the output artefacts that emerge from systematic context discovery</li>
+<li><strong>Paper 5: Getting Started</strong>: A practical guide for applying this paper's principles in your organisation, including team topology setup and the first 30-day plan</li>
+<li><strong>Paper 6: DWP Case Study</strong>: Applies the complete bounded context hierarchy from this paper to a live government services architecture; Parts Two and Four present the full context map and bounded context catalogue</li>
+</ul>
+<hr />
+<h2 id="appendix-a-glossary">Appendix A: Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Domain</strong></td>
+<td>A sphere of knowledge and activity; the overall problem space</td>
+</tr>
+<tr>
+<td><strong>Subdomain</strong></td>
+<td>A distinct problem area within a domain</td>
+</tr>
+<tr>
+<td><strong>Core Subdomain</strong></td>
+<td>Where the organisation differentiates; unique value</td>
+</tr>
+<tr>
+<td><strong>Supporting Subdomain</strong></td>
+<td>Necessary but not differentiating</td>
+</tr>
+<tr>
+<td><strong>Generic Subdomain</strong></td>
+<td>Commodity capability; often becomes platform service</td>
+</tr>
+<tr>
+<td><strong>Bounded Context</strong></td>
+<td>A linguistic/model boundary where terms have consistent meaning</td>
+</tr>
+<tr>
+<td><strong>Ubiquitous Language</strong></td>
+<td>The precise shared vocabulary within a bounded context</td>
+</tr>
+<tr>
+<td><strong>Model</strong></td>
+<td>The complete collection of entities, value objects, aggregates, and invariants</td>
+</tr>
+<tr>
+<td><strong>Entity</strong></td>
+<td>Object with identity that persists over time</td>
+</tr>
+<tr>
+<td><strong>Value Object</strong></td>
+<td>Immutable descriptor without identity</td>
+</tr>
+<tr>
+<td><strong>Aggregate</strong></td>
+<td>Cluster of entities forming a consistency boundary</td>
+</tr>
+<tr>
+<td><strong>Aggregate Root</strong></td>
+<td>The entry point that controls access to an aggregate</td>
+</tr>
+<tr>
+<td><strong>Invariant</strong></td>
+<td>Business rule that must always be true</td>
+</tr>
+<tr>
+<td><strong>Anti-Corruption Layer</strong></td>
+<td>Translation layer between bounded contexts</td>
+</tr>
+<tr>
+<td><strong>Shared Kernel</strong></td>
+<td>Definitions shared between contexts by agreement</td>
+</tr>
+<tr>
+<td><strong>Open Host Service</strong></td>
+<td>Stable, well-documented API with backward compatibility</td>
+</tr>
+<tr>
+<td><strong>Saga</strong></td>
+<td>Coordination of multiple aggregates over time using events</td>
+</tr>
+<tr>
+<td><strong>Domain Event</strong></td>
+<td>Past-tense fact emitted when aggregate state changes</td>
+</tr>
+<tr>
+<td><strong>Clean Architecture</strong></td>
+<td>Layered structure with dependencies pointing inward</td>
+</tr>
+<tr>
+<td><strong>Use Case</strong></td>
+<td>Application-specific business workflow</td>
+</tr>
+<tr>
+<td><strong>Repository</strong></td>
+<td>Interface for aggregate persistence</td>
+</tr>
+<tr>
+<td><strong>Dependency Injection</strong></td>
+<td>Providing implementations at runtime, not compile time</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="appendix-b-quick-reference-diagrams">Appendix B: Quick Reference Diagrams</h2>
+<h3 id="the-complete-hierarchy">The Complete Hierarchy</h3>
+<pre class="mermaid"><code>flowchart TB
+    Domain["Domain&lt;br/&gt;(Problem Space)"] --&gt; Subdomain["Subdomain&lt;br/&gt;(Problem Area)"]
+    Subdomain --&gt; BC["Bounded Context&lt;br/&gt;(Solution Space)"]
+    BC --&gt; Aggregate["Aggregate&lt;br/&gt;(Consistency Boundary)"]
+    Aggregate --&gt; MS["Microservice&lt;br/&gt;(Deployment Unit)"]
+    MS --&gt; CA["Clean Architecture&lt;br/&gt;(Code Layers)"]
+
+    style Domain fill:#e3f2fd
+    style Subdomain fill:#bbdefb
+    style BC fill:#90caf9
+    style Aggregate fill:#64b5f6
+    style MS fill:#42a5f5
+    style CA fill:#2196f3,color:#fff</code></pre>
+<h3 id="clean-architecture-layers">Clean Architecture Layers</h3>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Outer["Frameworks &amp; Drivers"]
+        subgraph Mid["Interface Adapters"]
+            subgraph Inner["Use Cases"]
+                subgraph Core["Entities"]
+                    E["Most Stable"]
+                end
+            end
+        end
+        V["Most Volatile"]
+    end
+
+    V -.-&gt;|"depends on"| Mid
+    Mid -.-&gt;|"depends on"| Inner
+    Inner -.-&gt;|"depends on"| Core
+
+    style Outer fill:#ffebee
+    style Mid fill:#fff3e0
+    style Inner fill:#e8f5e9
+    style Core fill:#e3f2fd</code></pre>
+<p><strong>All dependencies point INWARD</strong></p>
+<h3 id="context-relationship-patterns">Context Relationship Patterns</h3>
+<pre class="mermaid"><code>flowchart LR
+    subgraph ACL["Anti-Corruption Layer"]
+        Elig["Eligibility\nContext"] --&gt;|"translates to\nClaimant"| Identity["Identity\nContext"]
+    end
+
+    subgraph SK["Shared Kernel"]
+        Benefits["Benefits\nContext"] &lt;--&gt;|"Customer360\nshared definitions"| Pensions["Pensions\nContext"]
+    end
+
+    subgraph OHS_box["Open Host Service"]
+        Client["Any Consumer"] --&gt;|"stable versioned\nAPI"| Platform["Identity\nPlatform"]
+    end
+
+    subgraph CS["Customer-Supplier"]
+        BenefitsCS["Benefits\n(customer)"] --&gt;|"drives\nrequirements"| PaymentsCS["Payments\n(supplier)"]
+    end
+
+    subgraph CONF["Conformist"]
+        BenefitsCF["Benefits\nContext"] --&gt;|"accepts model\nwithout translation"| NotifCF["Notifications\nService"]
+    end
+
+    subgraph PART["Partnership"]
+        IdentityP["Identity\nContext"] &lt;--&gt;|"co-evolve\ninterface"| FraudP["Fraud\nContext"]
+    end
+
+    style ACL fill:#e3f2fd
+    style SK fill:#e8f5e9
+    style OHS_box fill:#fff3e0
+    style CS fill:#fce4ec
+    style CONF fill:#f3e5f5
+    style PART fill:#e0f7fa</code></pre>
+<h3 id="testing-pyramid-for-ddd">Testing Pyramid for DDD</h3>
+<pre class="mermaid"><code>flowchart TB
+    E2E["E2E Journey Tests (critical paths only, slow, brittle)"]
+    Domain["Domain Rule Tests (BDD specs, executable invariants)"]
+    Contract["Contract Tests (Provider + Consumer, run on every commit)"]
+    Unit["Unit + Integration Tests (bulk of testing, fast, focused)"]
+    Infra["🔻 Infrastructure Tests\n(Helm, health checks, config)"]
+
+    E2E --&gt; Domain
+    Domain --&gt; Contract
+    Contract --&gt; Unit
+    Unit --&gt; Infra
+
+    style E2E fill:#ffcdd2
+    style Domain fill:#fff9c4
+    style Contract fill:#c8e6c9
+    style Unit fill:#bbdefb
+    style Infra fill:#f5f5f5</code></pre>
+<hr />
+<p><em>Paper 1 of 6 in the Architecting Modern Government Services series</em></p>
+<p><strong>Next:</strong> Paper 2: Evidence-Based Identity: A Semantic Coordination Architecture
+<strong>See also:</strong> Paper 3: LLM-Assisted Development with RAG and Guardrails, Paper 4: Automated LLM-Driven Development, Paper 5: Getting Started, Paper 6: DWP Case Study</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

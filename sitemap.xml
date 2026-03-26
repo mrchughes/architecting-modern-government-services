@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://mrchughes.github.io/architecting-modern-government-services/</loc>
+         <lastmod>2026-03-26</lastmod>
+    </url>
+    <url>
+         <loc>https://mrchughes.github.io/architecting-modern-government-services/Architects%20concise%20addendum/</loc>
+         <lastmod>2026-03-26</lastmod>
+    </url>
+    <url>
+         <loc>https://mrchughes.github.io/architecting-modern-government-services/Paper_1_DDD_Clean_Architecture/</loc>
+         <lastmod>2026-03-26</lastmod>
+    </url>
+    <url>
+         <loc>https://mrchughes.github.io/architecting-modern-government-services/Paper_2_Evidence_Based_Identity/</loc>
+         <lastmod>2026-03-26</lastmod>
+    </url>
+    <url>
+         <loc>https://mrchughes.github.io/architecting-modern-government-services/Paper_3_LLM_RAG_Guardrails/</loc>
+         <lastmod>2026-03-26</lastmod>
+    </url>
+    <url>
+         <loc>https://mrchughes.github.io/architecting-modern-government-services/Paper_4_Automated_LLM_Development/</loc>
+         <lastmod>2026-03-26</lastmod>
+    </url>
+    <url>
+         <loc>https://mrchughes.github.io/architecting-modern-government-services/Paper_5_Getting_Started/</loc>
+         <lastmod>2026-03-26</lastmod>
+    </url>
+    <url>
+         <loc>https://mrchughes.github.io/architecting-modern-government-services/Paper_6_Case_Study/</loc>
+         <lastmod>2026-03-26</lastmod>
+    </url>
+</urlset>

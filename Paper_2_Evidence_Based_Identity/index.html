@@ -1,0 +1,3092 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A six-paper series on DDD, evidence-based identity, and LLM-assisted development for government services">
+      
+      
+      
+        <link rel="canonical" href="https://mrchughes.github.io/architecting-modern-government-services/Paper_2_Evidence_Based_Identity/">
+      
+      
+        <link rel="prev" href="../Paper_1_DDD_Clean_Architecture/">
+      
+      
+        <link rel="next" href="../Paper_3_LLM_RAG_Guardrails/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>2 — Evidence-Based Identity - Architecting Modern Government Services</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#evidence-based-identity-a-semantic-coordination-architecture" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Architecting Modern Government Services" class="md-header__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Architecting Modern Government Services
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              2 — Evidence-Based Identity
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Paper_1_DDD_Clean_Architecture/" class="md-tabs__link">
+          
+  
+  
+  Papers
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Architecting Modern Government Services" class="md-nav__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Architecting Modern Government Services
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_1_DDD_Clean_Architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — DDD & Clean Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Evidence-Based Identity
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Evidence-Based Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prologue-the-question-weve-been-asking-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prologue: The Question We've Been Asking Wrong
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-the-assumption-archaeology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: The Assumption Archaeology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: The Assumption Archaeology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-three-invisible-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Three Invisible Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-the-circular-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 The Circular Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-what-estonia-actually-proves-and-doesnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 What Estonia Actually Proves (and Doesn't)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-why-most-organisations-dont-have-this-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Why Most Organisations Don't Have This Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-the-paradigm-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: The Paradigm Shift
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: The Paradigm Shift">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-assertions-bind-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Assertions Bind Attributes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-how-asserters-are-established" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 How Asserters Are Established
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-assertions-are-immutable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Assertions Are Immutable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-the-semantic-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 The Semantic Graph
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-asserters-as-identity-clusters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Asserters as Identity Clusters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-binding-the-central-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Binding: The Central Operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-identity-emerges-from-linked-assertions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Identity Emerges from Linked Assertions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27a-the-uber-graph-is-primary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7a The Uber Graph Is Primary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-eligibility-is-just-another-rule-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Eligibility Is Just Another Rule-Application
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-the-complete-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 The Complete Picture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-how-this-changes-everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: How This Changes Everything
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: How This Changes Everything">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-no-more-master-identity-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 No More Master Identity Records
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-semantic-translation-not-standardisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Semantic Translation, Not Standardisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-social-evidence-for-the-excluded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Social Evidence for the Excluded
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-the-flow-from-assertion-to-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 The Flow: From Assertion to Decision
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-the-domain-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: The Domain Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: The Domain Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-domain-and-subdomains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The Domain and Subdomains
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-bounded-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Bounded Contexts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 Bounded Contexts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evidence-based-identity-bc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence-Based Identity (BC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benefit-contexts-linguistic-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefit Contexts (Linguistic Boundaries)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-context-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Context Relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-the-read-model-customer360" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 The Read Model: Customer360
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-v-the-three-layer-confidence-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part V: The Three-Layer Confidence Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part V: The Three-Layer Confidence Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-assertion-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1: Assertion Quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-identifier-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2: Identifier Binding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-cluster-match" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3: Cluster Match
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overall-confidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overall Confidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-vi-the-three-coordination-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part VI: The Three Coordination Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part VI: The Three Coordination Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-internal-organisational-coordination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: Internal Organisational Coordination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-cross-government-coordination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Cross-Government Coordination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-business-interactions-verifiable-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Business Interactions (Verifiable Credentials)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-vii-why-this-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part VII: Why This Matters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part VII: Why This Matters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-citizens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Citizens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-caseworkers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Caseworkers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-architects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Architects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-government" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Government
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion-the-paradigm-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion: The Paradigm Shift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A: Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-b-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix B: References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_3_LLM_RAG_Guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — LLM RAG & Guardrails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_4_Automated_LLM_Development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 — Automated LLM Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_5_Getting_Started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5 — Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_6_Case_Study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6 — Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prologue-the-question-weve-been-asking-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prologue: The Question We've Been Asking Wrong
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-i-the-assumption-archaeology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part I: The Assumption Archaeology
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part I: The Assumption Archaeology">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-three-invisible-assumptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Three Invisible Assumptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-the-circular-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 The Circular Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-what-estonia-actually-proves-and-doesnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 What Estonia Actually Proves (and Doesn't)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-why-most-organisations-dont-have-this-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Why Most Organisations Don't Have This Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-ii-the-paradigm-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part II: The Paradigm Shift
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part II: The Paradigm Shift">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#21-assertions-bind-attributes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.1 Assertions Bind Attributes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#22-how-asserters-are-established" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.2 How Asserters Are Established
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#23-assertions-are-immutable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.3 Assertions Are Immutable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#24-the-semantic-graph" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.4 The Semantic Graph
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#25-asserters-as-identity-clusters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.5 Asserters as Identity Clusters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#26-binding-the-central-operation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.6 Binding: The Central Operation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27-identity-emerges-from-linked-assertions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7 Identity Emerges from Linked Assertions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#27a-the-uber-graph-is-primary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.7a The Uber Graph Is Primary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#28-eligibility-is-just-another-rule-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.8 Eligibility Is Just Another Rule-Application
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#29-the-complete-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2.9 The Complete Picture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iii-how-this-changes-everything" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part III: How This Changes Everything
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part III: How This Changes Everything">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-no-more-master-identity-records" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 No More Master Identity Records
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-semantic-translation-not-standardisation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Semantic Translation, Not Standardisation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-social-evidence-for-the-excluded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Social Evidence for the Excluded
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-the-flow-from-assertion-to-decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 The Flow: From Assertion to Decision
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-iv-the-domain-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part IV: The Domain Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part IV: The Domain Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-the-domain-and-subdomains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 The Domain and Subdomains
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-bounded-contexts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Bounded Contexts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.2 Bounded Contexts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evidence-based-identity-bc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evidence-Based Identity (BC)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benefit-contexts-linguistic-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefit Contexts (Linguistic Boundaries)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-context-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Context Relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-the-read-model-customer360" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 The Read Model: Customer360
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-v-the-three-layer-confidence-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part V: The Three-Layer Confidence Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part V: The Three-Layer Confidence Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-assertion-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1: Assertion Quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-identifier-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2: Identifier Binding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-cluster-match" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3: Cluster Match
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#overall-confidence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overall Confidence
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-vi-the-three-coordination-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part VI: The Three Coordination Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part VI: The Three Coordination Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-internal-organisational-coordination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: Internal Organisational Coordination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-cross-government-coordination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Cross-Government Coordination
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-business-interactions-verifiable-credentials" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Business Interactions (Verifiable Credentials)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-vii-why-this-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part VII: Why This Matters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part VII: Why This Matters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-citizens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Citizens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-caseworkers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Caseworkers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-architects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Architects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-government" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Government
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion-the-paradigm-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion: The Paradigm Shift
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-a-glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix A: Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#appendix-b-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Appendix B: References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="evidence-based-identity-a-semantic-coordination-architecture">Evidence-Based Identity: A Semantic Coordination Architecture</h1>
+<p><strong>Rethinking Identity from First Principles</strong></p>
+<p><em>Part 2 of the Architecting Modern Government Services Series</em></p>
+<p><em>Version 2.0 | March 2026</em></p>
+<hr />
+<h2 id="version-history">Version History</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>Feb 2026</td>
+<td>Initial release</td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>Feb 2026</td>
+<td>Added Fellegi-Sunter primer, confidence calibration section, Mermaid diagrams</td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Mar 2026</td>
+<td>Added §1.4 on institutional reality</td>
+</tr>
+<tr>
+<td>2.0</td>
+<td>Mar 2026</td>
+<td>Complete rewrite: assertion graph model, binding as first-class concept, identity and eligibility as parallel rule-applications</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="prologue-the-question-weve-been-asking-wrong">Prologue: The Question We've Been Asking Wrong</h2>
+<p>When someone walks into a job centre and says "I'm Sarah Miller, I need housing benefit," what actually happens?</p>
+<p>The traditional answer focuses on verification: check her passport, validate her address, confirm her identity against records. Match the person to a master identity record. Then assess eligibility.</p>
+<p>But this answer hides an assumption so deep it becomes invisible: that "Sarah Miller" exists as a discrete thing somewhere, waiting to be verified. That identity is a fact to be discovered rather than a conclusion to be computed.</p>
+<p>What if identity doesn't work like that? What if the question "who is this person?" has no answer independent of the question "what do we know about them and how confident are we?"</p>
+<p>This paper proposes a radical reframing:</p>
+<ul>
+<li>
+<p><strong>Assertions bind attributes together.</strong> HMRC asserts that NINO AB123456C earned £30,000 from employer ABC Ltd in 2024-25. That's one assertion binding four attributes: NINO, income, employer, period. HMPO asserts that someone named Sarah Miller, born 15/3/1985, with this photograph, was issued passport 123456789. That's one assertion binding name, DOB, photo, document number. Each assertion is a bundle of attributes, bound together by the asserter's authority. This is <em>intra-assertion binding</em>.</p>
+</li>
+<li>
+<p><strong>Assertions get linked.</strong> When two assertions share an attribute (both cite NINO AB123456C), they're probably about the same person. When a claimant presents a passport and states a NINO, their physical presence links those assertions together. This is <em>inter-assertion binding</em>—connecting assertion bundles into larger structures.</p>
+</li>
+<li>
+<p><strong>Identity is assembled.</strong> Each assertion contributes a bundle of bound attributes. Inter-assertion links connect the bundles. Enough linked assertions, and a unique person emerges—not stored anywhere, but deduced from the pattern. Part II calls this "the Frankenstein insight."</p>
+</li>
+</ul>
+<p>The passport doesn't verify Sarah's identity; it's one assertion binding {name, DOB, photo, document number}. HMRC's tax records don't belong to Sarah; they're assertions binding {NINO, income, employer, period}. The question isn't "is this the real Sarah Miller?" The question is: can we link enough assertions, bound to this claimant through biometric or knowledge proofs, to assemble a unique combination of attributes that constitute a distinct person?</p>
+<p>This shift changes everything. It dissolves the circular dependency that has paralysed UK government identity initiatives for decades. It explains why attribute standardisation efforts always fail (they're solving the wrong problem). It reveals identity and eligibility as parallel deductions from the same assertion graph. And it points toward an architecture that can actually work.</p>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<p>UK government efforts to coordinate identity and attributes across departments have repeatedly failed, despite billions in investment. Universal Credit's integration programme. NHS-to-DWP data sharing. Cross-government identity verification. All attempted to create shared data standards, master identity records, or centralised verification systems. All collapsed against the same immovable realities.</p>
+<p><strong>What they tried to solve:</strong> DWP and other departments focused on standardising <em>attributes</em>—agreeing on common formats for income, address, employment status. They treated the problem as data interoperability: if we could just agree on schemas, systems could share data.</p>
+<p><strong>What they didn't realise:</strong> The attribute problem is actually an identity problem, and the identity problem is actually an assertion problem. You cannot standardise "income" when HMRC's income assertion and UC's income assertion reference different subjects identified by different attributes. You cannot link records when there's no universal identifier. You cannot determine "Sarah's income" when you first need to determine which assertions are about Sarah—and that requires establishing Sarah's identity from assertions in the first place.</p>
+<p><strong>The conceptual error:</strong> Every initiative treated identity, attributes, and evidence as separate concerns. But these aren't separate things. Evidence <em>is</em> assertion. Assertions <em>bind</em> attributes (intra-assertion binding). Identity <em>emerges</em> from linked assertions (inter-assertion binding). They're all facets of the same underlying reality: a graph of assertions binding attributes.</p>
+<p><strong>This paper's contribution:</strong> The <em>intra-/inter-assertion binding</em> model introduced above. Assertions bind attribute bundles (intra). Claimant actions and shared identifiers link assertions together (inter). Identity emerges from the linked structure.</p>
+<p>Assertions get linked through shared attributes or through claimant actions—<em>inter-assertion binding</em>. When Sarah presents her passport and states her NINO, her physical presence links the HMPO assertion to the HMRC assertion. Asserters themselves are assembled from assertions (HMRC's credibility rests on PKI certificates, statutory instruments, operational history—all assertions).</p>
+<p>Identity emerges when linked assertions form a unique attribute cluster. Eligibility emerges when that cluster's attributes meet policy thresholds. Both are deductions from the assertion graph—parallel operations, not a pipeline.</p>
+<p><strong>Why it matters:</strong> The assertion graph model dissolves the circular dependency. You cannot link assertions without identity, but cannot establish identity without assertions—unless you realise that assertions with shared attributes link naturally, and claimant binding actions create more links. Identity assembles from linked assertions; it doesn't need to exist first.</p>
+<p>This approach abandons attribute standardisation in favour of semantic translation. It handles the 27% of lowest-income households lacking traditional documents through social vouching (vouches are assertions too). And it aligns with how identity actually works in human communities: you are who the assertions say you are, assembled from what independent sources have claimed about you, linked through your presence and your knowledge.</p>
+<hr />
+<h2 id="part-i-the-assumption-archaeology">Part I: The Assumption Archaeology</h2>
+<h3 id="11-three-invisible-assumptions">1.1 Three Invisible Assumptions</h3>
+<p>Every failed UK identity initiative shares three assumptions so embedded in institutional thinking that they resist examination:</p>
+<p><strong>Assumption 1: Identity is something you verify</strong></p>
+<p>The language pervades every programme: "identity verification," "verified credentials," "proof of identity." But stop and ask: what exactly is being verified?</p>
+<p>When a caseworker examines a passport, they're not verifying an abstract identity. They're assessing an assertion: does this document appear genuine? Does the photo match the person presenting it? What attributes does it bind together (name, DOB, photo, document number)? The passport is an assertion from HMPO, and the caseworker is evaluating its reliability.</p>
+<p>What we call "identity verification" is actually: does this assertion meet our criteria? How confident are we in the asserter (HMPO)? How confident are we in the binding to this claimant (does the photo match)? The assertion doesn't <em>prove</em> identity; it <em>contributes to</em> identity by adding a bundle of bound attributes to the claimant's cluster.</p>
+<p>The distinction matters because downstream systems inherit a binary "verified" token without knowing what assertions supported it, what attributes were bound, or whether those assertions meet their specific decision requirements.</p>
+<p><strong>Assumption 2: Attributes are properties of identity</strong></p>
+<p>We speak of "Sarah's address," "her employment status," "her income." As if these were stable properties of a persistent identity entity. This framing drove decades of failed standardisation efforts: DWP would agree attribute schemas with HMRC, define common data formats, build APIs to exchange "the attributes."</p>
+<p>But the framing is backwards. Attributes aren't properties of identity. They're the content of assertions. And identity isn't a thing that has attributes—identity <em>is</em> a unique combination of attributes, deduced from corroborating assertions.</p>
+<p><strong>The same word means different things.</strong> Consider "residential address." What does it mean to <em>reside</em> somewhere?</p>
+<table>
+<thead>
+<tr>
+<th>Organisation</th>
+<th>What "residential address" means</th>
+<th>How they verify it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>HMRC</strong></td>
+<td>Where you say you live for tax purposes</td>
+<td>They don't. You declare it. They care that you pay tax, not where you sleep.</td>
+</tr>
+<tr>
+<td><strong>Council Tax</strong></td>
+<td>The property you're liable for</td>
+<td>Checked against property register; occupancy assumed from liability</td>
+</tr>
+<tr>
+<td><strong>DWP Housing Benefit</strong></td>
+<td>Where you actually sleep most nights</td>
+<td>May require proof; 3+ nights/week matters for household composition</td>
+</tr>
+<tr>
+<td><strong>NHS GP</strong></td>
+<td>Catchment area for primary care</td>
+<td>Self-declared at registration; rarely verified</td>
+</tr>
+<tr>
+<td><strong>Electoral Roll</strong></td>
+<td>Where you're eligible to vote</td>
+<td>Self-declared; cross-checked against other registers</td>
+</tr>
+</tbody>
+</table>
+<p>If Sarah spends four nights a week at her partner's flat and three at her own, where does she "reside"? The answer depends on which organisation is asking and why. HMRC doesn't care. Housing Benefit cares intensely—it affects whether she's a single claimant or part of a couple, which changes her entitlement by thousands of pounds.</p>
+<p><strong>Verification levels vary wildly.</strong> HMRC's "address" assertion is unverified self-declaration—they have no operational reason to check where you sleep. Council Tax's "address" is verified against property records but says nothing about actual occupancy. DWP's "address" may be investigated if fraud is suspected. These aren't the same attribute with the same schema. They're different assertions, with different semantics, different verification levels, and different confidence.</p>
+<p>Standardising the schema ("address is a string with postcode") achieves nothing. The assertions still mean different things. A downstream system receiving "address" from HMRC cannot know it's unverified self-declaration. A system receiving "address" from Council Tax cannot know it means "liable property" not "place of residence."</p>
+<p><strong>Temporal fragmentation compounds it.</strong> Three assertions say someone lives at Flat 3: council tax records, a bank statement, GP registration. A fourth shows Flat 2: a recent DBS check. There is no single "correct" address. There are four assertions claiming address attributes, telling a coherent story about a recent move. Systems built around "identity attributes" cannot represent this story. They can only store one address at a time, forcing arbitrary choices or generating errors.</p>
+<p>Consider employment. HMRC asserts employed (based on employer RTI submissions). Universal Credit asserts unemployed (based on Sarah's self-declaration two weeks ago). Both assertions are true: they happened. Sarah started work last Monday, so the assertions reflect different points in time. The employment attribute doesn't exist independent of the assertions that claim it.</p>
+<p><strong>The deeper confusion:</strong> DWP treated attributes as a <em>data</em> problem—standardise the schemas, agree the formats—without realising they had three problems underneath:</p>
+<ol>
+<li><strong>Identity:</strong> Which assertions are about Sarah? How do we know these address assertions reference the same person?</li>
+<li><strong>Semantics:</strong> What does each assertion actually mean? What definition of "address" was used? What verification was applied?</li>
+<li><strong>Confidence:</strong> How much should we trust each assertion given its provenance and verification level?</li>
+</ol>
+<p>Standardising schemas without addressing semantics and confidence just moves the problem. You exchange "addresses" successfully, but you still don't know what they mean or how much to trust them.</p>
+<p><strong>Assumption 3: Integration means making systems talk</strong></p>
+<p>When coordination fails, the obvious solution appears: build APIs, define data exchange formats, implement message queues, establish service contracts. Technical integration. Billions later, systems exchange messages successfully, yet coordination still doesn't work.</p>
+<p>Why? Because integration solves the wrong problem. When DWP asks HMRC "Is John Smith employed?", they're not asking for a database field. They're asking: what assertions exist about this person's employment, what's the provenance of those assertions, how recent are they, and do they meet DWP's specific criteria for this specific benefit decision?</p>
+<p>But before any of that: <em>which</em> assertions? "John Smith" isn't a unique identifier. HMRC has employment assertions referencing NINOs. DWP needs to know which NINO is John Smith—which requires establishing John Smith's identity—which requires clustering assertions by corroborating attributes—which brings us back to the same fundamental problem.</p>
+<p>No API specification captures this. Technical integration assumes shared identifiers (there are none) and shared semantics (there aren't). DWP and HMRC define "income" differently because their governing legislation requires different definitions. Even if they agreed on schemas, they'd still be exchanging assertions about subjects they cannot reliably link. Integration connects systems. Coordination requires <em>identity resolution at query time</em>, semantic translation between vocabularies, and propagation of uncertainty through calculations.</p>
+<h3 id="12-the-circular-dependency">1.2 The Circular Dependency</h3>
+<p>The UK lacks a universal citizen identifier. Estonia has the isikukood, assigned at birth, linking all government records. The UK has NINOs that many people lack, NHS numbers that changed historically, and passport numbers that expire and renew.</p>
+<p>Without a universal identifier, coordination demands answering "is this the same person?" across services. Relational databases answer this through foreign keys requiring deterministic identity records.</p>
+<p>The traditional solution: create a master identity record first, then link assertions to it.</p>
+<p>But here's the trap: you cannot create the identity record without assertions about the person. And you cannot link assertions without knowing which ones refer to the same person. You need the identity to find the assertions. You need the assertions to establish the identity.</p>
+<p>This circular dependency has paralysed UK government for decades. Every attempt to solve it within the traditional paradigm fails, because the paradigm itself creates the problem.</p>
+<p><strong>The dissolution:</strong> Part II shows we don't need a master identity record. Assertions with shared attributes link naturally. Claimant actions (presenting documents, authenticating) create more links. Enough linked assertions, and a unique person emerges—assembled from the graph, not required before we can process it.</p>
+<h3 id="13-what-estonia-actually-proves-and-doesnt">1.3 What Estonia Actually Proves (and Doesn't)</h3>
+<p>Estonia is the standard example of successful government identity coordination. Twenty years of X-Road infrastructure connecting government systems. 95% digital adoption. Real-time employment data flowing to benefit calculations.</p>
+<p>But Estonia solved a different problem. They have a universal identifier. Every citizen receives an isikukood at birth. When HMRC-equivalent queries tax data, they pass an isikukood and get a deterministic answer. No probabilistic matching required.</p>
+<p>And crucially, Estonia did not standardise semantics. X-Road follows what Paper 1 calls the <strong>Open Host Service (OHS)</strong> pattern: each service provider defines their own schema and exposes a stable API; consumers adapt to the provider's format. If a consuming department needs to translate provider data into their local model, they build their own <strong>Anti-Corruption Layer (ACL)</strong>, but that's the consumer's problem, not an infrastructure concern. Estonia solved the <em>transport</em> problem—secure, audited data exchange between organisations—not the <em>semantic</em> problem.</p>
+<p><strong>What Estonia proves:</strong>
+- Federated government queries can work at national scale
+- Citizens trust transparent data sharing
+- Standardised transport infrastructure (with OHS pattern) beats point-to-point integration
+- Universal identifiers eliminate the matching problem entirely</p>
+<p><strong>What Estonia didn't need to solve:</strong>
+- Probabilistic identity matching (universal ID eliminates it)
+- Centralised semantic translation (OHS pushes adaptation to consumers)
+- Confidence scoring when evidence conflicts</p>
+<p><strong>What we cannot extrapolate:</strong>
+- 50× population scale (1.3M vs 67M)
+- 3× organisation count (30-50 vs 100+ departments)
+- Absence of universal identifier</p>
+<p>Estonia is a success story. It is not a proxy for the UK. The probabilistic identity and semantic translation capabilities this paper proposes must be proven independently.</p>
+<h3 id="14-why-most-organisations-dont-have-this-problem">1.4 Why Most Organisations Don't Have This Problem</h3>
+<p>Before diving into the solution, it's worth asking: why is this so hard for government when banks, retailers, and tech companies seem to manage identity fine?</p>
+<p>The answer: they're solving a different problem.</p>
+<p><strong>Most businesses need account ownership.</strong> When you sign up for Amazon, you create an account. Amazon doesn't care whether you're "really" Sarah Miller. You could be anyone. The only question is: "Is this the same person who created account #12345?" That's a simple cryptographic problem—passwords, session tokens, device fingerprints. The user controls the account; the business controls what they can do with it.</p>
+<p><strong>Government needs proof that a real person exists.</strong> DWP doesn't create your identity when you sign up. You existed before you applied for Universal Credit. The question isn't "is this the account holder?" It's: "Is there a real person named Sarah Miller, born on this date, resident at this address, with these dependents—and is the claimant sitting in front of us that person?"</p>
+<p>This difference cascades into everything:</p>
+<table>
+<thead>
+<tr>
+<th>Private Sector</th>
+<th>Government</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>User self-declares identity attributes</td>
+<td>Attributes must come from authoritative assertions</td>
+</tr>
+<tr>
+<td>Account is the unit of identity</td>
+<td>Person is the unit of identity (accounts are just sessions)</td>
+</tr>
+<tr>
+<td>"Wrong" identity means account fraud</td>
+<td>"Wrong" identity means public money to the wrong recipient</td>
+</tr>
+<tr>
+<td>Resolution: ban the account</td>
+<td>Resolution: legal prosecution, debt recovery, possible prison</td>
+</tr>
+<tr>
+<td>One organisation's assertions</td>
+<td>Assertions scattered across dozens of autonomous departments</td>
+</tr>
+<tr>
+<td>User incentivised to maintain accurate info</td>
+<td>Claimant may be incentivised to misrepresent</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The population compounds it.</strong> As Paper 1 notes, DWP's cohorts often lack the assertions that typical identity systems rely on. Many claimants do not have passports, driving licences, or credit histories. GOV.UK Verify demonstrated this gap: populations with the greatest need for government services had the fewest institutional assertions about them. Amazon can require a credit card to sign up; DWP cannot refuse benefits to people without bank accounts.</p>
+<p><strong>Attributes and relationships matter, not just "who."</strong> Eligibility depends on <em>asserted</em> attributes (age, residency, household composition) and <em>asserted</em> relationships (partner, dependents, carers)—not just identity. "Is this Sarah Miller?" is insufficient. "Do the assertions linked to this claimant include: residence alone, income below £X, UK residency for Y years, dependent child under Z?" That's the eligibility question.</p>
+<p>And here's the insight that dissolves the boundary: identity and eligibility are both deductions from assertions. Identity asks: do linked assertions form a unique person? Eligibility asks: do linked assertions meet policy thresholds? Same assertions, parallel operations. They're not separate problems.</p>
+<p>This is why commodity identity solutions fail for government. The problem isn't authentication—it's assembling enough assertions, from enough sources, linked through binding events, to deduce both identity and eligibility for people who may lack the documentation that private-sector systems assume.</p>
+<hr />
+<h2 id="part-ii-the-paradigm-shift">Part II: The Paradigm Shift</h2>
+<h3 id="21-assertions-bind-attributes">2.1 Assertions Bind Attributes</h3>
+<p>Here is the fundamental insight: <strong>an assertion binds attributes together.</strong></p>
+<p>Not to an identity. Not to a person. To each other.</p>
+<p>When HMRC submits RTI data, they're asserting: "NINO AB123456C earned £30,000 from employer ABC Ltd in tax year 2024-25." That's four attributes bound together by one assertion:
+- NINO: AB123456C
+- Income: £30,000
+- Employer: ABC Ltd
+- Period: 2024-25</p>
+<p>HMRC isn't saying "Sarah Miller earned £30,000." HMRC doesn't know who Sarah Miller is. They know a NINO submitted returns. The assertion binds NINO to income to employer to period. That's all.</p>
+<p>When HMPO issues a passport, they're asserting: "Someone named Sarah Jane Miller, born 15 March 1985, with this photograph, is a British citizen, and we issued document number 123456789 to them." That's multiple attributes bound together:
+- Name: Sarah Jane Miller
+- DOB: 15 March 1985
+- Photo: [biometric template]
+- Citizenship: British
+- Document number: 123456789</p>
+<p>HMPO isn't pointing to a global identity record. They're binding attributes. This document, with this photo, was issued to someone with this name and DOB.</p>
+<p><strong>Why this matters:</strong> The assertions don't reference identity—they <em>constitute the raw material from which identity is deduced</em>. If we can link the HMRC assertion (NINO AB123456C) to the HMPO assertion (Sarah Jane Miller, DOB 15/3/1985), we start building an identity cluster. But the link isn't inherent in the assertions. We have to establish it.</p>
+<p><strong>Two types of binding:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>What It Does</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Intra-assertion binding</strong></td>
+<td>Binds attributes <em>within</em> a single assertion</td>
+<td>HMPO binds {name, DOB, photo, passport number} together in one assertion</td>
+</tr>
+<tr>
+<td><strong>Inter-assertion binding</strong></td>
+<td>Links <em>between</em> assertions</td>
+<td>Claimant's biometric matches passport photo, linking HMPO assertion to HMRC assertion via the claimant</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Intra-assertion binding</strong> happens when the asserter makes the assertion. HMPO binds name + DOB + photo + passport number together. HMRC binds NINO + income + employer + tax year together. Each assertion is a bundle of attributes, bound by the asserter's authority.</p>
+<p><strong>Inter-assertion binding</strong> happens when assertions get linked—either through shared attributes or through binding events:</p>
+<table>
+<thead>
+<tr>
+<th>Linking Method</th>
+<th>How It Works</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Shared unique attribute</strong></td>
+<td>Assertions reference the same rare attribute</td>
+<td>Two assertions both cite NINO AB123456C → probably same person</td>
+</tr>
+<tr>
+<td><strong>Corroborating attributes</strong></td>
+<td>Multiple attributes match across assertions</td>
+<td>Same name + same DOB + similar address → probably same person</td>
+</tr>
+<tr>
+<td><strong>Binding event</strong></td>
+<td>Claimant links assertions through their presence</td>
+<td>Claimant presents passport AND provides NINO; biometric match links them</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The Frankenstein insight:</strong> An identity is assembled from parts. Each assertion contributes a bundle of bound attributes (intra-assertion binding). When assertions are linked together (inter-assertion binding), their attribute bundles connect. Enough linked assertions, and a unique person emerges—like Frankenstein's monster assembled from components, but the components are attribute bundles, and the stitching is inter-assertion links.</p>
+<p>And here's the recursive bit: <em>asserters are assembled the same way</em>. HMRC's identity is assertions about HMRC (PKI certificates, statutory instruments, operational history) stitched together. A vouching person's identity is assertions about them (employment records, council tax, NHS registration) stitched together. It's monsters all the way down.</p>
+<p>The binding event is crucial for making this operational. When Sarah walks into the job centre, presents her passport (HMPO's assertion), and states her NINO (which links to HMRC's assertions), she's creating inter-assertion bindings. Her physical presence, matched to the passport photo, links the assertions together. Now we can say: the HMRC assertions about NINO AB123456C are about the same person as the HMPO assertion in this passport.</p>
+<p><strong>The structure of an assertion:</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Asserter → binds attributes together → with confidence
+</code></pre></div>
+<ul>
+<li>
+<p><strong>Asserter:</strong> Who makes the claim. HMRC. DVLA. A bank. A vouching individual. Asserters are themselves assembled from assertions (more below).</p>
+</li>
+<li>
+<p><strong>Bound attributes:</strong> The content—not a single claim, but a <em>binding</em> of multiple attributes. This NINO had this income. This name+DOB was issued this document. This address is registered to this name.</p>
+</li>
+<li>
+<p><strong>Confidence:</strong> How much to trust this binding. Product of source reliability and verification strength.</p>
+</li>
+</ul>
+<p><strong>Evidence is assertion. Assertion is attribute-binding. This is really important.</strong></p>
+<p>When we say "evidence," we mean: an assertion that binds attributes. A passport is evidence because it binds name + DOB + photo + document number, asserted by HMPO. A payslip is evidence because it binds NINO + employer + pay amount + pay date, asserted by the employer. A utility bill is evidence because it binds name + address + account number + date, asserted by the utility company.</p>
+<p><strong>There is no separate concept of "evidence" apart from "assertion."</strong> They're the same thing. Evidence is just what we call assertions when we're evaluating them for a decision.</p>
+<h3 id="22-how-asserters-are-established">2.2 How Asserters Are Established</h3>
+<p>The asserter in "HMRC asserts NINO AB123456C earned £30,000" is itself established through assertions—the same way people are.</p>
+<p><strong>How do we know this assertion came from HMRC?</strong></p>
+<p>It's assertions all the way down:</p>
+<ul>
+<li><strong>Government PKI</strong> asserts that this public key belongs to HMRC</li>
+<li><strong>Cabinet Office</strong> asserts that HMRC is a statutory authority with these responsibilities  </li>
+<li><strong>Twenty years of operational history</strong> constitutes implicit assertions about HMRC's reliability</li>
+</ul>
+<p>When HMRC sends employment data via API, the cryptographic signature binds the assertion to HMRC's established identity. We verify the signature using HMRC's public key, which itself was asserted by the Government PKI infrastructure.</p>
+<p><strong>Digital vs. physical channels—same model, different binding:</strong></p>
+<p>Consider how HMPO assertions reach us through different channels:</p>
+<table>
+<thead>
+<tr>
+<th>Channel</th>
+<th>How Assertion Arrives</th>
+<th>How Asserter Is Verified</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>API integration</strong></td>
+<td>Structured data via secure connection</td>
+<td>Mutual TLS + cryptographic signature; signature binds data to HMPO's PKI-established identity</td>
+</tr>
+<tr>
+<td><strong>Paper passport</strong></td>
+<td>Physical document presented by claimant</td>
+<td>Holographic security features, paper stock, MRZ format—characteristics only HMPO could produce</td>
+</tr>
+<tr>
+<td><strong>Chip passport (NFC)</strong></td>
+<td>Cryptographically signed data read from chip</td>
+<td>Digital signature verifiable against HMPO's certificate in ICAO PKD</td>
+</tr>
+</tbody>
+</table>
+<p>The paper passport is still an assertion from HMPO—it's just that the binding to HMPO happens through physical security features rather than cryptographic signatures. When a caseworker examines a passport, they're implicitly asking: "Does this physical object bear the characteristics that only HMPO could have produced?" The answer is probabilistic (forgeries exist), which is why chip verification has higher confidence than visual inspection.</p>
+<p><strong>The recursive insight:</strong> There is no foundation of "self-evident" identity. Every asserter's credibility rests on assertions from other asserters. HMRC is credible because Government PKI asserts its key. Government PKI is credible because Cabinet Office established it. The chain eventually grounds in institutional trust built over decades—but it's assertions binding attributes all the way down.</p>
+<h3 id="23-assertions-are-immutable">2.3 Assertions Are Immutable</h3>
+<p>An assertion is an event that happened: HMRC stated on this date that this NINO earned this income. You cannot change what HMRC said; you can only record what they said next.</p>
+<p>If HMRC later corrects the income figure, that's a new assertion—not an update to the original. Both assertions persist. The original was true (HMRC did say that), even if the content was wrong.</p>
+<p>This applies equally to our deductions. When the system concludes "these assertions cluster into identity X with 0.89 confidence" or "this claimant is eligible for housing benefit," that conclusion is an event. Record it. If new evidence arrives and the conclusion changes, that's a new conclusion superseding the old one. The original happened; deleting it destroys the audit trail.</p>
+<p><strong>Why immutability matters:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Mutable approach</th>
+<th>Immutable approach</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Update assertion when source corrects</td>
+<td>New assertion supersedes; original preserved</td>
+</tr>
+<tr>
+<td>Delete assertion when retracted</td>
+<td>Retraction assertion recorded; original preserved</td>
+</tr>
+<tr>
+<td>Change decision when evidence changes</td>
+<td>New decision references new evidence; original preserved</td>
+</tr>
+<tr>
+<td>Fraud audit asks "what did you know when?"</td>
+<td>Complete history answers precisely</td>
+</tr>
+</tbody>
+</table>
+<p>The graph becomes a complete history of everything asserted and concluded. Fraud investigation can reconstruct exactly what assertions existed at decision time. Appeals can examine whether the original conclusion was reasonable given what was known.</p>
+<h3 id="24-the-semantic-graph">2.4 The Semantic Graph</h3>
+<p>Here's how an assertion looks in RDF:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">:</span><span class="nt">emp_001</span> <span class="kt">a</span> <span class="p">:</span><span class="nt">EmploymentAssertion</span> <span class="p">;</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="p">:</span><span class="nt">assertedBy</span> <span class="p">:</span><span class="nt">HMRC_RTI</span> <span class="p">;</span>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="p">:</span><span class="nt">bindsAttributes</span> <span class="p">[</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>        <span class="p">:</span><span class="nt">nino</span> <span class="s">&quot;AB123456C&quot;</span> <span class="p">;</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>        <span class="p">:</span><span class="nt">employer</span> <span class="s">&quot;ABC Ltd&quot;</span> <span class="p">;</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>        <span class="p">:</span><span class="nt">annualIncome</span> <span class="mi">30000</span> <span class="p">;</span>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>        <span class="p">:</span><span class="nt">taxYear</span> <span class="s">&quot;2024-25&quot;</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="p">]</span> <span class="p">;</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>    <span class="p">:</span><span class="nt">verificationMethod</span> <span class="p">:</span><span class="nt">CryptographicSignature</span> <span class="p">;</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="p">:</span><span class="nt">confidence</span> <span class="mf">0.94</span> <span class="p">;</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>    <span class="p">:</span><span class="nt">assertionTimestamp</span> <span class="s">&quot;2025-03-27T14:23:00Z&quot;</span><span class="p">^^</span><span class="nn">xsd</span><span class="p">:</span><span class="nt">dateTime</span> <span class="p">.</span>
+</code></pre></div>
+<p>What does this preserve that a relational table destroys?</p>
+<table>
+<thead>
+<tr>
+<th>Context</th>
+<th>How It's Preserved</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Who made the claim</td>
+<td><code>:assertedBy :HMRC_RTI</code> distinguishes statutory authority from self-report</td>
+</tr>
+<tr>
+<td>How it was verified</td>
+<td><code>:verificationMethod :CryptographicSignature</code> vs <code>:ManualReview</code></td>
+</tr>
+<tr>
+<td>When the assertion was made</td>
+<td>Timestamp enables currency assessment</td>
+</tr>
+<tr>
+<td>How confident we should be</td>
+<td>Quantified reliability score for risk-based processing</td>
+</tr>
+<tr>
+<td>What attributes are bound</td>
+<td><code>:bindsAttributes</code> shows NINO + employer + income + period as a unit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="25-asserters-as-identity-clusters">2.5 Asserters as Identity Clusters</h3>
+<p>Individual asserters—people who vouch, witnesses, references—are themselves identity clusters established the same way:</p>
+<ul>
+<li>Institutional assertions (HMRC employment records, council tax, NHS registration)</li>
+<li>Documentary assertions (passport, driving licence)</li>
+<li>Social assertions (other community members who vouch for them)</li>
+<li>Vouching history (accuracy of their previous vouches, tracked over time)</li>
+</ul>
+<p>Why does HMRC's assertion carry weight? Because HMRC's identity cluster is dense with high-confidence corroborating assertions—PKI certificates, statutory authority, operational history. Why does a random email carry little weight? Because the asserter has no established identity—no corroborating assertions about who they are.</p>
+<p>Why does a community leader's vouch carry weight? Because that person has fifteen years of high-confidence institutional evidence plus a vouching history showing consistent accuracy. Their identity cluster is well-established, which gives their assertions credibility.</p>
+<p>The graph is recursive. Assertions about Sarah's employment are made by HMRC. HMRC's credibility rests on assertions from Government PKI. The vouching community leader's credibility rests on assertions from HMRC, councils, NHS. Trust propagates through the network of assertions binding attributes.</p>
+<h3 id="26-binding-the-central-operation">2.6 Binding: The Central Operation</h3>
+<p>Assertions bind attributes. But when Sarah walks into a job centre, she needs to connect those assertions to herself, present now.</p>
+<p>This is <strong>binding</strong>: connecting assertions (which bind attributes) to a physical claimant.</p>
+<p>Consider: HMRC has an assertion binding NINO AB123456C to income £30,000. HMPO has an assertion binding name "Sarah Miller" + DOB 15/3/1985 to passport photo. How do we know these assertions are about the person standing in front of us?</p>
+<p><strong>Biometric binding:</strong> Face recognition, fingerprint, voice recognition with liveness detection. The passport photo matches the face of the person presenting it. This is a new assertion: "the person present at this session matches the biometric in the HMPO assertion." Now we've linked the claimant to the HMPO assertion.</p>
+<p><strong>Knowledge binding:</strong> Demonstrating secrets that only the assertee would know. "What's the last four digits of your NINO?" "What employer is on your most recent P60?" Correct answers create a new assertion: "the person present knows secrets from the HMRC assertion." Weaker than biometric (secrets can be shared or stolen) but widely available.</p>
+<p><strong>Documentary binding:</strong> Possession of physical tokens. A passport. A driving licence. An NFC bank card. The assumption: if you have the document containing attributes, you're probably the person those attributes describe. Weakened by document theft; strengthened when combined with other binding types.</p>
+<p><strong>Social binding:</strong> Vouches from established identity clusters. When the Imam asserts "I have known Amara Hassan for three years, she is the person standing here," that's a binding assertion—it links Amara's physical presence to the attributes the Imam knows about her.</p>
+<p><strong>Binding creates linking assertions.</strong> Without binding, we have assertions about attributes floating in the graph. With binding, we have assertions that say "the claimant present in this session is linked to these other assertions." Now we can build an identity cluster for this claimant.</p>
+<h3 id="27-identity-emerges-from-linked-assertions">2.7 Identity Emerges from Linked Assertions</h3>
+<p>Now we can dissolve the circular dependency.</p>
+<p>The question isn't "match this person to their identity record." The question is: given the assertions linked to this claimant through binding, do they cluster into a unique combination of attributes?</p>
+<p><strong>How identity emerges:</strong></p>
+<ol>
+<li>
+<p><strong>Claimant binds</strong> — Sarah presents her passport (biometric binding) and states her NINO (knowledge binding). These binding events create linking assertions.</p>
+</li>
+<li>
+<p><strong>Attributes cluster</strong> — The passport assertion binds {name, DOB, photo}. The HMRC assertion (linked via NINO) binds {NINO, income, employer}. Via the binding events, these assertions are now linked to the same claimant. Their attributes cluster together.</p>
+</li>
+<li>
+<p><strong>Uniqueness check</strong> — Is this combination of attributes already associated with another cluster? If NINO AB123456C is already linked to a cluster, Sarah merges with that cluster. If not, a new cluster emerges.</p>
+</li>
+<li>
+<p><strong>Contradiction detection</strong> — Do assertions conflict in ways suggesting fraud or error? Same NINO but different dates of birth? Employment assertions that overlap impossibly? These trigger manual review.</p>
+</li>
+<li>
+<p><strong>Confidence calculation</strong> — How confident are we that these assertions correctly identify a unique person? Product of assertion confidence × binding confidence × cluster coherence. High-confidence biometric binding to high-confidence HMRC assertions yields high-confidence identity. Low-confidence knowledge binding to low-confidence self-reported assertions yields low-confidence identity requiring additional evidence.</p>
+</li>
+</ol>
+<p><strong>The chicken-and-egg dissolves:</strong> We don't need an identity record to correlate assertions. We cluster assertions by attribute similarity and linking events. Assertions citing NINO AB123456C cluster together. Assertions linked via the same binding session cluster together. Clusters that share multiple attributes merge. The identity emerges from this correlation; we don't need it to exist beforehand.</p>
+<h3 id="27a-the-uber-graph-is-primary">2.7a The Uber Graph Is Primary</h3>
+<p>This is the heart of the paradigm shift, and it's easy to miss: <strong>the assertion graph is the only thing that exists. Identity clusters are ephemeral computations over it.</strong></p>
+<p>There is ONE global graph of assertions—call it the "uber graph." Every assertion from every source lives in this graph: HMRC employment data, HMPO passport issuances, council tax records, GP registrations, social vouches, binding events. They accumulate. They never disappear. The graph only grows.</p>
+<p><strong>Identity clusters are not stored records.</strong> They are computed projections—working hypotheses about which assertions in the uber graph refer to the same person. When you ask "who is Sarah Miller?", a clustering service traverses the graph, identifies assertions that likely refer to the same person, and returns a cluster hypothesis with a confidence score. The cluster is computed, not retrieved.</p>
+<p><strong>This means:</strong></p>
+<ol>
+<li>
+<p><strong>Multiple cluster hypotheses can coexist.</strong> The same assertions might support different clustering interpretations. Two clusters might overlap—sharing some assertions but not others. One algorithm might cluster assertions one way; another algorithm might cluster them differently. Neither is "correct"—they're hypotheses with different confidence scores.</p>
+</li>
+<li>
+<p><strong>Clusters are blurry, not crisp.</strong> A cluster boundary isn't a hard line. Some assertions belong firmly (high match probability). Others are ambiguous (0.6 match to cluster A, 0.4 to cluster B). The blurriness is the truth—forcing crisp boundaries would be a lie.</p>
+</li>
+<li>
+<p><strong>Clusters get clearer or blurrier over time.</strong> When corroborating evidence arrives, a cluster hypothesis strengthens—confidence rises from 0.78 to 0.92. When contradicting evidence arrives, confidence drops. When evidence links two clusters, they merge. When fraud reveals mis-grouped assertions, a cluster splits. The cluster is not stable; it's a living hypothesis.</p>
+</li>
+<li>
+<p><strong>The cluster is NOT the person.</strong> The person exists in the real world. The cluster is our current best guess about which graph nodes refer to that person. New evidence can strengthen the guess, weaken it, or prove it wrong entirely.</p>
+</li>
+</ol>
+<p><strong>Why this matters for implementation:</strong></p>
+<p>Traditional systems would store an <code>IdentityRecord</code> table or an <code>IdentityCluster</code> aggregate and update it when evidence arrives. That's the old paradigm leaking back in. What we store is assertions (immutable events). What we compute is clusters (ephemeral hypotheses). The distinction is critical:</p>
+<table>
+<thead>
+<tr>
+<th>Store</th>
+<th>Compute</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Assertions (immutable)</td>
+<td>Cluster hypotheses</td>
+</tr>
+<tr>
+<td>Binding events (immutable)</td>
+<td>Cluster confidence scores</td>
+</tr>
+<tr>
+<td>Decision events (with frozen hypothesis)</td>
+<td>Cluster membership probabilities</td>
+</tr>
+</tbody>
+</table>
+<p>If you find yourself designing a database table for identity clusters with CRUD operations, you've slipped back into the old paradigm. Assertions have CRUD (well, just CR—they're immutable). Clusters don't. Clusters are query results.</p>
+<p><strong>But what about audit?</strong> When a decision is made—"yes, this is Sarah Miller" or "yes, eligible for UC"—we capture that moment by embedding the cluster hypothesis in an immutable <strong>decision event</strong>. The hypothesis is frozen at decision time. Two years later at tribunal, we can show exactly what the system believed when it decided. The current graph might look different (new assertions, higher confidence), but the decision record preserves the point-in-time state.</p>
+<p><strong>The neural network analogy (from the addendum):</strong> The assertion graph functions cognitively like a neural network—nodes are entities, edges are weighted relationships, intelligence emerges from traversing weighted paths. But unlike a neural network, the graph is <strong>explainable</strong>: every clustering decision can be traced to specific assertions, specific match scores, specific binding events. We get the power of probabilistic reasoning with the auditability of explicit rules.</p>
+<h3 id="28-eligibility-is-just-another-rule-application">2.8 Eligibility Is Just Another Rule-Application</h3>
+<p>Here's the final insight that completes the paradigm shift: identity and eligibility are parallel operations on the same assertion graph.</p>
+<p><strong>Identity rules ask:</strong> Do bound assertions constitute a unique person?</p>
+<p><strong>Eligibility rules ask:</strong> Do assertions bound to this cluster meet policy thresholds for this benefit?</p>
+<p>Both operate on assertions. Both produce confidence-scored conclusions. Neither is ontologically prior to the other.</p>
+<p>When Sarah applies for housing benefit:</p>
+<ol>
+<li>
+<p><strong>Binding:</strong> Sarah authenticates (knowledge binding via login credentials). She presents her passport (documentary binding with biometric match). Her session now has bound assertions.</p>
+</li>
+<li>
+<p><strong>Identity rules:</strong> Do Sarah's bound assertions match an existing cluster? Yes—her NINO links to prior HMRC employment data, her address matches council tax records. Identity confidence: 0.91.</p>
+</li>
+<li>
+<p><strong>Eligibility rules:</strong> Do Sarah's bound assertions meet housing benefit criteria? Income below threshold (HMRC assertion at 0.94 confidence). Residency established (council tax assertion at 0.89 confidence). Eligibility confidence: 0.87.</p>
+</li>
+</ol>
+<p>The only reason identity appears to come first is practical: eligibility rules reference "this person's income," requiring us to first determine which assertions constitute "this person." But conceptually, both identity and eligibility are conclusions computed from the assertion graph.</p>
+<h3 id="29-the-complete-picture">2.9 The Complete Picture</h3>
+<p>Everything in Part II:</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph UBER["The Uber Graph (What Exists)"]
+        A1["Assertion: HMRC Employment"]
+        A2["Assertion: HMPO Passport"]
+        A3["Assertion: Council Tax"]
+        A4["Assertion: Social Vouch"]
+        A5["Assertion: Binding Event"]
+
+        A1 --- A2
+        A2 --- A3
+        A3 --- A4
+        A1 --- A5
+        A2 --- A5
+    end
+
+    subgraph COMPUTE["Clustering Service (What Computes)"]
+        CS["Traverse graph"]
+        CS --&gt; MATCH["Calculate match probabilities"]
+        MATCH --&gt; HYPO["Generate cluster hypotheses"]
+    end
+
+    subgraph RESULT["Cluster Hypotheses (Ephemeral Output)"]
+        C1["Cluster A\\nconfidence: 0.89"]
+        C2["Cluster B\\nconfidence: 0.72"]
+        OVERLAP["Some assertions in both\\n(blurry boundaries)"]
+        C1 --- OVERLAP
+        C2 --- OVERLAP
+    end
+
+    UBER --&gt; COMPUTE
+    COMPUTE --&gt; RESULT
+
+    style UBER fill:#e8f5e9
+    style COMPUTE fill:#fff3e0
+    style RESULT fill:#e1f5fe</code></pre>
+<p><strong>Reading this diagram:</strong>
+- <strong>Green:</strong> The uber graph — assertions accumulated over time. This is what exists.
+- <strong>Orange:</strong> The clustering service — computes hypotheses by traversing the graph.
+- <strong>Blue:</strong> Cluster hypotheses — ephemeral results, not stored. Multiple can coexist. Boundaries are blurry.</p>
+<p><strong>The Frankenstein insight:</strong> Identity is assembled from parts—each assertion a bundle of attributes, stitched together by inter-assertion links. It's not stored anywhere. It's computed from the graph. And the computation can yield multiple hypotheses with different confidence levels.</p>
+<hr />
+<h2 id="part-iii-how-this-changes-everything">Part III: How This Changes Everything</h2>
+<p><em>Part II established the model: assertions bind attributes (intra), get linked (inter), and identity emerges from the graph. What does this mean in practice?</em></p>
+<h3 id="31-no-more-master-identity-records">3.1 No More Master Identity Records</h3>
+<p>Stop trying to create authoritative identity records. There is no master file. There are only assertions, bindings, and the clusters computed over them.</p>
+<p>An identity cluster is a working hypothesis: these assertions probably refer to the same person. The hypothesis strengthens with corroborating evidence. It weakens with contradictions. It can merge with other clusters when new assertions link them. It can split when fraud reveals that assertions were incorrectly grouped.</p>
+<p><strong>Clusters are blurry.</strong> When Sarah applies for Universal Credit, the system computes a cluster hypothesis: confidence 0.89 that these 47 assertions refer to the same person. But three of those assertions have only 0.62 membership probability—they might belong to a different Sarah Miller. The cluster boundary isn't crisp; some assertions are firmly in, others are ambiguous. This blurriness is the truth. Forcing a binary in/out decision would be a lie.</p>
+<p><strong>Clusters get clearer or blurrier.</strong> A year later, Sarah presents additional evidence—a bank statement with her NINO, a council tax bill at her current address. The cluster hypothesis strengthens: confidence rises to 0.94, and those three ambiguous assertions now have 0.88 membership probability. The cluster got clearer. But then contradicting evidence arrives: an employment record with the same NINO but a different date of birth. Confidence drops to 0.76. The cluster got blurrier. Neither state is "wrong"—they're the system's honest uncertainty given the evidence at each point in time.</p>
+<p><strong>Multiple cluster hypotheses can coexist.</strong> Sometimes the evidence genuinely supports two interpretations. Perhaps "Sarah Miller, DOB 15/3/1985" and "Sarah J. Miller, DOB 15/3/1985" share some assertions but diverge on others. The system maintains both cluster hypotheses: Cluster A (confidence 0.72) and Cluster B (confidence 0.68). Neither is definitively correct. When additional evidence arrives—perhaps a biometric match—one hypothesis will strengthen and the other will weaken. Until then, both coexist. This isn't a bug; it's the system accurately representing genuine ambiguity.</p>
+<p><strong>What this abandons:</strong>
+- The illusion that identity is a fixed fact
+- The requirement to decide identity before processing evidence
+- The single point of failure of a master identity database
+- The pretense of certainty when evidence is ambiguous</p>
+<p><strong>What this enables:</strong>
+- Processing evidence without knowing identity
+- Graceful handling of ambiguity
+- Fraud detection through contradiction analysis
+- Evolution of understanding as evidence accumulates
+- Honest representation of uncertainty to decision-makers</p>
+<h3 id="32-semantic-translation-not-standardisation">3.2 Semantic Translation, Not Standardisation</h3>
+<p>HMRC defines income as annual gross employment income including bonuses. Universal Credit defines income as monthly net assessment income excluding one-off bonuses. These aren't arbitrary technical choices; they reflect policy requirements written into legislation.</p>
+<p>Standardisation asks departments to abandon definitions their governing law requires. It will never succeed.</p>
+<p>Semantic translation asks: given HMRC's definition, how do we map to Universal Credit's definition, and what confidence penalty applies for the translation uncertainty?</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">:</span><span class="nt">hmrc_to_uc_income_mapping</span> <span class="kt">a</span> <span class="p">:</span><span class="nt">SemanticMapping</span> <span class="p">;</span>
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="p">:</span><span class="nt">sourceVocab</span> <span class="p">:</span><span class="nt">HMRC</span> <span class="p">;</span>
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="p">:</span><span class="nt">sourceConcept</span> <span class="p">:</span><span class="nt">AnnualGrossIncome</span> <span class="p">;</span>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="p">:</span><span class="nt">targetVocab</span> <span class="p">:</span><span class="nt">UniversalCredit</span> <span class="p">;</span>
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="p">:</span><span class="nt">targetConcept</span> <span class="p">:</span><span class="nt">MonthlyNetIncome</span> <span class="p">;</span>
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="p">:</span><span class="nt">translationLogic</span> <span class="s">&quot;((annual - bonuses) / 12) * 0.87&quot;</span> <span class="p">;</span>
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="p">:</span><span class="nt">confidencePenalty</span> <span class="mf">0.03</span> <span class="p">;</span>
+<a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>    <span class="p">:</span><span class="nt">validFrom</span> <span class="s">&quot;2025-01-01&quot;</span><span class="p">^^</span><span class="nn">xsd</span><span class="p">:</span><span class="nt">date</span> <span class="p">;</span>
+<a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="p">:</span><span class="nt">approvedBy</span> <span class="p">:</span><span class="nt">JointGovernanceBoard</span> <span class="p">.</span>
+</code></pre></div>
+<p>Each organisation keeps its vocabulary. Translation happens at boundaries. Uncertainty propagates through confidence scores. No one is forced to change their definitions.</p>
+<h3 id="33-social-evidence-for-the-excluded">3.3 Social Evidence for the Excluded</h3>
+<p>27% of lowest-income households lack passports. 32% lack driving licences. Asylum seekers granted refugee status cannot obtain digital ID for employment because traditional verification assumes stable residential histories and institutional documentation.</p>
+<p>The assertion graph handles this naturally: social vouching is just another assertion type.</p>
+<p>When Imam vouches for Amara Hassan:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">:</span><span class="nt">vouch_001</span> <span class="kt">a</span> <span class="p">:</span><span class="nt">SocialAssertion</span> <span class="p">;</span>
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="p">:</span><span class="nt">assertedBy</span> <span class="p">:</span><span class="nt">person_imam_mohammed</span> <span class="p">;</span>
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="p">:</span><span class="nt">bindsAttributes</span> <span class="p">[</span>
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>        <span class="p">:</span><span class="nt">name</span> <span class="s">&quot;Amara Hassan&quot;</span> <span class="p">;</span>
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>        <span class="p">:</span><span class="nt">knownContext</span> <span class="s">&quot;Community member, 3 years&quot;</span> <span class="p">;</span>
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>        <span class="p">:</span><span class="nt">identityVouch</span> <span class="l">true</span> <span class="p">;</span>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="p">:</span><span class="nt">relationshipBasis</span> <span class="s">&quot;Community leader, regular interaction&quot;</span>
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>    <span class="p">]</span> <span class="p">;</span>
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    <span class="p">:</span><span class="nt">confidence</span> <span class="mf">0.82</span> <span class="p">;</span>
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="p">:</span><span class="nt">verificationMethod</span> <span class="p">:</span><span class="nt">InPersonInterview</span> <span class="p">;</span>
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>    <span class="p">:</span><span class="nt">legalBasis</span> <span class="p">:</span><span class="nt">ImmigrationAct2024</span> <span class="p">.</span>
+</code></pre></div>
+<p>The Imam's vouch carries weight because the Imam's identity is established through fifteen years of institutional assertions (employment, council tax, NHS records). His vouching history shows accuracy when cross-checked against later evidence. Trust propagates through the graph.</p>
+<p>Multiple independent vouches triangulate. When three community members who don't know each other all vouch for Amara, combined confidence may exceed a single passport verification—especially when the passport itself is difficult to verify through international channels during conflict.</p>
+<p>Fraud detection comes naturally: graph analysis catches circular vouching (A vouches for B, B for C, C for A), temporal clustering (60 vouches from one address in 48 hours), and symmetric relationships (fraud rings lack natural community hierarchy).</p>
+<h3 id="34-the-flow-from-assertion-to-decision">3.4 The Flow: From Assertion to Decision</h3>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Assertions["Assertion Layer"]
+        A1["HMRC RTI\\n(employment data)"]
+        A2["DVLA\\n(licence data)"]
+        A3["Council Tax\\n(residence data)"]
+        A4["Social Vouch\\n(community knowledge)"]
+    end
+
+    subgraph Binding["Binding Layer"]
+        B1["Biometric Bind\\n(face match)"]
+        B2["Knowledge Bind\\n(secret demonstration)"]
+        B3["Social Bind\\n(voucher attestation)"]
+    end
+
+    A1 --&gt; B2
+    A2 --&gt; B1
+    A3 --&gt; B2
+    A4 --&gt; B3
+
+    B1 --&gt; Session["Bound Session"]
+    B2 --&gt; Session
+    B3 --&gt; Session
+
+    Session --&gt; Rules["Rule Application"]
+
+    Rules --&gt; IR["Identity Rules"]
+    Rules --&gt; ER["Eligibility Rules"]
+
+    IR --&gt; IC["Identity Cluster\\n(confidence: 0.89)"]
+    ER --&gt; ED["Eligibility Decision\\n(confidence: 0.84)"]
+
+    style Assertions fill:#e3f2fd
+    style Binding fill:#fff9c4
+    style Rules fill:#c8e6c9</code></pre>
+<ol>
+<li>
+<p><strong>Assertions exist</strong> in the graph, made by asserters about assertees referenced by attributes.</p>
+</li>
+<li>
+<p><strong>Claimant authenticates</strong> and establishes a binding session through biometric, knowledge, or social proof.</p>
+</li>
+<li>
+<p><strong>Binding connects</strong> the claimant to relevant assertions—those whose assertee attributes match the claimant's demonstrated attributes.</p>
+</li>
+<li>
+<p><strong>Rules apply</strong> to bound assertions. Identity rules determine: is this a unique, coherent person? Eligibility rules determine: does this person meet policy criteria?</p>
+</li>
+<li>
+<p><strong>Decisions emerge</strong> with confidence scores reflecting the compounded uncertainty of assertions, bindings, and translations.</p>
+</li>
+</ol>
+<hr />
+<h2 id="part-iv-the-domain-model">Part IV: The Domain Model</h2>
+<p><em>This section applies Domain-Driven Design concepts from Paper 1 to the assertion graph architecture.</em></p>
+<h3 id="41-the-domain-and-subdomains">4.1 The Domain and Subdomains</h3>
+<p><strong>Scope:</strong> This domain model covers <em>evidence-based identity and eligibility determination</em>—the problem space this paper addresses. DWP and other government departments have many other domains (payments, accounting, case management, debt recovery, fraud investigation, appeals, etc.) that are outside this scope. Those domains would consume the outputs of this one but have their own models, teams, and bounded contexts. What follows is not "the DWP domain model"—it's the domain model for the specific problem we're solving.</p>
+<p><strong>The problem space:</strong> Government needs to deliver benefits and services to people it cannot directly identify. Unlike private companies that create accounts, government must establish that a real person exists and meets eligibility criteria—using only indirect evidence from other organisations and individuals.</p>
+<p><strong>The core domain:</strong> Evidence-based identity. Storing assertions in the uber graph, computing identity cluster hypotheses on demand, and providing that identity foundation to benefit systems. This is differentiating work that no commodity software can do.</p>
+<p><strong>Supporting subdomains:</strong>
+- <strong>Benefit eligibility</strong> (one per benefit type): Applying policy rules to cluster hypotheses. Important but largely codifying existing regulations.
+- <strong>Semantic translation:</strong> Mapping between organisational vocabularies. Necessary plumbing with well-understood patterns.</p>
+<p><strong>Generic subdomains</strong> (buy or use commodity solutions):
+- <strong>Document storage:</strong> S3-style storage with retention policies.
+- <strong>Biometric matching:</strong> Vendor SDK for face/fingerprint/voice.
+- <strong>Credential issuance:</strong> W3C Verifiable Credentials library.
+- <strong>Audit logging:</strong> Append-only compliance logging.</p>
+<pre class="mermaid"><code>flowchart TB
+    subgraph Core["Core Subdomain"]
+        EBI_SD["Evidence-Based Identity"]
+    end
+
+    subgraph Supporting["Supporting Subdomains"]
+        UC_SD["Universal Credit Eligibility"]
+        HB_SD["Housing Benefit Eligibility"]
+        PIP_SD["PIP Eligibility"]
+        SEM_SD["Semantic Translation"]
+    end
+
+    subgraph Generic["Generic Subdomains"]
+        DOC_SD["Document Storage"]
+        BIO_SD["Biometric Matching"]
+        CRED_SD["Credential Issuance"]
+        AUDIT_SD["Audit Logging"]
+    end
+
+    EBI_SD --&gt; UC_SD
+    EBI_SD --&gt; HB_SD
+    EBI_SD --&gt; PIP_SD
+    EBI_SD --&gt; SEM_SD
+
+    EBI_SD -.-&gt; DOC_SD
+    EBI_SD -.-&gt; BIO_SD
+    EBI_SD -.-&gt; CRED_SD
+    EBI_SD -.-&gt; AUDIT_SD
+
+    style Core fill:#e8f5e9
+    style Supporting fill:#fff3e0
+    style Generic fill:#e3f2fd</code></pre>
+<p><strong>Reading this subdomain map:</strong>
+- <strong>Green (Core):</strong> Evidence-Based Identity — differentiating capability, build in-house
+- <strong>Orange (Supporting):</strong> Benefit eligibility contexts consume the core; semantic translation enables cross-context communication
+- <strong>Blue (Generic):</strong> Commodity capabilities the core uses — buy or use existing solutions
+- <strong>Solid arrows:</strong> Domain dependency (supporting subdomains use core)
+- <strong>Dashed arrows:</strong> Technical dependency (core uses generic subdomains)</p>
+<p><strong>Subdomain → Implementation:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Subdomain</th>
+<th>Type</th>
+<th>Implementation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Evidence-Based Identity</td>
+<td>Core</td>
+<td>Build as BC (§4.2)</td>
+</tr>
+<tr>
+<td>UC / HB / PIP Eligibility</td>
+<td>Supporting</td>
+<td>Build as separate BCs (§4.2)</td>
+</tr>
+<tr>
+<td>Semantic Translation</td>
+<td>Supporting</td>
+<td>ACL pattern within each BC</td>
+</tr>
+<tr>
+<td>Document Storage</td>
+<td>Generic</td>
+<td>AWS S3 or equivalent</td>
+</tr>
+<tr>
+<td>Biometric Matching</td>
+<td>Generic</td>
+<td>Vendor SDK</td>
+</tr>
+<tr>
+<td>Credential Issuance</td>
+<td>Generic</td>
+<td>W3C VC library</td>
+</tr>
+<tr>
+<td>Audit Logging</td>
+<td>Generic</td>
+<td>Append-only log service</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-bounded-contexts">4.2 Bounded Contexts</h3>
+<p>Subdomains are the problem space. Bounded contexts are the solution space. Here's how we implement the core and supporting subdomains as BCs:</p>
+<p><strong>Strategic vs Tactical:</strong> This section covers strategic design (bounded contexts, context relationships). Tactical design (aggregates, entities, value objects) appears below under "Tactical Design."</p>
+<pre class="mermaid"><code>flowchart TB
+    EBI["Evidence-Based Identity (BC)"]
+
+    UC["Universal Credit (BC)"]
+    HB["Housing Benefit (BC)"]
+    PIP["PIP (BC)"]
+
+    EBI --&gt;|"Published Language"| UC
+    EBI --&gt;|"Published Language"| HB
+    EBI --&gt;|"Published Language"| PIP
+
+    style EBI fill:#e8f5e9
+    style UC fill:#fff3e0
+    style HB fill:#fff3e0
+    style PIP fill:#fff3e0</code></pre>
+<p><strong>Reading this context map:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Color</th>
+<th>Subdomain type</th>
+<th>Bounded contexts</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Green</td>
+<td>Core</td>
+<td>Evidence-Based Identity</td>
+</tr>
+<tr>
+<td>Orange</td>
+<td>Supporting</td>
+<td>UC, HB, PIP—each has its own meaning for "income"</td>
+</tr>
+</tbody>
+</table>
+<p>Arrows show BC-to-BC integration via Published Language. Generic subdomains don't appear here—see the implementation table in §4.1.</p>
+<h4 id="evidence-based-identity-bc">Evidence-Based Identity (BC)</h4>
+<p>This is <strong>one bounded context</strong>. The language is unified: caseworkers and domain experts talk about "checking documents," "matching the face," "proving who someone is," and "linking records together." These are different operations but share a ubiquitous language.</p>
+<p><strong>Why one context, not many:</strong>
+- "Assertion" means the same thing whether from HMRC or from a vouch
+- "Binding" means the same thing whether biometric or knowledge-based
+- "Cluster" means the same thing to everyone working on identity
+- One team owns this; one deployment; one model</p>
+<p><strong>The language domain experts use:</strong></p>
+<table>
+<thead>
+<tr>
+<th>What they say</th>
+<th>What the model calls it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Check their documents"</td>
+<td>Receive and validate assertions</td>
+</tr>
+<tr>
+<td>"Match the face to the passport"</td>
+<td>Biometric binding event</td>
+</tr>
+<tr>
+<td>"Link their tax records"</td>
+<td>Assertions join cluster hypothesis via shared NINO</td>
+</tr>
+<tr>
+<td>"They proved who they are"</td>
+<td>Cluster hypothesis confidence threshold met</td>
+</tr>
+<tr>
+<td>"Something doesn't add up"</td>
+<td>Contradiction detected, review flagged</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Tactical Design — What's Stored vs What's Computed:</strong></p>
+<p>This is where the paradigm shift bites. Traditional DDD would model <code>IdentityCluster</code> as an Aggregate Root with status and lifecycle. That's the old paradigm leaking in. As §2.7a established: assertions are stored; clusters are computed.</p>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Stored or Computed?</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Assertions</td>
+<td><strong>Stored</strong> (immutable events)</td>
+<td>They happened; cannot change</td>
+</tr>
+<tr>
+<td>Binding events</td>
+<td><strong>Stored</strong> (immutable events)</td>
+<td>They happened during sessions</td>
+</tr>
+<tr>
+<td>Identity clusters</td>
+<td><strong>Computed</strong></td>
+<td>Working hypotheses over graph</td>
+</tr>
+<tr>
+<td>Cluster snapshots</td>
+<td><strong>Cached</strong> (read model)</td>
+<td>Performance optimization</td>
+</tr>
+<tr>
+<td>Decision events</td>
+<td><strong>Stored</strong> (immutable events)</td>
+<td>Audit trail — captures cluster hypothesis at decision time</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Aggregates (What We Store):</strong></p>
+<p><strong>Assertion</strong> (Aggregate Root)
+The assertion is the primary stored entity. The uber graph IS the collection of assertions.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>Assertion
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>├── assertionId: AssertionId
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>├── asserter: AsserterReference
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>├── boundAttributes: AttributeBundle
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>├── confidence: ConfidenceScore
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>├── verificationMethod: VerificationMethod
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>├── receivedAt: Timestamp
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>└── invariants:
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    - Immutable after creation
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>    - Asserter must be resolvable (institution or person cluster)
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>    - Attributes are bound together (intra-assertion binding)
+</code></pre></div>
+<p><strong>BindingSession</strong> (Aggregate Root)
+A live interaction where a claimant creates binding events that link assertions.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>BindingSession
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>├── sessionId: SessionId
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>├── startedAt: Timestamp
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>├── bindingEvents: List&lt;BindingEvent&gt;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>├── linkedAssertions: List&lt;AssertionId&gt;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>└── invariants:
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    - Session expires after 30 minutes without activity
+<a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a>    - At least one binding event required before linking
+<a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a>    - Binding events are immutable once recorded
+</code></pre></div>
+<p><strong>DecisionEvent</strong> (Aggregate Root)
+When a decision is made based on an ephemeral cluster hypothesis, we capture that moment for audit.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>DecisionEvent
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>├── decisionId: DecisionId
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>├── decidedAt: Timestamp
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>├── decisionType: IdentityConfirmation | EligibilityDetermination | FraudFlag
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>├── outcome: Approved | Rejected | ReferToHuman | Pending
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>├── clusterHypothesisSnapshot: ClusterHypothesis (embedded, immutable)
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>├── confidenceAtDecision: ConfidenceScore
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>├── policyRulesApplied: List&lt;RuleId&gt;
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>├── decidedBy: SystemId | CaseworkerId
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>└── invariants:
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>    - Immutable after creation
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>    - Cluster hypothesis is frozen at decision time
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    - References assertions by ID (assertions themselves are immutable)
+</code></pre></div>
+<p><strong>Why DecisionEvent matters:</strong></p>
+<p>Clusters are ephemeral — computed on demand, never stored as living entities. But when a decision is made ("yes, this is Sarah Miller with confidence 0.89" or "yes, this person is eligible for UC"), that moment must be captured:</p>
+<ul>
+<li><strong>What assertions were in the cluster at decision time?</strong></li>
+<li><strong>What were the membership probabilities?</strong></li>
+<li><strong>What was the overall confidence?</strong></li>
+<li><strong>What policy rules were applied?</strong></li>
+</ul>
+<p>If challenged at tribunal two years later, we can reconstruct exactly what the system believed when it made the decision — even if the current cluster looks different because new assertions have arrived.</p>
+<p>The cluster hypothesis embedded in DecisionEvent is a <strong>frozen snapshot</strong>, not a reference to a living entity. The current cluster might have confidence 0.94 now, but the decision was made when it was 0.78. The audit trail preserves this.</p>
+<p><strong>Domain Services (What We Compute):</strong></p>
+<p><strong>ClusteringService</strong>
+Computes cluster hypotheses by traversing the assertion graph.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>ClusteringService
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>├── computeCluster(startingAssertions: List&lt;AssertionId&gt;) → ClusterHypothesis
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>├── findRelatedAssertions(attributes: AttributeBundle) → List&lt;AssertionId&gt;
+<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>├── detectContradictions(assertions: List&lt;AssertionId&gt;) → List&lt;Contradiction&gt;
+<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>└── operations:
+<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    - Traverse graph via shared attributes (NINO, DOB, address)
+<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>    - Calculate match probabilities using Fellegi-Sunter
+<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>    - Aggregate confidence scores
+<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>    - Flag contradictions for review
+</code></pre></div>
+<p><strong>ClusterHypothesis</strong> (Value Object)
+The output of clustering. Ephemeral when computed; frozen when embedded in a DecisionEvent.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>ClusterHypothesis
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>├── assertions: List&lt;AssertionId&gt;
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>├── confidence: ConfidenceScore
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>├── membershipProbabilities: Map&lt;AssertionId, Probability&gt;
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>├── contradictions: List&lt;Contradiction&gt;
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>├── computedAt: Timestamp
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>└── characteristics:
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>    - NOT an aggregate — no lifecycle, no identity of its own
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>    - Blurry boundaries (membership is probabilistic)
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>    - Multiple hypotheses can coexist for same assertions
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>    - Computed ephemerally by ClusteringService
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>    - Frozen as snapshot when embedded in DecisionEvent
+</code></pre></div>
+<p><strong>The lifecycle:</strong>
+1. <strong>Computed</strong> — ClusteringService traverses graph, produces ClusterHypothesis
+2. <strong>Evaluated</strong> — Rules engine checks hypothesis against policy thresholds
+3. <strong>Decision made</strong> — Outcome determined (approved, rejected, refer)
+4. <strong>Frozen</strong> — ClusterHypothesis embedded in immutable DecisionEvent
+5. <strong>Graph continues</strong> — New assertions arrive, new hypotheses computed, old decision stands</p>
+<p><strong>Read Models (What We Cache):</strong></p>
+<p><strong>ClusterSnapshot</strong> (Read Model / CQRS Projection)
+For performance, we cache the current best clustering. This is a projection, not truth.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>ClusterSnapshot
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>├── snapshotId: SnapshotId
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>├── hypothesis: ClusterHypothesis
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>├── cachedAt: Timestamp
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>├── invalidatedBy: AssertionId? (null if still valid)
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>└── characteristics:
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>    - Invalidated when new assertions arrive
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>    - Re-computed on demand or batch
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a>    - Customer360 reads from these snapshots
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>    - NOT a source of truth
+</code></pre></div>
+<p><strong>Why no IdentityCluster aggregate?</strong></p>
+<p>Traditional systems would create an <code>IdentityCluster</code> aggregate with <code>status: Active | Flagged | Merged | Split</code>. That implies the cluster is a thing that exists and changes state. But:</p>
+<ul>
+<li>Clusters don't split — the service computes a different hypothesis when evidence changes</li>
+<li>Clusters don't merge — the service finds more assertions that link together</li>
+<li>Clusters don't get flagged — contradictions are detected at query time</li>
+</ul>
+<p>The graph is what exists. Clusters are what we compute. The distinction isn't pedantic; it determines whether your system can handle the fundamental truth that identity is uncertain, overlapping, and constantly revised.</p>
+<p><strong>Value Objects:</strong>
+- <code>ConfidenceScore</code>: 0.0–1.0 with composition rules
+- <code>AttributeBundle</code>: The bound attributes within an assertion
+- <code>BindingEvent</code>: Biometric match, knowledge proof, or social vouch
+- <code>AsserterReference</code>: Pointer to institutional config or person cluster
+- <code>Contradiction</code>: Two assertions with incompatible claims (e.g., different NINOs for same biometric)</p>
+<h4 id="benefit-contexts-linguistic-boundaries">Benefit Contexts (Linguistic Boundaries)</h4>
+<p>Here's where contexts actually diverge: each benefit uses different words for the same underlying data.</p>
+<p><strong>Universal Credit Context:</strong>
+- "Income" = gross taxable earnings per HMRC RTI
+- "Household" = benefit unit (complex cohabitation rules)
+- "Residence" = where you normally live (distinct from tenancy)</p>
+<p><strong>Housing Benefit Context:</strong>
+- "Income" = take-home plus child maintenance plus in-kind support
+- "Household" = who sleeps there 4+ nights per week
+- "Residence" = the tenancy address</p>
+<p><strong>PIP Context:</strong>
+- "Income" = irrelevant (not means-tested)
+- "Condition" = functional impact, not diagnosis
+- "Residence" = UK ordinarily resident test</p>
+<p>Each benefit context has its own ubiquitous language. When UC asks the core context for "income," it needs <strong>semantic translation</strong>—the core context provides HMRC assertions, and UC's Anti-Corruption Layer translates to UC's income definition.</p>
+<p><strong>This is a real context boundary:</strong> different teams (UC policy team vs. Housing Benefit policy team), different domain experts, different meanings for the same words.</p>
+<h3 id="43-context-relationships">4.3 Context Relationships</h3>
+<pre class="mermaid"><code>flowchart LR
+    EBI["Evidence-Based Identity\\n(Core Context)"]
+
+    UC["Universal Credit"]
+    HB["Housing Benefit"]
+
+    EBI --&gt;|"Published Language\\n(assertions, hypotheses)"| UC
+    EBI --&gt;|"Published Language\\n(assertions, hypotheses)"| HB
+
+    UC --&gt;|"ACL translates\\n'income' to UC meaning"| UC_DOMAIN["UC Domain Model"]
+    HB --&gt;|"ACL translates\\n'income' to HB meaning"| HB_DOMAIN["HB Domain Model"]</code></pre>
+<p><strong>Core → Benefits:</strong> The Evidence-Based Identity context publishes a stable API (its Published Language). It exposes cluster hypotheses (computed on demand) and bound assertions. It does NOT interpret what those assertions mean for eligibility.</p>
+<p><strong>Benefits consume via ACL:</strong> Each benefit context wraps the core API in an Anti-Corruption Layer that translates the generic assertions into benefit-specific domain concepts. UC's ACL knows that HMRC employment assertions map to UC's income definition. Housing Benefit's ACL applies different mapping rules.</p>
+<p><strong>Why this matters:</strong> When UC policy changes (e.g., capital disregards), only UC's ACL changes. The core context remains stable. When the core context improves cluster matching, all benefits get better identity without changing their eligibility logic.</p>
+<h3 id="44-the-read-model-customer360">4.4 The Read Model: Customer360</h3>
+<p>Customer360 is not a bounded context—it's a <strong>read model</strong> (CQRS projection) built from cluster snapshots.</p>
+<p><strong>What it provides:</strong>
+- Current best cluster hypotheses (cached, not authoritative)
+- Bound assertions with confidence scores
+- Relationship assertions (household composition, dependents)
+- Query-optimized for benefit contexts to consume</p>
+<p><strong>What it doesn't do:</strong>
+- Make eligibility decisions (that's the benefit contexts' job)
+- Store authoritative identity (there is no authoritative identity—only hypotheses)
+- Enforce business rules (those live in domain services)</p>
+<p><strong>Implementation:</strong> Projects from ClusterSnapshot cache. When new assertions arrive, affected snapshots are invalidated and re-computed by the ClusteringService. Customer360 always serves the latest cached hypotheses. Benefit contexts query it but never write to it.</p>
+<p><strong>Remember:</strong> Customer360 serves cluster <em>hypotheses</em>, not ground truth. The hypotheses have confidence scores. They can change when new evidence arrives. Benefit contexts must handle this uncertainty—they cannot assume the identity they received yesterday is still valid today.</p>
+<hr />
+<h2 id="part-v-the-three-layer-confidence-model">Part V: The Three-Layer Confidence Model</h2>
+<p><em>Every assertion carries a confidence score. But where does that number come from? Three independent layers, each measuring something different.</em></p>
+<p>Confidence is not a single number. It composes from three independent assessments:</p>
+<h3 id="layer-1-assertion-quality">Layer 1: Assertion Quality</h3>
+<p>How reliable is this assertion independent of who it's about?</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Question</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Source Reliability</td>
+<td>How trustworthy is the asserter?</td>
+<td>HMRC statutory authority: 0.94</td>
+</tr>
+<tr>
+<td>Verification Strength</td>
+<td>How was the claim verified?</td>
+<td>Cryptographic signature: 0.95</td>
+</tr>
+<tr>
+<td>Transmission Integrity</td>
+<td>How securely did it arrive?</td>
+<td>Mutual TLS: 0.99</td>
+</tr>
+</tbody>
+</table>
+<p>Layer 1 = Source × Verification × Transmission</p>
+<p>HMRC RTI: 0.94 × 0.95 × 0.99 = <strong>0.88</strong></p>
+<p>Citizen self-report via HTTP: 0.40 × 0.55 × 0.60 = <strong>0.13</strong></p>
+<h3 id="layer-2-identifier-binding">Layer 2: Identifier Binding</h3>
+<p>How precisely does this assertion identify its subject? Entirely separate from quality.</p>
+<table>
+<thead>
+<tr>
+<th>Evidence</th>
+<th>Binding Strength</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NINO reference</td>
+<td>0.98</td>
+<td>Unique national identifier</td>
+</tr>
+<tr>
+<td>Driving licence</td>
+<td>0.96</td>
+<td>Photo + DOB + name + address</td>
+</tr>
+<tr>
+<td>Utility bill "C Hughes"</td>
+<td>0.45</td>
+<td>Chris, Christine, Charles?</td>
+</tr>
+<tr>
+<td>Anonymous tip</td>
+<td>0.10</td>
+<td>No identifier at all</td>
+</tr>
+</tbody>
+</table>
+<h3 id="layer-3-cluster-match">Layer 3: Cluster Match</h3>
+<p>Our system's inference: how well does this assertion match the existing cluster?</p>
+<p>Uses Fellegi-Sunter probabilistic record linkage considering name similarity, DOB match, address correlation, NINO agreement, temporal consistency.</p>
+<h3 id="overall-confidence">Overall Confidence</h3>
+<p><strong>Overall = Layer 1 × Layer 2 × Layer 3</strong></p>
+<p>Example: 0.88 (HMRC quality) × 0.98 (NINO binding) × 0.91 (cluster match) = <strong>0.78</strong></p>
+<p>Multiplying is deliberate: uncertainty compounds. A system that papers over this produces false confidence and incorrect decisions.</p>
+<hr />
+<h2 id="part-vi-the-three-coordination-patterns">Part VI: The Three Coordination Patterns</h2>
+<p><em>The assertion graph can deploy at three scales—each with different trust boundaries and governance requirements.</em></p>
+<h3 id="pattern-1-internal-organisational-coordination">Pattern 1: Internal Organisational Coordination</h3>
+<p><strong>Scope:</strong> Within single organisation (e.g., DWP coordinating Universal Credit, Housing Benefit, Pension Credit)</p>
+<p>Pattern 1 deploys the full architecture within one organisation's boundary. A single RDF triple store holds assertions. Internal services share the binding and rules infrastructure. Semantic translation handles vocabulary differences between internal benefits (each has slightly different income definitions).</p>
+<p><strong>Why it matters:</strong> Highest-confidence deployment. Single governance authority. No cross-organisational trust boundaries. This is where to pilot before extending to Pattern 2.</p>
+<h3 id="pattern-2-cross-government-coordination">Pattern 2: Cross-Government Coordination</h3>
+<p><strong>Scope:</strong> Between autonomous organisations (DWP, HMRC, NHS, Councils)</p>
+<p>Pattern 2 adds federated query infrastructure. Each organisation runs its own assertion store. X-Road-style security servers handle mutual authentication and encrypted communication. Semantic translation mappings are negotiated bilaterally between organisation pairs.</p>
+<p><strong>Why it's hard:</strong> Governance across autonomous organisations. Distributed SPARQL optimisation at 100+ endpoints is unproven. Estonia works with 30-50; UK needs 100+.</p>
+<h3 id="pattern-3-business-interactions-verifiable-credentials">Pattern 3: Business Interactions (Verifiable Credentials)</h3>
+<p><strong>Scope:</strong> Government → Citizen → Business verification</p>
+<p>Pattern 3 uses W3C Verifiable Credentials. Government issues digital credentials to citizen wallets. Citizens present credentials to businesses. Cryptographic verification without government involvement; offline-capable; citizen-controlled.</p>
+<p><strong>Why it matters:</strong> Stateless verification scales to 400M+ (EU Digital Identity Wallet already proves this). Citizen controls sharing. Privacy by architecture.</p>
+<hr />
+<h2 id="part-vii-why-this-matters">Part VII: Why This Matters</h2>
+<p><em>The assertion graph model isn't academic theory. It changes how government delivers services.</em></p>
+<h3 id="for-citizens">For Citizens</h3>
+<p>No more uploading the same documents six times. Evidence gathered once, bound to your identity cluster, reusable across benefits with your consent. Clear audit trail showing which assertions influenced which decisions. The ability to challenge both the assertions and the reasoning.</p>
+<p>For the 27% lacking traditional documents: a path to verified identity through community vouching, breaking the exclusion that current systems create.</p>
+<h3 id="for-caseworkers">For Caseworkers</h3>
+<p>Confidence scores that expose when human judgment is needed. Automatic processing of clear cases (95%+), freeing capacity for genuinely complex decisions. Full provenance chains supporting defensible decisions. Fraud patterns visible through graph analysis rather than intuition.</p>
+<h3 id="for-architects">For Architects</h3>
+<p>A model that matches reality. Evidence is uncertain; the architecture represents uncertainty. Identity is emergent; the architecture lets it emerge. Organisational vocabularies differ; the architecture translates rather than standardises. The gap between model and reality that creates system failures is closed.</p>
+<h3 id="for-government">For Government</h3>
+<p>Integration programmes that might actually work, because they don't require the impossible (standardisation across autonomous departments). Fraud detection through graph analysis that organised criminals cannot game without detection. An incremental path: prove Pattern 1 internally before attempting Pattern 2 federation.</p>
+<hr />
+<h2 id="conclusion-the-paradigm-shift">Conclusion: The Paradigm Shift</h2>
+<p>The old paradigm treats identity as a thing to verify. It assumes attributes are properties of identity. It attempts standardisation across organisations that cannot standardise. It builds integration when the problem is coordination. It fails, repeatedly, for the same fundamental reasons.</p>
+<p>The new paradigm treats identity as a conclusion to compute. Assertions from multiple sources, bound to claimants through verifiable proofs, corroborate or contradict. Identity clusters emerge from this evidence. Eligibility is another rule-application on the same evidence. Semantic translation preserves organisational autonomy. Uncertainty propagates through confidence scores.</p>
+<p>This is not merely a technical architecture. It is a different answer to the question: what is identity?</p>
+<p>Identity is not a fact stored in a database. Identity is what emerges when independent assertions about someone, bound to that someone through verifiable means, form a coherent pattern distinguishable from all other patterns.</p>
+<p>Once you see it this way, the architecture follows necessarily. The surprising thing is that we've been trying to build identity systems any other way.</p>
+<hr />
+<h2 id="appendix-a-glossary">Appendix A: Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Definition</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Assertion</strong></td>
+<td>A claim made by an asserter about an assertee, with provenance and confidence</td>
+</tr>
+<tr>
+<td><strong>Asserter</strong></td>
+<td>Who makes a claim (institution or person); asserters are themselves identity nodes</td>
+</tr>
+<tr>
+<td><strong>Assertee</strong></td>
+<td>Who the claim is about, referenced by attributes not by pre-existing identity</td>
+</tr>
+<tr>
+<td><strong>Binding</strong></td>
+<td>Connecting assertions to physical presence: biometric, knowledge, documentary, social</td>
+</tr>
+<tr>
+<td><strong>Identity Cluster</strong></td>
+<td>Bound assertions passing identity rules; the pattern that constitutes identity</td>
+</tr>
+<tr>
+<td><strong>Identity Rules</strong></td>
+<td>Rules determining whether bound assertions constitute a unique person</td>
+</tr>
+<tr>
+<td><strong>Eligibility Rules</strong></td>
+<td>Policy rules determining whether bound assertions meet benefit thresholds</td>
+</tr>
+<tr>
+<td><strong>Confidence</strong></td>
+<td>Quantified reliability (0.0-1.0), product of source trust, verification, and binding</td>
+</tr>
+<tr>
+<td><strong>Semantic Translation</strong></td>
+<td>Mapping between organisational vocabularies with confidence penalty</td>
+</tr>
+<tr>
+<td><strong>Binding Session</strong></td>
+<td>Authenticated session where assertions are gathered and binding established</td>
+</tr>
+<tr>
+<td><strong>Customer360</strong></td>
+<td>Read model of stable identity clusters with bound assertions</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="appendix-b-references">Appendix B: References</h2>
+<ul>
+<li>Fellegi, I.P. and Sunter, A.B. (1969). "A Theory for Record Linkage"</li>
+<li>W3C Verifiable Credentials: https://www.w3.org/TR/vc-data-model/</li>
+<li>RDF 1.1 Primer: https://www.w3.org/TR/rdf11-primer/</li>
+<li>Estonia X-Road documentation: https://x-road.global/</li>
+<li>EU Digital Identity Wallet: https://digital-strategy.ec.europa.eu/en/policies/eudi-wallet-toolbox</li>
+</ul>
+<hr />
+<p><em>Paper 2 of 6 in the Architecting Modern Government Services series</em></p>
+<p><strong>Prerequisites:</strong> Paper 1 — Domain-Driven Design &amp; Clean Architecture for Enterprise Systems<br />
+<strong>Next:</strong> Paper 3 — LLM-Assisted Development with RAG and Guardrails<br />
+<strong>See also:</strong> Paper 4 — Automated LLM-Driven Development · Paper 5 — Getting Started · Paper 6 — DWP Case Study</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

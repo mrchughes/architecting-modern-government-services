@@ -1,0 +1,2236 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A six-paper series on DDD, evidence-based identity, and LLM-assisted development for government services">
+      
+      
+      
+        <link rel="canonical" href="https://mrchughes.github.io/architecting-modern-government-services/Paper_3_LLM_RAG_Guardrails/">
+      
+      
+        <link rel="prev" href="../Paper_2_Evidence_Based_Identity/">
+      
+      
+        <link rel="next" href="../Paper_4_Automated_LLM_Development/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>3 — LLM RAG & Guardrails - Architecting Modern Government Services</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#llm-assisted-development-in-microservice-architectures" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Architecting Modern Government Services" class="md-header__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Architecting Modern Government Services
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              3 — LLM RAG & Guardrails
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../Paper_1_DDD_Clean_Architecture/" class="md-tabs__link">
+          
+  
+  
+  Papers
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Architecting Modern Government Services" class="md-nav__button md-logo" aria-label="Architecting Modern Government Services" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Architecting Modern Government Services
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mrchughes/architecting-modern-government-services" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mrchughes/architecting-modern-government-services
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Papers
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Papers
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_1_DDD_Clean_Architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1 — DDD & Clean Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_2_Evidence_Based_Identity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2 — Evidence-Based Identity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — LLM RAG & Guardrails
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3 — LLM RAG & Guardrails
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-one-why-llms-need-guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part One: Why LLMs Need Guardrails
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part One: Why LLMs Need Guardrails">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-promise-and-the-peril" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Promise and the Peril
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-catastrophic-tinkering-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Catastrophic Tinkering Cascade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-three-dimensions-of-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Dimensions of Failure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-conversation-scope-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Conversation Scope Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-traditional-approaches-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Traditional Approaches Fail
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-two-the-solution-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Two: The Solution Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Two: The Solution Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-service-scoped-rag-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Service-Scoped RAG Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-four-tier-architectural-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Four-Tier Architectural Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-phase-vs-evolution-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Phase vs. Evolution Phase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conversation-scoping-the-practical-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conversation Scoping: The Practical Rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-critical-insight-rag-follows-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Critical Insight: RAG Follows Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-three-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Three: Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Three: Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-the-rag-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building the RAG Index
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keeping-rag-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keeping RAG Current
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-rag-retrieves-wrong-or-insufficient-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When RAG Retrieves Wrong or Insufficient Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layered-enforcement-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layered Enforcement Controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-full-ci-enforcement-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Full CI Enforcement Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-llm-workflow-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The LLM Workflow Step by Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling-in-the-llm-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling in the LLM Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-governance-and-llm-assistance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Governance and LLM Assistance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-four-practical-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Four: Practical Application
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Four: Practical Application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-a-feature-to-an-existing-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Feature to an Existing Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integrating-with-a-shared-platform-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integrating with a Shared Platform Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-five-the-economics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Five: The Economics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Five: The Economics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-cost-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Cost Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-six-implementation-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Six: Implementation Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Six: Implementation Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-one-foundation-months-1-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase One: Foundation (Months 1-4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lightweight-adoption-for-smaller-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lightweight Adoption for Smaller Teams
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-two-expansion-months-5-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase Two: Expansion (Months 5-10)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-three-optimisation-months-11-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase Three: Optimisation (Months 11-18)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Papers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_4_Automated_LLM_Development/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4 — Automated LLM Development
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_5_Getting_Started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5 — Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Paper_6_Case_Study/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6 — Case Study
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#version-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version History
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-one-why-llms-need-guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part One: Why LLMs Need Guardrails
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part One: Why LLMs Need Guardrails">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-promise-and-the-peril" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Promise and the Peril
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-catastrophic-tinkering-cascade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Catastrophic Tinkering Cascade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-three-dimensions-of-failure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Dimensions of Failure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-conversation-scope-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Conversation Scope Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-traditional-approaches-fail" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Traditional Approaches Fail
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-two-the-solution-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Two: The Solution Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Two: The Solution Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Principle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#understanding-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding RAG
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-service-scoped-rag-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Service-Scoped RAG Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-four-tier-architectural-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Four-Tier Architectural Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-phase-vs-evolution-phase" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Phase vs. Evolution Phase
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conversation-scoping-the-practical-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conversation Scoping: The Practical Rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-critical-insight-rag-follows-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Critical Insight: RAG Follows Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-three-implementation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Three: Implementation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Three: Implementation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#building-the-rag-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Building the RAG Index
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keeping-rag-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keeping RAG Current
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-rag-retrieves-wrong-or-insufficient-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When RAG Retrieves Wrong or Insufficient Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layered-enforcement-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layered Enforcement Controls
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-full-ci-enforcement-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Full CI Enforcement Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-llm-workflow-step-by-step" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The LLM Workflow Step by Step
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#error-handling-in-the-llm-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Error Handling in the LLM Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-governance-and-llm-assistance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Governance and LLM Assistance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-four-practical-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Four: Practical Application
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Four: Practical Application">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-a-feature-to-an-existing-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Feature to an Existing Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#integrating-with-a-shared-platform-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integrating with a Shared Platform Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-five-the-economics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Five: The Economics
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Five: The Economics">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-cost-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Cost Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#part-six-implementation-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Part Six: Implementation Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Part Six: Implementation Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#phase-one-foundation-months-1-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase One: Foundation (Months 1-4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#lightweight-adoption-for-smaller-teams" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lightweight Adoption for Smaller Teams
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-two-expansion-months-5-10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase Two: Expansion (Months 5-10)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#phase-three-optimisation-months-11-18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase Three: Optimisation (Months 11-18)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conclusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conclusion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-papers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Papers
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="llm-assisted-development-in-microservice-architectures">LLM-Assisted Development in Microservice Architectures</h1>
+<p><strong>A Framework for Safe AI Assistance at Scale</strong></p>
+<p><em>Part 3 of 6 in the Architecting Modern Government Services Series</em></p>
+<p><em>Version 1.0 | February 2026</em></p>
+<hr />
+<h2 id="version-history">Version History</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.0</td>
+<td>Feb 2026</td>
+<td>Initial release</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<p>Large Language Models promise to accelerate software delivery and democratise technical knowledge. But in microservice architectures—where boundaries matter, contracts are sacred, and coupling is the enemy—uncontrolled LLM assistance creates chaos, not productivity.</p>
+<p>This paper presents a framework that dramatically reduces token costs through intelligent context retrieval, prevents boundary violations by design through architectural enforcement, and scales to hundreds of services. The approach combines Service-Scoped RAG (Retrieval-Augmented Generation), a four-tier architectural model, and automated CI/CD guardrails to make safe LLM assistance possible at scale.</p>
+<p>The choice is clear: adopt LLMs with architectural control, or watch short-term productivity gains erode into technical debt that costs millions to unwind.</p>
+<hr />
+<h2 id="prerequisites">Prerequisites</h2>
+<p>This paper assumes familiarity with Domain-Driven Design concepts (bounded contexts, aggregates, ubiquitous language) and Clean Architecture principles (dependency inversion, layer separation). For a complete treatment of these foundations, see <strong>Paper 1: Domain-Driven Design &amp; Clean Architecture for Enterprise Systems</strong>.</p>
+<p>For readers applying this framework to identity and evidence coordination systems, <strong>Paper 2: Evidence-Based Identity</strong> provides the domain-specific context for that problem space.</p>
+<hr />
+<h2 id="part-one-why-llms-need-guardrails">Part One: Why LLMs Need Guardrails</h2>
+<h3 id="the-promise-and-the-peril">The Promise and the Peril</h3>
+<p>LLMs are remarkable tools. They understand code, recognise patterns, suggest improvements, and accelerate routine tasks. A developer can describe a feature in natural language and receive working code in seconds. Refactoring that once took hours happens in minutes. Documentation writes itself. Tests materialise from specifications.</p>
+<p>But this power comes with a fundamental problem: LLMs don't understand architectural boundaries. They see connections and patterns everywhere. They're trained to be helpful, which means "improving" things beyond what you asked for. And they have perfect recall—every file they've seen is equally accessible in their reasoning.</p>
+<p>In a well-structured microservice architecture, this creates a dangerous failure mode.</p>
+<h3 id="the-catastrophic-tinkering-cascade">The Catastrophic Tinkering Cascade</h3>
+<p>Imagine your payments service processes hundreds of thousands of transactions daily with 99.5% success rates. Someone asks an LLM to optimise a query. But the LLM has visibility across the entire codebase. It notices the notification service has similar patterns, "standardises" them, refactors shared code, and touches six services instead of one. Each change might be correct in isolation, but together they introduce subtle incompatibilities. Success rates drop from 99.5% to 87% to 45%. The incident response team struggles because modifications are scattered across twenty files in six services.</p>
+<p><strong>The critical insight: with LLMs, the risk isn't gradual architectural erosion. It's rapid, catastrophic destabilisation through well-intentioned but boundary-ignorant modifications.</strong> Traditional development has protective friction—humans get tired, lose context, focus on one thing at a time. LLMs have no such friction. They can refactor twenty services as easily as one function, never losing focus or forgetting what they saw.</p>
+<h3 id="the-three-dimensions-of-failure">The Three Dimensions of Failure</h3>
+<p>When organisations adopt LLMs without guardrails, failure manifests in three interconnected ways.</p>
+<p><strong>First, boundary violations compound.</strong> LLMs treat everything as potentially relevant. They don't know that the payments service shouldn't import from the notifications service implementation. They don't understand that domain logic belongs in the domain layer, not scattered throughout infrastructure code. Services designed to be independent become coupled. Business logic leaks across domain boundaries. The properties that make microservices valuable—loose coupling, independent deployability, clear ownership—evaporate one "helpful" modification at a time.</p>
+<p><strong>Second, costs explode exponentially.</strong> Token usage doesn't grow linearly with scale. Loading a service folder into context might consume 400,000 tokens. That's manageable for a single request. But conversations accumulate. First request: 400,000 tokens. Second request: 800,000 tokens. Third request: 1.2 million tokens. By the fourth or fifth turn, you're approaching context window limits and the conversation must reset. The developer loses the thread of reasoning, must re-explain the problem, and the LLM starts from scratch.</p>
+<p>Scale this to an organisation with a hundred services making ten changes per service per month, and you're looking at costs between £500,000 and over £1 million annually—just in token usage. That doesn't count the hidden costs: architectural cleanup, integration fixes, review overhead from changes that touch too many things.</p>
+<p><strong>Third, quality degrades paradoxically.</strong> More context produces worse results. When an LLM processes 2 million tokens to answer a question requiring 25,000 tokens of relevant information, the signal-to-noise ratio plummets. Relevant business rules are buried in irrelevant files. The LLM gets distracted by patterns that look similar but aren't actually related. Accuracy drops from 85-95% with focused context down to 45-60% with full repository access. The LLM changes the wrong files, misses edge cases, and introduces bugs that wouldn't exist if it had just been given the right information in the first place.</p>
+<h3 id="the-conversation-scope-problem">The Conversation Scope Problem</h3>
+<p>There's another dimension that's easy to miss: conversations accumulate irrelevant history that continues to consume tokens and dilute accuracy.</p>
+<p>A developer fixes a refund bug, loading 25,000 tokens of context about refund logic. Great. But then, without starting a new conversation, they ask the LLM about implementing a fraud detection feature. The LLM now carries both the refund context and the fraud detection context—50,000 tokens. Then they ask about optimising database queries. Now it's 75,000 tokens. By day's end, the conversation has touched six different features, accumulated 150,000 tokens of context, and the LLM is reasoning over a mental model that includes irrelevant information from hours ago.</p>
+<p>This creates compounding problems. Each new request pays the token cost for all previous context, even though 90% of it is now irrelevant. Accuracy degrades as the context becomes polluted—the LLM might try to apply refund patterns where they don't belong. Conversations hit context window limits after 5-6 turns instead of 20-30.</p>
+<p>The solution is deliberate conversation scoping: one conversation per feature, per bug fix, per distinct task. When you fix the refund bug, that conversation ends. When you start working on fraud detection, you start a fresh conversation with fresh context. Think of it like pair programming with a human colleague—you don't expect them to keep all the refund details in their head while reasoning about fraud. You give them permission to focus fully on the new task. LLMs need the same permission, and conversation boundaries provide it.</p>
+<h3 id="why-traditional-approaches-fail">Why Traditional Approaches Fail</h3>
+<p>Organisations facing these problems typically try three approaches, and all three fail for the same fundamental reason: they try to control LLM behaviour through instructions and process rather than through architecture.</p>
+<p>The first approach is to write better prompts. "Only change files in the payments service. Do not touch other services. Follow Clean Architecture principles." It's appealing because it's easy and requires no infrastructure investment. It's also ineffective. LLMs are helpful, not obedient. When they see an "obvious improvement" in a file they shouldn't touch, they touch it anyway. Instructions don't constrain what an LLM can see, and visibility equals capability.</p>
+<p>The second approach is to rely on code review. Humans catch boundary violations after the code is written, reject the pull request, and ask for changes. This is better than nothing, but it operates at the wrong point in the workflow. The work has already been done. The tokens have already been spent. And as you scale to 50, 100, 200 services, code review becomes a bottleneck that nobody can keep up with.</p>
+<p>The third approach is to limit LLM access to a single service folder. This is closer to the right answer, but it still suffers from the context explosion problem. A service folder might contain 150 files and 400,000 tokens. The LLM loads everything with equal weight—domain logic, infrastructure boilerplate, test utilities, configuration files—and the conversation still collapses after four or five turns.</p>
+<p>What's actually needed is a fundamental shift in approach: enforce boundaries through architecture, not instructions. Make violations impossible, not just discouraged.</p>
+<hr />
+<h2 id="part-two-the-solution-architecture">Part Two: The Solution Architecture</h2>
+<h3 id="the-core-principle">The Core Principle</h3>
+<p>The solution rests on a deceptively simple principle: <strong>give the LLM exactly what it needs to know, nothing more, and make it physically impossible to violate architectural boundaries.</strong></p>
+<p>This is accomplished through three complementary mechanisms working in concert. Service-Scoped RAG provides focused context by retrieving only the relevant code and documentation for a specific task. A multi-tier architectural model segregates concerns so that domain questions, contract questions, implementation questions, and infrastructure questions are handled separately with appropriate context. And CI/CD guardrails enforce boundaries automatically, blocking any change that violates architectural rules before a human even sees it.</p>
+<p>The genius is in the combination. RAG alone would reduce token costs but wouldn't prevent violations. Architectural tiers alone would provide structure but wouldn't solve the context explosion. CI/CD guardrails alone would catch problems but only after the work is done. Together, they create a system where efficient assistance and architectural robustness are two sides of the same coin.</p>
+<h3 id="understanding-rag">Understanding RAG</h3>
+<p>Before diving into how Service-Scoped RAG works, let's clarify what RAG actually is and why it's the right approach for this problem.</p>
+<p><strong>You don't train your own model.</strong> This is critical to understand. This framework uses existing, commercially available LLMs—GPT-4, Claude, Gemini, or similar models that are already trained on vast amounts of code and natural language. These models already understand programming languages, software patterns, testing practices, and architectural concepts. They're general-purpose reasoning engines that don't need to be taught what a microservice is or how to write a unit test.</p>
+<p>The challenge isn't that LLMs don't understand code. The challenge is that they don't understand <em>your</em> code, <em>your</em> domain, <em>your</em> architectural decisions, <em>your</em> business rules. And more specifically, they don't know what they should and shouldn't change when helping you.</p>
+<p>There are three ways to give an LLM knowledge about your codebase.</p>
+<p><strong>Training or fine-tuning</strong> means taking a base model and continuing its training on your codebase. This sounds appealing but has critical flaws: it's expensive (hundreds of thousands of pounds for serious training runs), the knowledge freezes at training time, and the model learns your mistakes as thoroughly as your good practices. It also doesn't solve the boundary problem—the model still sees everything equally.</p>
+<p><strong>Context window stuffing</strong> means putting all your relevant code directly into each request. This works for small projects, but breaks catastrophically at scale. A 100-service microservice architecture might contain 200 million tokens. You can't fit that in any context window.</p>
+<p><strong>Retrieval-Augmented Generation</strong> is the middle path that solves both problems. You don't modify the model at all. Instead, you build an index of your codebase—a searchable knowledge base. When you ask a question, the system searches this index to find the 8-12 most relevant chunks of code and documentation. These chunks are inserted into the LLM's context along with your question. The LLM reasons over this focused context and provides an answer. When your code changes, you update the index, not the model.</p>
+<p>RAG is the right answer for microservice architectures because it's cost-effective (no expensive training runs), stays current automatically (the index regenerates on every commit), provides focused context (25,000 high-signal tokens instead of 400,000 noisy ones), and enforces boundaries by construction (separate indexes per service mean the payments LLM assistance physically cannot see notifications). It works with any model and any language.</p>
+<p>The practical implication: you need infrastructure engineers, not data scientists. RAG uses standard tools like ChromaDB, Pinecone, or Weaviate, semantic search, and LLM API integration.</p>
+<h3 id="how-service-scoped-rag-works">How Service-Scoped RAG Works</h3>
+<p>Traditional approaches to LLM assistance operate like handing someone a library card and saying "find what you need." Service-Scoped RAG operates like having a reference librarian who knows exactly which eight books contain the answer to your question.</p>
+<p>When a developer asks to add partial refund support to the payments service, the system doesn't load 150 files containing 400,000 tokens. Instead, it performs a semantic search across a pre-indexed representation of the service, finding the 8-12 files that are actually relevant. These might include the refund test suite (which encodes the expected behaviour), the Payment aggregate root (which contains the current refund logic), the ProcessRefund use case (which orchestrates the operation), and an architectural decision record explaining why settlement works the way it does.</p>
+<p>The context provided to the LLM is 25,000 tokens instead of 400,000 tokens. But more importantly, it's the <em>right</em> 25,000 tokens. Tests appear first, making expected behaviour clear. Domain logic is prioritised over infrastructure boilerplate. ADRs provide the "why" behind design decisions. The LLM isn't distracted by irrelevant patterns because irrelevant files simply aren't included.</p>
+<p>The real magic happens over multiple conversation turns. Without RAG, each turn doubles the context size until the conversation becomes unusable. With RAG, each turn adds only the newly retrieved relevant context, and the conversation flows naturally like a pair programming session. The developer can explore, refine, test, and iterate without losing the thread of reasoning.</p>
+<h3 id="the-four-tier-architectural-model">The Four-Tier Architectural Model</h3>
+<p>The framework organises concerns into four distinct tiers, each with its own sphere of influence, its own RAG context, and its own verification mechanisms.</p>
+<p><strong>The Domain Architecture tier</strong> sits at the strategic level, dealing with bounded contexts, domain language, and business capabilities. This is where you answer questions like "Should refund logic live in the payments domain or the finance domain?" The RAG at this tier contains business capability maps, domain glossaries, context boundaries, and cross-context contracts. Verification comes through domain rule tests—executable specifications that encode business invariants. Changes at this tier are rare but impactful, typically requiring enterprise architect approval.</p>
+<p>For a detailed treatment of bounded contexts, aggregates, and domain modelling, see <strong>Paper 1, Part I: The Hierarchy of Boundaries</strong>.</p>
+<p><strong>The Microservice Architecture tier</strong> governs service boundaries, contracts, and inter-service communication. This is where you answer questions like "What should the refund API contract look like?" and "Is this change backwards compatible?" The RAG contains OpenAPI specifications, event schemas, versioning policies, and lists of consumer services. Verification comes through contract testing—both provider tests (does my service fulfil its promises?) and consumer tests (do I satisfy what other services need?). Changes at this tier are more frequent but must maintain backwards compatibility.</p>
+<p><strong>The Clean Architecture tier</strong> controls the internal structure of individual services—the domain, application, and infrastructure layers that keep business logic pure and testable. This is where you answer questions like "How do I implement partial refunds?" The RAG contains the actual service code, prioritising tests and domain logic over infrastructure boilerplate. Verification comes through TDD and architectural fitness functions that ensure layers don't become coupled. Changes at this tier are daily and can be largely automated if tests pass.</p>
+<p>For a complete explanation of Clean Architecture layers and dependency inversion, see <strong>Paper 1, Part II: Clean Architecture Within Microservices</strong>.</p>
+<p><strong>The Infrastructure &amp; Deployment tier</strong> handles platforms, deployment pipelines, and operational concerns. This is where you answer questions like "How do I add Redis to my service deployment?" The RAG contains Terraform configurations, Kubernetes manifests, security baselines, and deployment patterns. Verification comes through infrastructure contract tests that ensure deployments actually work in staging before going to production. Changes at this tier follow a different cadence than application code and are owned by platform teams.</p>
+<p>The tiers are nested and coordinated. Domain rules constrain service contracts. Service contracts guide internal implementation. Internal implementation is deployed through infrastructure. Each tier can only make changes that respect the constraints of the tier above it, and the CI/CD system enforces this automatically.</p>
+<h3 id="design-phase-vs-evolution-phase">Design Phase vs. Evolution Phase</h3>
+<p>Each tier moves through two distinct phases with fundamentally different characteristics, and understanding this distinction is critical to using LLMs effectively.</p>
+<p><strong>The Design Phase</strong> is when boundaries are being discovered and established. The RAG scope is broad because you're exploring possibilities. The LLM's role is to propose options, generate alternatives, and help humans think through trade-offs. Human involvement is high because these are decisions that shape the architecture for years to come. The goal is to establish boundaries and contracts that will guide all future work.</p>
+<p>During design, you might ask an LLM to analyse a legacy system and suggest bounded context candidates, or to propose an event-driven architecture for cross-service communication. The LLM has access to a wide range of reference material—patterns, examples, anti-patterns, business requirements—and its job is to help architects make informed decisions. Once decisions are made, they're frozen in contracts, manifests, and test suites.</p>
+<p><strong>The Evolution Phase</strong> is when boundaries are established and work happens within them. The RAG scope is narrow because you're implementing within constraints. The LLM's role is to write code, refactor, and maintain implementations that respect existing boundaries. Human involvement is low for routine changes because the CI/CD system catches violations automatically. The goal is to maintain architectural integrity while moving quickly.</p>
+<p>During evolution, you might ask an LLM to add a new feature to an existing service or refactor domain logic for clarity. The LLM has access to only the specific service's code and the contracts it must honour. It cannot see other services' implementations, cannot change shared contracts without permission, and cannot violate layer boundaries. The guardrails make incorrect changes impossible to merge.</p>
+<p>The transition from design to evolution is explicit and deliberate. A service moves from design to evolution when its contracts are written, its boundaries are defined, its test suite is in place, and its RAG index is built. From that point forward, the architecture guides the LLM rather than the LLM proposing the architecture.</p>
+<p><strong>Knowing When Design Phase Is Complete.</strong> A common question is: how do you know when to stop designing and start building? The answer is that Design Phase completes when you have a specific set of frozen artefacts: a manifest entry for the service declaring its paths, dependencies, and ownership; written contracts (OpenAPI specs, event schemas) that define how other services will interact with it; at least one aggregate identified with its invariants documented; a glossary entry in the bounded context defining the key terms; and a passing domain rule test that encodes the core business invariant. These artefacts don't need to be perfect—they need to be <em>sufficient</em> to constrain Evolution Phase work. If you find yourself constantly revising boundaries during implementation, you're still in Design Phase and should acknowledge that rather than pretending you're evolving a stable design.</p>
+<h3 id="conversation-scoping-the-practical-rule">Conversation Scoping: The Practical Rule</h3>
+<p>The conversation scope principle is simple to state: <strong>one task, one conversation</strong>. Start a new conversation for each distinct bug fix, feature, or refactoring concern. When you switch services, start fresh. When a conversation exceeds ten turns, start fresh and re-state context.</p>
+<p>The cost of violating this is concrete, not theoretical.</p>
+<p><strong>Poorly scoped — one long conversation:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Turn</th>
+<th>Developer asks</th>
+<th>Context added</th>
+<th>Running total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Fix refund validation bug</td>
+<td>Refund service code</td>
+<td>25,000 tokens</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Add fraud detection webhook</td>
+<td>+ Fraud service code</td>
+<td>52,000 tokens</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Optimise the payment DB queries</td>
+<td>+ Payment DB code</td>
+<td>81,000 tokens</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Review the notifications logic</td>
+<td>+ Notification code</td>
+<td>118,000 tokens</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Back to refunds — add proration</td>
+<td>LLM accuracy degrades; refund context buried</td>
+<td>143,000 tokens</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Why is the proration wrong?</td>
+<td>Context window nearly full</td>
+<td>❌ Limit exceeded</td>
+</tr>
+</tbody>
+</table>
+<p>By turn 5, the LLM is reasoning over 143,000 tokens and the refund context — which should be dominant — is buried under three other services' code. Accuracy drops from ~90% to ~55%. The developer spends more time diagnosing bad suggestions than writing code.</p>
+<p><strong>Well scoped — five focused conversations:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Conversation</th>
+<th>Scope</th>
+<th>Turns</th>
+<th>Tokens</th>
+<th>LLM accuracy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#1</td>
+<td>Refund validation bug</td>
+<td>3</td>
+<td>~25K</td>
+<td>92%</td>
+</tr>
+<tr>
+<td>#2</td>
+<td>Fraud detection webhook</td>
+<td>4</td>
+<td>~30K</td>
+<td>91%</td>
+</tr>
+<tr>
+<td>#3</td>
+<td>Payment DB optimisation</td>
+<td>3</td>
+<td>~28K</td>
+<td>93%</td>
+</tr>
+<tr>
+<td>#4</td>
+<td>Notifications review</td>
+<td>3</td>
+<td>~22K</td>
+<td>90%</td>
+</tr>
+<tr>
+<td>#5</td>
+<td>Refund proration</td>
+<td>5</td>
+<td>~40K</td>
+<td>89%</td>
+</tr>
+</tbody>
+</table>
+<p>Same work, five clean conversations, ~145K tokens total — comparable cost, dramatically better accuracy. Each conversation carries only high-signal context for its specific task.</p>
+<p><strong>Practical rule:</strong> When you finish one task and move to another, close the conversation. This feels unnatural at first — it seems like you're "losing context." But the LLM doesn't benefit from knowing you spent the last hour fixing refund bugs when it now needs to reason clearly about fraud detection. Fresh context is a feature, not a cost.</p>
+<h3 id="the-critical-insight-rag-follows-architecture">The Critical Insight: RAG Follows Architecture</h3>
+<p><strong>RAG follows architecture—architecture does not follow RAG.</strong> RAG is an enforcement mechanism, not a design tool. You use Domain-Driven Design to discover what your services should be. You use business capability mapping to decide bounded contexts. RAG then enforces those decisions at the AI assistance level, making the LLM behave like a disciplined developer who respects boundaries.</p>
+<p>This means the process of building a microservice estate with LLM assistance follows a very specific flow: design wide, contract sharp, build narrow, evolve safely. Each step narrows the LLM's world until it's operating within constraints that make autonomous assistance safe.</p>
+<hr />
+<h2 id="part-three-implementation">Part Three: Implementation</h2>
+<h3 id="building-the-rag-index">Building the RAG Index</h3>
+<p>Let's demystify what actually happens when you create a Service RAG index. There's no magic here—just deliberate curation and engineering.</p>
+<p>First, you decide what belongs. This is a human decision encoded in a manifest. For a payments service, you might include everything under <code>services/payments/**</code> plus explicitly allowed shared contracts like <code>libs/payment-interfaces/**</code>. You exclude other services, old experiments, and global utilities unless explicitly permitted. This manifest becomes law—the single source of truth for what the LLM can see.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span>
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&quot;services&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;payments&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">&quot;paths&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;services/payments/**&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;libs/payment-interfaces/**&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">      </span><span class="nt">&quot;dependencies&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;libs/money-types&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;libs/events-common&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">      </span><span class="nt">&quot;owner&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;payments-team&quot;</span><span class="p">,</span>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">&quot;contracts&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">        </span><span class="nt">&quot;provides&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;refund-api-v2&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;payment-events-v1&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">        </span><span class="nt">&quot;consumes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;user-api-v3&quot;</span><span class="p">],</span>
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">        </span><span class="nt">&quot;consumers&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;notifications-service&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;finance-service&quot;</span><span class="p">]</span>
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">      </span><span class="p">}</span>
+<a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">    </span><span class="p">}</span>
+<a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="p">}</span>
+<a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">}</span>
+</code></pre></div>
+<p><strong>When should something be a separately manifested service?</strong> Use these six questions to decide:</p>
+<ol>
+<li><strong>Does it deploy independently?</strong> If you can release it without coordinating with another team, it deserves its own manifest entry.</li>
+<li><strong>Does a different team own it?</strong> Ownership boundaries map to manifest boundaries. If two teams will be pushing changes to "the same service," it should be two services.</li>
+<li><strong>Does it have its own API contract?</strong> If the thing you're building makes promises to external consumers via an API or event schema, it needs a manifest entry so those consumers can be tracked.</li>
+<li><strong>Would a change in this code break something the payments-team couldn't predict?</strong> If yes, the coupling should be made explicit in the manifest's <code>consumers</code> list rather than discovered in production.</li>
+<li><strong>Does it need a separate RAG scope?</strong> If it contains logic that LLMs should never mix with another service's logic (because they're different domains), they need separate indexes — which requires separate manifest entries.</li>
+<li><strong>Does it have distinct infrastructure requirements?</strong> Different scaling profiles, different data stores, or different compliance boundaries are signals for a separate manifest entry even if teams are shared.</li>
+</ol>
+<p>Second, you chunk the code and documentation. LLMs don't read files; they read chunks. A chunk might be a single function, a class, a test, or a documentation section—typically 200 to 800 tokens each. Each chunk gets metadata: its file path, its type (test, domain logic, infrastructure, documentation), which service it belongs to, and what concepts it relates to. This metadata enables smart retrieval later.</p>
+<p>Third, you create embeddings. Each chunk is converted into a vector—a list of numbers that represents its semantic meaning. Similar meanings produce similar vectors. Tests about refunds cluster together. Documentation about settlement rules clusters together. These vectors are stored in a service-specific index. Critically, you maintain one index per service, not one global repository index. This physical separation prevents cross-service leakage.</p>
+<p>The RAG index is derived data, like build artefacts. You never edit it directly. It's just a fast lookup system that answers: "Given this question, which bits of this service matter?"</p>
+<h3 id="keeping-rag-current">Keeping RAG Current</h3>
+<p>The beauty of the approach is that RAG maintenance is boring and automatic—which is exactly what you want.</p>
+<p>RAG updates happen automatically on three triggers: when code merges to main, when a release is cut, and optionally on a nightly schedule. When an update runs, the system detects which files changed, re-chunks only the affected code, re-embeds those chunks, and updates the index in place. No human involvement required.</p>
+<p>The update process is incremental and efficient. If you change three files in a 150-file service, only those three files are re-processed. The git diff tells you exactly what changed. A simple script updates just those chunks.</p>
+<p>What goes into RAG evolves by phase. During the Design Phase, you include service templates, architecture guidelines, similar services for reference, domain glossaries, and contract examples. During the Evolution Phase, you include actual service code prioritising domain and application layers, the complete test suite, service-specific ADRs, service contracts, and relevant shared library interfaces marked read-only.</p>
+<p>What never goes into Service RAG: other services' implementation code, global utilities unless explicitly allowed, deprecated or experimental code, and infrastructure code (which has its own separate Infrastructure RAG).</p>
+<blockquote>
+<p><strong>RAG Index Failure Modes</strong></p>
+<ul>
+<li><strong>Stale index:</strong> Symptoms: LLM references functions you renamed last week, suggests patterns from deprecated code. Fix: verify the CI trigger is hitting the indexing step on merge; run <code>rebuild-index.sh payments</code> manually to confirm.</li>
+<li><strong>Over-chunked (too small):</strong> Symptoms: 200-token chunks split functions mid-definition; LLM sees signature but not body. Fix: increase chunk size to 500–800 tokens; use AST-aware chunking rather than character count.</li>
+<li><strong>Under-chunked (too large):</strong> Symptoms: Semantic search can't distinguish relevant from irrelevant within a 2,000-token chunk; retrieval quality drops. Fix: split large files more aggressively; one class or function per chunk.</li>
+<li><strong>Metadata missing:</strong> Symptoms: Tests aren't prioritised in re-ranking; LLM sees infrastructure boilerplate before business logic. Fix: ensure the chunker writes <code>file_type</code> and <code>layer</code> metadata for every chunk.</li>
+<li><strong>Wrong index queried:</strong> Symptoms: LLM references code from a different service not in scope. Fix: confirm the service routing step at the start of the workflow is identifying the correct service name; add an assertion that validates the target index name before querying.</li>
+</ul>
+</blockquote>
+<h3 id="when-rag-retrieves-wrong-or-insufficient-context">When RAG Retrieves Wrong or Insufficient Context</h3>
+<p>Even a well-configured RAG system will occasionally retrieve unhelpful content. Understanding why helps you diagnose and fix these situations.</p>
+<p><strong>Symptoms of poor retrieval:</strong> The LLM suggests changes that don't match your codebase style. The LLM references patterns or APIs that don't exist in your service. The LLM gives generic advice instead of specific guidance based on your code. The LLM proposes changes to files that aren't in its context.</p>
+<p><strong>Common causes and fixes:</strong></p>
+<p><em>Stale index:</em> If recent changes aren't reflected, the index hasn't been updated. Run the indexing script manually or check the CI trigger that should update it on merge.</p>
+<p><em>Over-chunking:</em> If chunks are too small, the LLM gets fragments without context. Increase chunk size from 200 tokens to 500-800 tokens, ensuring functions and classes aren't split mid-definition.</p>
+<p><em>Under-chunking:</em> If chunks are too large, semantic search can't distinguish between relevant and irrelevant sections. Split large files more aggressively.</p>
+<p><em>Missing metadata:</em> If the re-ranker can't prioritise tests over infrastructure, the metadata probably isn't set. Ensure the chunker adds file type and layer information to each chunk.</p>
+<p><em>Ambiguous queries:</em> If your question is vague, retrieval will be vague. "How do I handle errors?" retrieves everything about errors. "How does RefundService handle InsufficientFundsException?" retrieves the specific handling.</p>
+<p><strong>Diagnosing retrieval problems:</strong> Most RAG systems can show you what was retrieved before it went to the LLM. If yours doesn't, add logging. Compare what the system retrieved against what you expected. If the right files aren't in the top 8-12 results, the problem is retrieval. If the right files are present but the LLM still gives bad answers, the problem is elsewhere—prompt construction, LLM temperature, or insufficient context even in the right files.</p>
+<h3 id="layered-enforcement-controls">Layered Enforcement Controls</h3>
+<p>The real power of this approach comes from layered segregation controls that make boundary violations not just discouraged but physically impossible.</p>
+<p>At the foundation sits the monorepo manifest—a single <code>monorepo.json</code> file at your repository root that defines the truth about service boundaries. For each service, it declares allowed paths, permitted dependencies, ownership, and contracts. This manifest enables everything else: automated path validation, dependency checking, contract test discovery, ownership enforcement, and impact analysis.</p>
+<p><strong>Layer 1: RAG Scoping.</strong> When you request a change to the payments service, the system locks RAG scope to only those declared paths. The LLM physically cannot see other services because they're not in the index it queries. This is pre-emptive control—95% of problems are prevented here simply by controlling visibility.</p>
+<p><strong>Layer 2: Path Validation.</strong> Before any code is committed, an automated check validates that all changed files are within the allowed scope for the target service. A simple script loads the manifest, examines the git diff, and fails if any file is outside the permitted paths. This catches any attempt to modify unauthorised files before human review.</p>
+<p><strong>Layer 3: Dependency Validation.</strong> The same CI check analyses imports in changed files to ensure they only reference allowed dependencies. If you try to import from another service's implementation or use a prohibited shared library, the check fails automatically.</p>
+<p><strong>Layer 4: Pre-flight Diff Guard.</strong> Before the LLM can even apply a patch, a validator examines the proposed diff and rejects it if any file path fails the allowlist. This provides immediate feedback, not just at PR time.</p>
+<p><strong>Layer 5: CODEOWNERS Integration.</strong> Each service path has declared owners. If you use separate bot accounts per service, each bot is a member of only its service team and can only approve changes within its scope. Cross-service changes require human approval from both teams.</p>
+<p><strong>Layer 6: Contract Testing.</strong> Any change that touches a service contract must pass contract tests for both provider and consumers. These run automatically in CI, and all must pass before merge is allowed.</p>
+<h3 id="the-full-ci-enforcement-pipeline">The Full CI Enforcement Pipeline</h3>
+<p>The following is a working GitHub Actions workflow that implements Layers 2–6. Drop it in <code>.github/workflows/llm-boundary.yml</code> and it runs on every pull request targeting a service.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LLM Boundary Enforcement</span>
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">on</span><span class="p">:</span>
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">pull_request</span><span class="p">:</span>
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">opened</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">synchronize</span><span class="p p-Indicator">]</span>
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="nt">jobs</span><span class="p">:</span>
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">  </span><span class="nt">validate-scope</span><span class="p">:</span>
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate Service Boundary</span>
+<a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">outputs</span><span class="p">:</span>
+<a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ steps.service.outputs.service }}</span>
+<a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">          </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
+<a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Identify target service</span>
+<a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">service</span>
+<a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">          </span><span class="no"># Convention: feature/SERVICE_NAME/description</span>
+<a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">          </span><span class="no">SERVICE=$(echo &quot;${{ github.head_ref }}&quot; | cut -d&#39;/&#39; -f2)</span>
+<a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">          </span><span class="no">echo &quot;service=$SERVICE&quot; &gt;&gt; $GITHUB_OUTPUT</span>
+<a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">          </span><span class="no">echo &quot;Working on service: $SERVICE&quot;</span>
+<a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>
+<a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate modified file paths (Layer 2)</span>
+<a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">          </span><span class="no">SERVICE=&quot;${{ steps.service.outputs.service }}&quot;</span>
+<a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">          </span><span class="no"># Read allowed paths from manifest</span>
+<a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">          </span><span class="no">ALLOWED=$(jq -r &quot;.services[\&quot;$SERVICE\&quot;].paths[]&quot; monorepo.json)</span>
+<a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">          </span><span class="no">CHANGED=$(git diff --name-only origin/main...HEAD)</span>
+<a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">          </span><span class="no">VIOLATIONS=&quot;&quot;</span>
+<a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">          </span><span class="no">for file in $CHANGED; do</span>
+<a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">            </span><span class="no">PERMITTED=false</span>
+<a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">            </span><span class="no">for pattern in $ALLOWED; do</span>
+<a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">              </span><span class="no"># Strip trailing ** glob for prefix matching</span>
+<a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">              </span><span class="no">PREFIX=&quot;${pattern%\*\*}&quot;</span>
+<a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">              </span><span class="no">if echo &quot;$file&quot; | grep -q &quot;^${PREFIX}&quot;; then</span>
+<a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">                </span><span class="no">PERMITTED=true; break</span>
+<a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">              </span><span class="no">fi</span>
+<a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">            </span><span class="no">done</span>
+<a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">            </span><span class="no">if [ &quot;$PERMITTED&quot; = &quot;false&quot; ]; then</span>
+<a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">              </span><span class="no">VIOLATIONS=&quot;$VIOLATIONS\n  - $file&quot;</span>
+<a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="w">            </span><span class="no">fi</span>
+<a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="w">          </span><span class="no">done</span>
+<a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="w">          </span><span class="no">if [ -n &quot;$VIOLATIONS&quot; ]; then</span>
+<a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="w">            </span><span class="no">echo &quot;::error ::Files outside allowed scope for &#39;$SERVICE&#39;:$VIOLATIONS&quot;</span>
+<a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="w">            </span><span class="no">echo &quot;Allowed paths: $ALLOWED&quot;</span>
+<a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="w">            </span><span class="no">exit 1</span>
+<a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="w">          </span><span class="no">fi</span>
+<a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">          </span><span class="no">echo &quot;All changed files within scope for $SERVICE ✅&quot;</span>
+<a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>
+<a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate imports (Layer 3)</span>
+<a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w">          </span><span class="no">SERVICE=&quot;${{ steps.service.outputs.service }}&quot;</span>
+<a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="w">          </span><span class="no">ALLOWED_DEPS=$(jq -r &quot;.services[\&quot;$SERVICE\&quot;].dependencies[]&quot; monorepo.json)</span>
+<a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="w">          </span><span class="no">VIOLATIONS=&quot;&quot;</span>
+<a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="w">          </span><span class="no"># Check changed Python files for forbidden internal imports</span>
+<a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="w">          </span><span class="no">git diff --name-only origin/main...HEAD | grep &#39;\.py$&#39; | while read -r pyfile; do</span>
+<a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="w">            </span><span class="no">grep -E &quot;^from services\.|^import services\.&quot; &quot;$pyfile&quot; 2&gt;/dev/null | while read -r imp; do</span>
+<a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w">              </span><span class="no">PKG=$(echo &quot;$imp&quot; | awk &#39;{print $2}&#39; | cut -d&#39;.&#39; -f1-2)</span>
+<a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="w">              </span><span class="no">if ! echo &quot;$ALLOWED_DEPS&quot; | grep -qF &quot;$PKG&quot;; then</span>
+<a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="w">                </span><span class="no">echo &quot;::error file=$pyfile::Forbidden internal import &#39;$PKG&#39; in $pyfile&quot;</span>
+<a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a><span class="w">                </span><span class="no">exit 1</span>
+<a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="w">              </span><span class="no">fi</span>
+<a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="w">            </span><span class="no">done</span>
+<a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="w">          </span><span class="no">done</span>
+<a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a>
+<a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="w">  </span><span class="nt">contract-tests</span><span class="p">:</span>
+<a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Contract Tests</span>
+<a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate-scope</span>
+<a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a>
+<a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
+<a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
+<a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a><span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a><span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.12&quot;</span>
+<a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a>
+<a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pip install pytest pytest-asyncio pact-python</span>
+<a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a>
+<a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run provider contract tests</span>
+<a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a><span class="w">          </span><span class="no">SERVICE=&quot;${{ needs.validate-scope.outputs.service }}&quot;</span>
+<a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a><span class="w">          </span><span class="no">cd services/$SERVICE</span>
+<a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a><span class="w">          </span><span class="no">pytest tests/contract/provider/ -v --tb=short</span>
+<a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a>
+<a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run consumer contract tests for all declared consumers</span>
+<a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a><span class="w">          </span><span class="no">SERVICE=&quot;${{ needs.validate-scope.outputs.service }}&quot;</span>
+<a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a><span class="w">          </span><span class="no">CONSUMERS=$(jq -r &quot;.services[\&quot;$SERVICE\&quot;].contracts.consumers[]&quot; monorepo.json)</span>
+<a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a><span class="w">          </span><span class="no">for consumer in $CONSUMERS; do</span>
+<a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a><span class="w">            </span><span class="no">echo &quot;--- Consumer tests: $consumer verifying against $SERVICE ---&quot;</span>
+<a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a><span class="w">            </span><span class="no">cd services/$consumer</span>
+<a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a><span class="w">            </span><span class="no">pytest tests/contract/consumer/ -v -k &quot;$SERVICE&quot; --tb=short</span>
+<a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a><span class="w">            </span><span class="no">cd -</span>
+<a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a><span class="w">          </span><span class="no">done</span>
+<a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a>
+<a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a><span class="w">  </span><span class="nt">domain-rule-tests</span><span class="p">:</span>
+<a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Domain Rule Tests</span>
+<a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a><span class="w">    </span><span class="nt">needs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validate-scope</span>
+<a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a><span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<a id="__codelineno-1-106" name="__codelineno-1-106" href="#__codelineno-1-106"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v4</span>
+<a id="__codelineno-1-107" name="__codelineno-1-107" href="#__codelineno-1-107"></a>
+<a id="__codelineno-1-108" name="__codelineno-1-108" href="#__codelineno-1-108"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Set up Python</span>
+<a id="__codelineno-1-109" name="__codelineno-1-109" href="#__codelineno-1-109"></a><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/setup-python@v4</span>
+<a id="__codelineno-1-110" name="__codelineno-1-110" href="#__codelineno-1-110"></a><span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<a id="__codelineno-1-111" name="__codelineno-1-111" href="#__codelineno-1-111"></a><span class="w">          </span><span class="nt">python-version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;3.12&quot;</span>
+<a id="__codelineno-1-112" name="__codelineno-1-112" href="#__codelineno-1-112"></a>
+<a id="__codelineno-1-113" name="__codelineno-1-113" href="#__codelineno-1-113"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install dependencies</span>
+<a id="__codelineno-1-114" name="__codelineno-1-114" href="#__codelineno-1-114"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-1-115" name="__codelineno-1-115" href="#__codelineno-1-115"></a><span class="w">          </span><span class="no">SERVICE=&quot;${{ needs.validate-scope.outputs.service }}&quot;</span>
+<a id="__codelineno-1-116" name="__codelineno-1-116" href="#__codelineno-1-116"></a><span class="w">          </span><span class="no">pip install -r services/$SERVICE/requirements.txt</span>
+<a id="__codelineno-1-117" name="__codelineno-1-117" href="#__codelineno-1-117"></a>
+<a id="__codelineno-1-118" name="__codelineno-1-118" href="#__codelineno-1-118"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run domain invariant tests</span>
+<a id="__codelineno-1-119" name="__codelineno-1-119" href="#__codelineno-1-119"></a><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<a id="__codelineno-1-120" name="__codelineno-1-120" href="#__codelineno-1-120"></a><span class="w">          </span><span class="no">SERVICE=&quot;${{ needs.validate-scope.outputs.service }}&quot;</span>
+<a id="__codelineno-1-121" name="__codelineno-1-121" href="#__codelineno-1-121"></a><span class="w">          </span><span class="no">cd services/$SERVICE</span>
+<a id="__codelineno-1-122" name="__codelineno-1-122" href="#__codelineno-1-122"></a><span class="w">          </span><span class="no">pytest tests/domain/ -v --tb=short</span>
+<a id="__codelineno-1-123" name="__codelineno-1-123" href="#__codelineno-1-123"></a><span class="w">          </span><span class="no">echo &quot;Domain rule tests passed ✅&quot;</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Adapting for your stack:</strong> Replace <code>pytest</code> with your test runner of choice. The path and import validation steps are framework-agnostic and work identically for TypeScript, Java, or Go projects — adjust the <code>grep</code> patterns for your import syntax. The <code>monorepo.json</code> manifest is the single configuration source for all steps.</p>
+</blockquote>
+<p>For the domain rule tests pattern (Given-When-Then BDD specs that this step runs), see <strong>Paper 1, Part IV: Testing Strategy at Each Tier</strong>.</p>
+<p>Together, these layers create defence in depth. If RAG scoping somehow fails, path validation catches it. If path validation somehow fails, dependency checking catches it. If all automated checks somehow fail, CODEOWNERS requires human approval. Violations aren't just discouraged—they're systematically prevented.</p>
+<h3 id="the-llm-workflow-step-by-step">The LLM Workflow Step by Step</h3>
+<p>Now let's trace through exactly what happens when an LLM assists with a code change.</p>
+<p><strong>Step 1: Service Identification.</strong> Before any retrieval happens, the system must deterministically identify which service is being changed. This isn't guessed by the LLM—it's derived from explicit context like a service label on the request, a branch naming convention, or a routing step that maps features to services.</p>
+<p><strong>Step 2: Semantic Search.</strong> The LLM generates a query based on your request. For "add partial refund support," the query might be "partial refund settlement logic implementation." This query is run against only the payments service RAG index—other service indexes are never touched. The semantic search returns chunks ranked by relevance, typically 20-30 candidates.</p>
+<p><strong>Step 3: Intelligent Re-ranking.</strong> Raw semantic similarity isn't enough. The system re-ranks results using metadata: tests get highest priority (they encode expected behaviour as executable specs), then domain logic (business rules), then ADRs (explain "why"), then application layer (use cases), then infrastructure (only if needed). This prioritisation ensures the LLM sees the most authoritative information first.</p>
+<p><strong>Step 4: Context Assembly.</strong> The top 8-15 chunks are assembled into the LLM's context, totalling about 25,000 tokens instead of 400,000. Crucially, this context includes an explicit constraint: "You may not propose changes outside these paths." This is defence in depth—even though file access is already restricted.</p>
+<p><strong>Step 5: Reasoning.</strong> The LLM reasons over this focused context. It sees the refund test suite defining current behaviour, the Payment aggregate showing current implementation, the architectural decision record explaining regulatory requirements, and the value objects it needs to work with. It doesn't see 142 irrelevant files. It isn't distracted by other services.</p>
+<p><strong>Step 6: Diff Proposal.</strong> The LLM outputs a proposed change as a unified diff—just text, with no side effects yet.</p>
+<p><strong>Step 7: Automated Validation.</strong> Before any code is touched, the pre-flight diff guard validates that all files in the diff are within allowed paths. The path validator confirms scope. The dependency checker confirms no unauthorised imports. Only if all pass does the process continue.</p>
+<p><strong>Step 8: Application and Testing.</strong> The patch is applied by a deterministic tool (not by the LLM directly), service-specific tests are run for fast feedback, and a pull request is created by a bot account with the changes logged for audit. Humans review business logic, not architectural compliance—that's already been validated.</p>
+<h3 id="error-handling-in-the-llm-workflow">Error Handling in the LLM Workflow</h3>
+<p>Things go wrong. Understanding the failure modes helps you build robust processes.</p>
+<p><strong>LLM generates invalid code.</strong> This is caught at Step 8 when tests fail. The system logs the failure, the generated code, and the context that was provided. The developer reviews the log, adjusts the prompt or provides additional context, and tries again. Don't manually fix generated code—this defeats the purpose of having reproducible, auditable generation.</p>
+<p><strong>Path validation fails.</strong> The LLM proposed changes to files outside the allowed scope. This is caught at Step 7. Review the diff to understand what the LLM was trying to do. Often this indicates a legitimate need that should be addressed differently—perhaps a shared library needs updating (by its owning team) or a contract needs amendment.</p>
+<p><strong>Dependency validation fails.</strong> The LLM imported something prohibited. Usually this means the LLM found a pattern in its training data that isn't appropriate for your architecture. Add explicit instructions in the context: "Do not import from package X. Use the Y interface instead."</p>
+<p><strong>Semantic search returns nothing relevant.</strong> The index may be empty, corrupted, or the query may be too abstract. Try rephrasing with specific terms that would appear in your code. If this happens consistently, rebuild the index from scratch.</p>
+<p><strong>Context window exceeded.</strong> The retrieved context plus conversation history exceeds the model's limit. Start a fresh conversation. If this happens frequently, your chunks may be too large, or you're having too many turns before starting fresh.</p>
+<p><strong>Rate limiting or API errors.</strong> Transient failures from the LLM provider. The system should retry with exponential backoff. If persistent, check your API quota or the provider's status page.</p>
+<h3 id="data-governance-and-llm-assistance">Data Governance and LLM Assistance</h3>
+<p>The framework so far has focused on code boundaries, but data is equally critical—especially in government and regulated industries where PII, GDPR compliance, data retention, and audit trails are non-negotiable.</p>
+<p><strong>Each Microservice Owns Its Data.</strong> The foundational principle: each microservice has its own database that no other service accesses directly. This is database-per-service, not a shared database. Services communicate through APIs and events, never through direct database access. This ensures that data schemas can evolve independently without breaking consumers.</p>
+<p>When an LLM assists with data-related changes, it operates within this boundary. It can modify the refund-management service's database schema, but it cannot touch the payment-processing service's database—even though they're in the same bounded context.</p>
+<p><strong>RAG and Data: What LLMs See.</strong> This is critical: <strong>production data never goes into RAG indexes or LLM prompts</strong>. Ever. The risks are too high—data leakage, PII exposure, compliance violations.</p>
+<p>Instead:
+- RAG indexes contain database <em>schemas</em> and migration scripts (the structure, not the data)
+- Code examples use synthetic data or anonymised samples
+- Test data is generated, not copied from production
+- LLM assistance for data queries uses schema definitions, not actual records</p>
+<p>When a developer asks "How do I query refunds for a specific payment?", the LLM sees the repository interface, the database schema, and example queries—but no actual payment or refund data.</p>
+<p><strong>Compliance and Audit.</strong> The framework logs all LLM-assisted changes that touch data: what question was asked, what files were changed, what schema migrations were generated, who approved the changes, and what tests were run. This audit trail is essential for compliance reviews. You can demonstrate that no LLM ever saw production PII, that all changes went through proper approval, and that all data access followed the principle of least privilege.</p>
+<hr />
+<h2 id="part-four-practical-application">Part Four: Practical Application</h2>
+<h3 id="adding-a-feature-to-an-existing-service">Adding a Feature to an Existing Service</h3>
+<p>Let's trace through a real scenario: adding subscription-based refunds to the refund-management microservice—a moderately complex feature that touches domain logic, contracts, and potentially infrastructure.</p>
+<p><strong>The journey begins with a domain question.</strong> Before writing any code, you ask: "Does subscription refund logic belong in the payments bounded context?" The system queries the Domain Architecture tier RAG, retrieving the payments context definition, domain invariants, and the domain glossary. The LLM analyses this and confirms: yes, subscription refunds fit within the existing payments context. No new cross-domain dependencies are needed. A domain rule test is added to encode the new invariant. This takes 30 seconds and costs about £0.002.</p>
+<p><strong>Next comes contract impact analysis.</strong> You ask: "Will this change the refund API contract?" The system queries the Microservice Architecture tier RAG, retrieving the current OpenAPI specification, the list of consuming microservices, and the versioning policy. The LLM proposes adding an optional "refundType" field. It checks compatibility: the field is optional, existing consumers can ignore it, no breaking changes. Contract tests are automatically updated for all consumer microservices. This takes 45 seconds and costs about £0.0015.</p>
+<p><strong>Now you implement the feature.</strong> You ask: "Implement subscription refund logic with proration." Here's where Service-Scoped RAG shines. The system performs a semantic search for "subscription refund proration" across the refund-management microservice index. It retrieves exactly eight files totalling 25,000 tokens: the refund test suite, the Refund aggregate root, the RefundRequest entity, the ProcessRefund use case, an ADR about subscription payment rules, the Money value object, the repository interface, and the RefundCalculator domain service.</p>
+<p>Critically, it does <em>not</em> retrieve the 142 other files in the microservice—controllers, middleware, database implementations, configuration files, deployment scripts. Those aren't relevant to this task. And it absolutely does not retrieve anything from the payment-processing or settlement microservices, even though they're in the same bounded context.</p>
+<p><strong>You have a 12-turn conversation with the LLM.</strong> It proposes domain model changes, adds proration calculation logic, updates the use case, adds tests for edge cases, refines the algorithm based on your feedback, adds validation, implements error handling, adds integration tests, updates API documentation, and helps you review everything. The conversation flows naturally because the context stays focused. Total cost: about £0.035. Total time: 25 minutes. All changes stay within the domain and application layers of the refund-management microservice. Zero changes to other microservices, shared libraries, or infrastructure.</p>
+<p><strong>Infrastructure comes last.</strong> You ask: "Do I need infrastructure changes?" The system queries the Infrastructure tier RAG, retrieving your current Helm chart, ConfigMap template, and feature flag patterns. The LLM suggests adding a feature flag and new monitoring metrics. An infrastructure contract test ensures the config is present. This takes 2 minutes and costs about £0.002.</p>
+<p><strong>Finally, CI/CD validates everything.</strong> You create a pull request and the automation kicks in. Path validation confirms all changes are within the allowed scope. Domain rule tests pass. Provider contract tests confirm your API is backwards compatible. Consumer contract tests run in the notification and finance microservices—all pass. Unit and integration tests pass. Architectural fitness functions detect zero layer violations. Total CI time: 75 seconds. All checks pass automatically.</p>
+<p>A human tech lead reviews the pull request, but they're only reviewing business logic—the proration algorithm and edge case handling. They spend 10 minutes because they don't need to check architectural compliance, contract compatibility, or test coverage. That's already been validated.</p>
+<p>From initial question to production-ready code: 40 minutes of developer time, 10 minutes of review time, about £0.041 in token costs, zero architectural violations, zero contract breaks.</p>
+<h3 id="integrating-with-a-shared-platform-service">Integrating with a Shared Platform Service</h3>
+<p>Here's a different scenario that shows how the framework handles platform services: a microservice within one subdomain needs to integrate with a platform service owned by another team.</p>
+<p>You're building a benefits-claim-service that needs to authenticate citizens. The Identity platform service is shared across multiple subdomains. It's owned by the Platform Identity Team, not your team.</p>
+<p><strong>Discovering the Platform Contract.</strong> You ask: "How do I authenticate a citizen in my service?" The LLM queries the domain RAG, which includes <em>contracts</em> for all platform dependencies (read-only). It retrieves the identity-service OpenAPI contract, authentication flow documentation, rate limiting and SLA information, and example integration code from other services.</p>
+<p>Critically, the LLM does <em>not</em> see the identity-service's implementation code, database schema, or internal architecture. That's owned by a different team and protected by different RAG boundaries. You see what the Identity platform service does, not how it does it.</p>
+<p><strong>Implementing the Anti-Corruption Layer.</strong> The identity-service uses its own domain language—"Subject," "Credential," "AuthenticationContext." Your service uses different language—"Claimant," "Verification," "ClaimContext." You don't want Identity concepts leaking into your domain model.</p>
+<p>You ask: "Create an anti-corruption layer for identity authentication." The LLM generates an adapter in your infrastructure layer that calls the Identity API, a service interface in your domain layer, translation logic that maps Identity concepts to your domain concepts, and tests that verify the translation works correctly.</p>
+<p>Your domain code depends on your own interface (which you own). The infrastructure provides an adapter (which implements your interface by calling the identity-service). The dependency arrow points inward—your domain doesn't know the Identity platform service exists.</p>
+<p>For more on anti-corruption layers and bounded context relationships, see <strong>Paper 1, Section 1.4: Context Relationships and Communication</strong>.</p>
+<p><strong>Contract Testing Across Domain Boundaries.</strong> You write consumer contract tests that verify your assumptions about the identity-service: "When I call authenticate with valid credentials, I get a token." "When I call validate-token, I get subject information." "When credentials are invalid, I get a 401 error."</p>
+<p>These tests run against the identity-service's contract. If the Platform Identity Team makes a breaking change, your tests fail in CI before you deploy. They're forced to either maintain compatibility or coordinate a migration with all consuming teams.</p>
+<p><strong>Governance and Communication.</strong> Because this is a cross-domain dependency, the framework enforces additional governance. Your microservice is automatically registered as a consumer of the identity-service. When the Platform Identity Team proposes contract changes, your team is notified. Contract tests for all consumers must pass before identity-service changes deploy. Breaking changes require explicit migration plans and coordination windows.</p>
+<p>You don't need to remember to check with the Identity team—the framework enforces the coordination automatically.</p>
+<hr />
+<h2 id="part-five-the-economics">Part Five: The Economics</h2>
+<h3 id="the-cost-comparison">The Cost Comparison</h3>
+<p>The calculation starts with a formula that you can adapt to your own organisation:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>annual_token_cost = services × changes_per_service_per_month × 12
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>                  × avg_turns_per_change × tokens_per_turn × price_per_token
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>hidden_cleanup_cost = annual_changes × violation_rate × avg_remediation_cost
+</code></pre></div>
+<p>Consider an organisation with 100 microservices, each undergoing about 10 changes per month. That's 1,200 changes per month, 14,400 per year. Each change involves an average of four LLM interactions as developers iterate toward a solution—57,600 interactions annually.</p>
+<p><em>Note: These figures are based on services averaging 150 files and 400K tokens each, LLM pricing of approximately $0.03 per 1K tokens for input, conversation lengths of 4-5 turns, and architectural violations occurring in approximately 15% of uncontrolled changes. Your actual results will vary based on service size, change frequency, team discipline, and organisational factors. The framework's value increases with scale.</em></p>
+<p><strong>Worked arithmetic:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Without framework</th>
+<th>With framework</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Services</td>
+<td>100</td>
+<td>100</td>
+</tr>
+<tr>
+<td>Changes/service/month</td>
+<td>10</td>
+<td>10</td>
+</tr>
+<tr>
+<td>Annual interactions (×4 turns avg)</td>
+<td>57,600</td>
+<td>57,600</td>
+</tr>
+<tr>
+<td>Tokens per interaction</td>
+<td>400,000 (full service)</td>
+<td>25,000 (RAG-scoped)</td>
+</tr>
+<tr>
+<td>Token price ($/1K)</td>
+<td>$0.03</td>
+<td>$0.03</td>
+</tr>
+<tr>
+<td><strong>Annual token cost</strong></td>
+<td><strong>£2,765</strong></td>
+<td><strong>£173</strong></td>
+</tr>
+<tr>
+<td>Violation rate</td>
+<td>15% of changes</td>
+<td>~0.5% (CI blocks most)</td>
+</tr>
+<tr>
+<td>Avg remediation cost per violation</td>
+<td>£1,000</td>
+<td>£1,000</td>
+</tr>
+<tr>
+<td>Annual violations</td>
+<td>1,728</td>
+<td>58</td>
+</tr>
+<tr>
+<td><strong>Annual architectural cleanup</strong></td>
+<td><strong>£150,000</strong></td>
+<td><strong>£5,000</strong></td>
+</tr>
+<tr>
+<td>Integration fixes (contract breaks)</td>
+<td>£100,000</td>
+<td>£2,000</td>
+</tr>
+<tr>
+<td>Review overhead (manual checks)</td>
+<td>£200,000</td>
+<td>£30,000</td>
+</tr>
+<tr>
+<td><strong>Total annual cost</strong></td>
+<td><strong>£453,000</strong></td>
+<td><strong>£37,000</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Substitute your own numbers: realistic estimates for a 20-service team (2 changes/service/month, 2 turns/change): without framework ~£17,000/yr, with framework ~£3,000/yr. The ratio holds.</p>
+<p><strong>Without this framework</strong>, the costs are brutal. Loading full service context for each interaction costs about £0.048 in tokens. That's £2,765 annually in direct token costs alone. But that's the small number. The hidden costs dwarf it: around £150,000 per year in architectural cleanup when changes violate boundaries, £100,000 in integration fixes when contracts break, and £200,000 in review overhead because humans must catch everything automation should have caught. Total annual cost: approximately £453,000.</p>
+<p><strong>With this framework</strong>, the economics flip dramatically. Service RAG reduces token cost per interaction to about £0.008. The 57,600 interactions cost £461 per year—a 95% reduction. More importantly, the hidden costs evaporate. Architectural cleanup drops to about £5,000 because violations are prevented by design. Integration fixes drop to £2,000 because contract tests catch breaks automatically. Review overhead drops to £30,000 because humans only review business logic. Total annual cost: approximately £37,000.</p>
+<p>The savings are £416,000 per year, every year, for as long as you operate these systems.</p>
+<p>The setup cost is real but manageable: perhaps £70,000 for RAG infrastructure, manifest creation, CI pipeline setup, contract test framework, and team training. With £416,000 in annual savings, you break even in about two months. Over three years, you're looking at over £1.1 million in savings.</p>
+<p>But here's what the numbers don't capture: the organisation with uncontrolled LLM usage is accumulating architectural debt that will eventually force a rewrite or major remediation. The organisation using this framework maintains architectural integrity while moving faster. That's not just a cost difference—it's a strategic advantage.</p>
+<hr />
+<h2 id="part-six-implementation-roadmap">Part Six: Implementation Roadmap</h2>
+<h3 id="phase-one-foundation-months-1-4">Phase One: Foundation (Months 1-4)</h3>
+<p>The first phase establishes the machinery that makes everything else possible.</p>
+<p><strong>Month 1: Architecture Documentation.</strong> Before building anything, document what you have. Create a manifest that describes your current services, their boundaries, their dependencies, and their ownership. This forces architectural decisions to be explicit. Even if your current state is messy, documenting it honestly is the first step toward improvement.</p>
+<p><strong>Month 2: RAG Infrastructure.</strong> Set up the vector database, embedding pipeline, and semantic search infrastructure. Start with one pilot service—something important enough to matter but contained enough to be manageable. Build the index for that service, wire up the LLM integration, and prove the concept works.</p>
+<p><strong>Month 3: CI/CD Integration.</strong> Implement the enforcement layers: path validation, dependency checking, and the pre-flight diff guard. These run in CI for the pilot service. Every PR that touches the pilot service goes through automated boundary validation.</p>
+<p><strong>Month 4: Contract Testing Foundation.</strong> Establish the contract testing framework. Write provider and consumer tests for the pilot service's APIs. Integrate these into CI so contract violations block merge.</p>
+<p>By the end of Phase One, you have one fully-protected service with Service-Scoped RAG, layered enforcement, and contract testing. This proves the approach works in your environment.</p>
+<h3 id="lightweight-adoption-for-smaller-teams">Lightweight Adoption for Smaller Teams</h3>
+<p>Not every organisation has 100 services and platform engineering capacity. If you're a single developer or a small team, here's how to get 80% of the value with 20% of the infrastructure.</p>
+<p><strong>Skip the vector database initially.</strong> Use file-based context selection instead. Create a simple script that, given a service name and a task description, copies the relevant files into a single context file. Manual curation beats no curation.</p>
+<p><strong>Use a manifest even with one service.</strong> Write the <code>monorepo.json</code> even if you only have one service. It forces you to think about boundaries, and it's ready when you add more services.</p>
+<p><strong>Implement path validation first.</strong> A 20-line script that checks <code>git diff</code> against allowed paths catches most boundary violations. Run it as a pre-commit hook.</p>
+<p><strong>Use conversation discipline instead of RAG.</strong> Without RAG, enforce scope through conversation hygiene: start fresh conversations for each task, explicitly paste only relevant files into context, tell the LLM what it may and may not modify.</p>
+<p><strong>Graduate to full infrastructure when you feel pain.</strong> When manual context selection becomes tedious, build the RAG index. When you have multiple services, add dependency validation. When you have multiple teams, add CODEOWNERS. Let complexity grow with actual need.</p>
+<h3 id="phase-two-expansion-months-5-10">Phase Two: Expansion (Months 5-10)</h3>
+<p>With the foundation proven, expand to cover more of your architecture.</p>
+<p><strong>Months 5-7: Core Services.</strong> Roll out the framework to your most critical services—the ones where architectural violations would cause the most damage. Typically this is 10-20 services covering payment processing, identity, core business logic.</p>
+<p><strong>Months 8-10: Broad Coverage.</strong> Extend to remaining services. By now, the process is well-understood and teams can self-serve. New services are created with the framework from day one. Legacy services are migrated incrementally.</p>
+<h3 id="phase-three-optimisation-months-11-18">Phase Three: Optimisation (Months 11-18)</h3>
+<p>With broad coverage established, focus on making the framework more effective.</p>
+<p><strong>Cross-Service Intelligence.</strong> Enhance RAG to understand cross-service patterns. When a developer asks about a feature that spans multiple services, the system can identify which services are involved and coordinate the work appropriately.</p>
+<p><strong>Predictive Analysis.</strong> Use historical data to predict which changes are likely to cause problems. Flag high-risk changes for additional review. Identify patterns that consistently lead to architectural drift.</p>
+<p><strong>Self-Improving Guardrails.</strong> The system learns from violations that slip through. When a boundary violation is caught in code review (meaning automated checks missed it), the check is enhanced to catch similar cases in the future.</p>
+<hr />
+<h2 id="conclusion">Conclusion</h2>
+<p>LLMs are not going away. They will become more capable, more accessible, and more embedded in development workflows. The question isn't whether to use them—it's how to use them without destroying the architectural integrity that makes systems maintainable.</p>
+<p>This framework provides an answer: enforce boundaries through architecture, not instructions. Give LLMs focused context through Service-Scoped RAG. Validate changes automatically through layered CI/CD controls. Make violations impossible, not just discouraged.</p>
+<p>The result is the best of both worlds: the productivity gains that LLMs promise, delivered without the architectural chaos that uncontrolled adoption creates. Developers move faster. Architects sleep better. Systems remain comprehensible.</p>
+<p>The cost of implementing this framework is measured in months and thousands of pounds. The cost of not implementing it is measured in years and millions of pounds—plus the eventual forced rewrite when architectural debt becomes insurmountable.</p>
+<p>The choice is clear.</p>
+<hr />
+<h2 id="related-papers">Related Papers</h2>
+<ul>
+<li>
+<p><strong>Paper 1: Domain-Driven Design &amp; Clean Architecture for Enterprise Systems</strong> — Comprehensive treatment of bounded contexts, aggregates, Clean Architecture layers, and the hierarchy of boundaries that this framework enforces.</p>
+</li>
+<li>
+<p><strong>Paper 2: Evidence-Based Identity</strong> — Application of DDD principles to identity coordination, demonstrating how the bounded context patterns work in a specific, complex domain.</p>
+</li>
+<li>
+<p><strong>Paper 4: Automated LLM-Driven Development</strong> — End-to-end automated pipeline that builds directly on this framework's guardrails to generate complete microservices from business requirements, closing the loop from manifest to running service.</p>
+</li>
+<li>
+<p><strong>Paper 5: Getting Started</strong> — Practical implementation guide with technology recommendations, pseudocode examples, and troubleshooting for teams beginning adoption of this framework.</p>
+</li>
+<li>
+<p><strong>Paper 6: DWP Case Study</strong> — Application of these guardrails and the underlying DDD architecture to a real government services programme, including the team topology and governance model that makes it work at scale.</p>
+</li>
+</ul>
+<hr />
+<p><em>Paper 3 of 6 in the Architecting Modern Government Services series</em></p>
+<p><strong>Prerequisites:</strong> Paper 1 — Domain-Driven Design &amp; Clean Architecture · Paper 2 — Evidence-Based Identity<br />
+<strong>Next:</strong> Paper 4 — Automated LLM-Driven Development<br />
+<strong>See also:</strong> Paper 5 — Getting Started · Paper 6 — DWP Case Study</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.top", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
