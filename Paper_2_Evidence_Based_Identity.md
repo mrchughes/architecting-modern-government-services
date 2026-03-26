@@ -598,11 +598,48 @@ flowchart TB
 - **Credential issuance:** W3C Verifiable Credentials library.
 - **Audit logging:** Append-only compliance logging.
 
+```mermaid
+flowchart TB
+    subgraph Core["Core Subdomain"]
+        EBI_SD["Evidence-Based Identity"]
+    end
+    
+    subgraph Supporting["Supporting Subdomains"]
+        UC_SD["Universal Credit Eligibility"]
+        HB_SD["Housing Benefit Eligibility"]
+        PIP_SD["PIP Eligibility"]
+        SEM_SD["Semantic Translation"]
+    end
+    
+    subgraph Generic["Generic Subdomains"]
+        DOC_SD["Document Storage"]
+        BIO_SD["Biometric Matching"]
+        CRED_SD["Credential Issuance"]
+        AUDIT_SD["Audit Logging"]
+    end
+    
+    style Core fill:#e8f5e9
+    style Supporting fill:#fff3e0
+    style Generic fill:#e3f2fd
+```
+
+**Subdomain → Implementation:**
+
+| Subdomain | Type | Implementation |
+|-----------|------|----------------|
+| Evidence-Based Identity | Core | Build as BC (§4.2) |
+| UC / HB / PIP Eligibility | Supporting | Build as separate BCs (§4.2) |
+| Semantic Translation | Supporting | ACL pattern within each BC |
+| Document Storage | Generic | AWS S3 or equivalent |
+| Biometric Matching | Generic | Vendor SDK |
+| Credential Issuance | Generic | W3C VC library |
+| Audit Logging | Generic | Append-only log service |
+
 ### 4.2 Bounded Contexts
 
-A bounded context emerges where the same word means different things to different teams. Context boundaries follow linguistic boundaries, not architectural layers.
+Subdomains are the problem space. Bounded contexts are the solution space. Here's how we implement the core and supporting subdomains as BCs:
 
-**A note on terminology:** This section uses DDD strategic design concepts (bounded contexts, context relationships, subdomains). The internal structure of each context—aggregates, entities, value objects—is tactical design, covered below under "Tactical Design."
+**Strategic vs Tactical:** This section covers strategic design (bounded contexts, context relationships). Tactical design (aggregates, entities, value objects) appears below under "Tactical Design."
 
 ```mermaid
 flowchart TB
@@ -629,9 +666,7 @@ flowchart TB
 | Green | Core | Evidence-Based Identity |
 | Orange | Supporting | UC, HB, PIP—each has its own meaning for "income" |
 
-Arrows show BC-to-BC integration via Published Language.
-
-**What's not on this map:** Generic subdomains (document storage, biometric matching, credential issuance) are implemented via vendor products and libraries. They're technical dependencies, not bounded contexts with domain language. They appear in §4.1 under "Generic subdomains" but don't belong on a context map.
+Arrows show BC-to-BC integration via Published Language. Generic subdomains don't appear here—see the implementation table in §4.1.
 
 #### Evidence-Based Identity (BC)
 
