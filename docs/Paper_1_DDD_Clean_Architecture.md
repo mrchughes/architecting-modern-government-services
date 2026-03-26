@@ -4,7 +4,7 @@
 
 *Part 1 of the Architecting Modern Government Services Series*
 
-*Version 1.4 | March 2026*
+*Version 1.5 | March 2026*
 
 ---
 
@@ -17,6 +17,7 @@
 | 1.2 | Mar 2026 | Added §1.3 subsection: legislation as boundary driver; legislative layers table; worked policy-to-domain-model example; EligibilityPolicy domain service pattern |
 | 1.3 | Mar 2026 | Rewrote §1.1 to clarify recursive subdomain decomposition; added two-level decomposition (product lines → functional subdomains); clarified Core/Supporting/Generic classification with consistent examples |
 | 1.4 | Mar 2026 | Added manufacturing analogy introduction to Part I — Ford/assembly line parallel to domain decomposition |
+| 1.5 | Mar 2026 | Added §1.5 "Using External Data for Decisions" — three patterns for cross-context data; anti-corruption layer; Identity→Eligibility→Payments flow diagram |
 
 ---
 
@@ -393,6 +394,53 @@ No giant transaction—just process coordination over time.
 - **If it must become true eventually → saga**
 
 Aggregates protect truth at a moment. Sagas protect truth across time. This is how complex business processes work in distributed systems without distributed transactions.
+
+#### Using External Data for Decisions
+
+Sagas coordinate *when* things happen. But there's a different question: when an aggregate needs data from another context to make a decision, how does it get that data?
+
+Consider Eligibility. To decide entitlement, it needs:
+- Identity confidence (is this a verified person?)
+- Evidence status (do the documents support the claim?)
+- Residency confirmation (do they live where they say?)
+
+These facts live in other bounded contexts. Eligibility doesn't own them. Three patterns exist:
+
+**1. Query at decision time.** Eligibility calls the Identity service when it needs to check verification status. Simple, but creates runtime coupling — if Identity is down, Eligibility can't decide. Also tempts you to use Identity's model directly, leaking their language into yours.
+
+**2. Maintain a local projection.** Eligibility subscribes to `IdentityVerified`, `EvidenceValidated` events and builds its own read model. When decision time comes, it queries its local copy. No runtime dependency, but the data is eventually consistent — there's a window where Identity knows something Eligibility doesn't yet.
+
+**3. Pass data as parameters.** The use case (application layer) gathers what's needed from other contexts and passes it to the domain. The aggregate receives value objects, not references. This keeps the domain pure but pushes coordination complexity to the application layer.
+
+DWP typically uses pattern 2 for high-volume decisions and pattern 3 for complex cases requiring human review.
+
+**The critical rule: translate into your language.** Eligibility doesn't store Identity's `VerificationResult` object. It stores an `IdentityConfidence` value object that means something *in eligibility terms*: "verified to threshold X" or "requires manual review." This is the anti-corruption layer — you take external data and translate it into your bounded context's ubiquitous language.
+
+The same applies downstream. Payments doesn't understand eligibility rules. It receives an `EntitlementAmount` — a fact stated in payment terms. If eligibility logic changes, Payments is unaffected as long as the contract ("here's what to pay") remains stable.
+
+```mermaid
+flowchart LR
+    subgraph Identity["Identity Context"]
+        IV["IdentityVerified event"]
+    end
+    
+    subgraph Eligibility["Eligibility Context"]
+        IC["IdentityConfidence\n(local value object)"]
+        ED["EligibilityDecision"]
+        EA["EntitlementAmount"]
+    end
+    
+    subgraph Payments["Payments Context"]
+        PO["PaymentOrder"]
+    end
+    
+    IV -->|"translated to"| IC
+    IC --> ED
+    ED -->|"emits"| EA
+    EA -->|"translated to"| PO
+```
+
+This is why bounded contexts work: each context owns its language, translates at the boundaries, and never lets external models leak in. The coupling is in the *contracts* (events, APIs), not the *models*.
 
 ### 1.6 The Complete Hierarchy
 
