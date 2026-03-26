@@ -930,7 +930,7 @@ You can swap DynamoDB for PostgreSQL by creating a `PostgresRefundRepository` th
 class RefundController:
     """Controller translates HTTP requests into use case calls"""
     def __init__(self, use_case: ProcessRefundUseCase):
-        self._use_case = use_case  # Depends on use case
+        self._use_case = use_case  # Depends on concrete use case
     
     def handle_request(self, request_body: dict) -> dict:
         # Translate from HTTP format (strings, dicts) to domain types
@@ -950,6 +950,12 @@ class RefundController:
 ```
 
 **Key points:** Controllers handle translation between external formats (HTTP JSON) and internal domain types. They depend on use cases but don't contain business logic themselves.
+
+**"Why is the use case concrete but the repository abstract?"** Because you don't usually need to swap use cases. There's one `ProcessRefundUseCase` — you're not going to have a `PostgresProcessRefundUseCase` vs `DynamoProcessRefundUseCase`. The business logic is the same regardless of infrastructure.
+
+Repositories are abstract because you *do* want to swap implementations: real database in production, in-memory fake in tests, different database technology in different deployments. The abstraction exists where variation exists.
+
+You *could* define a `ProcessRefundUseCaseInterface` and have the controller depend on it — useful if you want to mock the entire use case in controller tests. But it's optional, not required. Abstract where you need flexibility; concrete where you don't.
 
 **"How does the controller know the use case's interface?"** By importing it. Outer layers can see and depend on inner layers — that's the *allowed* direction. The controller imports `ProcessRefundUseCase`, sees its `execute(payment_id, amount, reason)` signature, and calls it. The restriction is the reverse: the use case cannot import the controller. Inner layers are blind to what's outside them.
 
