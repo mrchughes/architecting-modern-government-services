@@ -612,36 +612,26 @@ flowchart TB
     HB["Housing Benefit (BC)"]
     PIP["PIP (BC)"]
     
-    DOC["Document Storage (library)"]
-    BIO["Biometric Matching (library)"]
-    CRED["Credential Issuance (library)"]
-    
     EBI -->|"Published Language"| UC
     EBI -->|"Published Language"| HB
     EBI -->|"Published Language"| PIP
-    DOC -.-> EBI
-    BIO -.-> EBI
-    CRED -.-> EBI
     
     style EBI fill:#e8f5e9
     style UC fill:#fff3e0
     style HB fill:#fff3e0
     style PIP fill:#fff3e0
-    style DOC fill:#e3f2fd
-    style BIO fill:#e3f2fd
-    style CRED fill:#e3f2fd
 ```
 
 **Reading this context map:**
 
-| Color | What it is | Example |
-|-------|-----------|---------|
-| Green | Core subdomain, implemented as one BC | Evidence-Based Identity |
-| Orange | Supporting subdomains, each its own BC | UC, HB, PIP—each has its own meaning for "income" |
-| Blue | Generic subdomains, implemented as libraries | Document storage, biometrics—no domain language |
+| Color | Subdomain type | Bounded contexts |
+|-------|---------------|------------------|
+| Green | Core | Evidence-Based Identity |
+| Orange | Supporting | UC, HB, PIP—each has its own meaning for "income" |
 
-- **Solid arrows:** BC-to-BC integration via Published Language
-- **Dashed arrows:** Technical dependency on libraries (no domain semantics)
+Arrows show BC-to-BC integration via Published Language.
+
+**What's not on this map:** Generic subdomains (document storage, biometric matching, credential issuance) are implemented via vendor products and libraries. They're technical dependencies, not bounded contexts with domain language. They appear in §4.1 under "Generic subdomains" but don't belong on a context map.
 
 #### Evidence-Based Identity (BC)
 
