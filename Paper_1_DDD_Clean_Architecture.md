@@ -656,7 +656,7 @@ Here's the crucial insight: **A bounded context defines the complete model—the
 
 Think of the bounded context as the authoritative dictionary and grammar for a language, while each microservice is a conversation using that language for a specific purpose.
 
-Consider the Eligibility Bounded Context. The ubiquitous language specification defines "Claimant" completely:
+Consider the Eligibility Bounded Context. The ubiquitous language specification defines "Claimant" **completely:**
 - Identity attributes (ID, name, date of birth, National Insurance number)
 - Location information (current address, previous addresses, residency status)
 - Household details (relationships, household composition, dependents)
@@ -725,7 +725,29 @@ Because the direction of dependencies determines what breaks what:
 
 Clean Architecture reverses this. Your core business logic doesn't depend on anything external—it defines interfaces for what it needs, and the external world implements those interfaces.
 
-Your use cases don't call the database directly; they call a repository interface. The database adapter implements that interface. This means the core doesn't know or care what database you use. It depends on the interface (which it owns), not the implementation (which the infrastructure layer provides).
+Consider persistence. Your use case needs to save a claim. Instead of calling Postgres directly, it calls a `ClaimRepository` interface that lives *inside* the core:
+
+```
+// Defined in the core layer - the domain owns this contract
+interface ClaimRepository {
+    save(claim: Claim): void
+    findById(id: ClaimId): Claim
+}
+```
+
+The infrastructure layer provides the implementation:
+
+```
+// Defined in the infrastructure layer - implements the domain's contract
+class PostgresClaimRepository implements ClaimRepository {
+    save(claim: Claim): void { /* SQL here */ }
+    findById(id: ClaimId): Claim { /* SQL here */ }
+}
+```
+
+The dependency flows *inward*: `PostgresClaimRepository` depends on `ClaimRepository` (it has to implement that interface). The core doesn't depend on Postgres at all — it defines what it needs and trusts something will provide it. At runtime, dependency injection wires the implementation to the interface.
+
+This is why you can swap Postgres for DynamoDB without touching business logic. The infrastructure layer changes; the core doesn't.
 
 **This is dependency inversion**, and it's the mechanism that makes everything else possible.
 
