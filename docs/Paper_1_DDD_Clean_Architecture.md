@@ -773,10 +773,10 @@ flowchart TB
             AD["Controllers, Presenters, Gateways, Repository Impls"]
             
             subgraph UseCases["Use Cases"]
-                UC["Application Logic, Workflows, Orchestration"]
+                UC["Application Workflows, Orchestration"]
                 
-                subgraph Entities["Entities (Innermost)"]
-                    ENT["Business Rules, Invariants, Domain Logic"]
+                subgraph Entities["Domain (Innermost)"]
+                    ENT["Entities, Value Objects, Domain Services, Invariants"]
                 end
             end
         end
@@ -798,7 +798,11 @@ flowchart TB
 
 **Entities (innermost)** contain core business concepts and invariants—the fundamental truths of your domain. A `Refund` entity knows that you can't refund more than the original payment. It doesn't know whether it's stored in DynamoDB or Postgres, whether it arrived via HTTP or a message queue.
 
-**Use Cases** (sometimes called Interactors or Application Services) contain application-specific business rules and workflows. The `ProcessRefund` use case orchestrates the steps: validate the request, check business rules, update the Refund entity, persist the change, emit events. It knows *what* needs to happen but not *how* the infrastructure accomplishes it.
+This layer also includes **domain services**—stateless logic that spans multiple entities. The `EligibilityPolicy` from §1.3 lives here: it evaluates rules across `WorkCapabilityStatus`, income records, and residency—pure domain logic that doesn't belong inside any single entity. Domain services are part of the domain model, not application orchestration.
+
+**Use Cases** (sometimes called Interactors or Application Services) contain application-specific workflows. The `ProcessRefund` use case orchestrates the steps: validate the request, call domain logic, persist the change, emit events. It knows *what* needs to happen but not *how* the infrastructure accomplishes it.
+
+**The distinction matters:** A domain service asks "Does this claimant meet eligibility criteria?" A use case asks "What are all the steps to process this eligibility application?"—gathering inputs, calling the domain service, saving results, notifying downstream systems. Domain services encode business rules; use cases coordinate application flow.
 
 **Interface Adapters** translate between the use cases and the outside world. Controllers receive HTTP requests and translate them into use case inputs. Presenters translate use case outputs into HTTP responses. Repository adapters implement the repository interfaces that use cases depend on, translating domain objects to and from database formats.
 
