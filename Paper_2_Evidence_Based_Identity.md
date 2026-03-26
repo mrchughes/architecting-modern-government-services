@@ -36,11 +36,14 @@ This paper applies Domain-Driven Design principles from Paper 1 to the identity 
 
 | DDD Concept | Identity Application |
 |-------------|---------------------|
-| Bounded Contexts | Identity, Evidence, Trust, Resolution, Eligibility |
-| Shared Kernel | Customer360 (verified attributes) |
+| Bounded Contexts | Evidence (assertions with provenance), Trust (issuer reliability), Resolution (correlation and confidence computation), Eligibility (policy decisions) |
+| Emergent Output | Identity is not a domain; it is the pattern of correlated attributes that emerges from Resolution |
+| Shared Kernel | Assertion schema (how to express claims with confidence, not canonical facts) |
 | Semantic Translation | Bilateral vocabulary mappings with confidence penalties |
-| Aggregates | Identity Cluster, Evidence Item, Resolution Decision |
-| Anti-Corruption Layer | Policy-specific interpretation of shared attributes |
+| Aggregates | Evidence Item, Attribute Correlation (same attribute corroborated cross-source), Identity Cluster (correlated attributes constituting a person) |
+| Anti-Corruption Layer | Policy-specific confidence thresholds for consuming correlated attributes |
+
+**Core insight:** Identity is a function of corroborating evidence. Attributes corroborated across independent sources constitute identity; the attributes are the primary key, not a property of some pre-existing identity entity.
 
 ### Implementation Reality
 
@@ -116,7 +119,7 @@ When DWP asks HMRC "Is John Smith employed?" they're not asking for a database f
 
 No API specification captures that without shared semantic understanding of what "employment evidence" means, how confidence is calculated, and how to map from HMRC's evidence schema to DWP's decision requirements.
 
-**From a DDD perspective:** These assumptions conflate multiple bounded contexts into one. Identity (who is this person?), Evidence (what do we know?), Trust (how reliable is the source?), and Eligibility (do they qualify?) are separate contexts with different invariants. Treating them as one creates the semantic confusion that causes coordination failure.
+**From a DDD perspective:** These assumptions conflate multiple bounded contexts into one. Evidence (what assertions exist with what provenance?), Trust (how reliable is each source?), Resolution (what patterns emerge from corroborating evidence?), and Eligibility (do they qualify?) are separate contexts with different invariants. Identity is not a context; it is the emergent output of Resolution. Treating identity as a thing to be verified rather than a conclusion to be computed creates the semantic confusion that causes coordination failure.
 
 ### 1.3 Identity Without Universal Identifier
 
@@ -201,7 +204,7 @@ These three substitutions form the complete architecture described in what follo
 
 ## Part II: The Technical Breakthrough
 
-> **Domain context:** The mechanisms in this part implement two of the bounded contexts from Part IV—*Evidence* (stores assertions with provenance) and *Identity* (resolves probabilistic clusters). The technical choices here—RDF triples, confidence scores, Fellegi-Sunter matching—are *consequences* of the domain model, not arbitrary technology decisions. Part IV provides the "why"; this part provides the "how." If you prefer to understand the conceptual model before the implementation, read Part IV first then return here.
+> **Domain context:** The mechanisms in this part implement the bounded contexts from Part IV: *Evidence* (stores assertions with provenance) and *Resolution* (correlates evidence into identity clusters). The technical choices here, RDF triples, confidence scores, Fellegi-Sunter matching, are *consequences* of the domain model, not arbitrary technology decisions. Part IV provides the "why"; this part provides the "how." If you prefer to understand the conceptual model before the implementation, read Part IV first then return here.
 
 ### The Core Insight
 
@@ -557,24 +560,22 @@ This creates virtuous cycles where well-verified community members become anchor
 
 ### 4.1 The Identity Domain Landscape
 
-Identity coordination is not one domain—it's a **federation of bounded contexts**, each with its own model, language, and rules.
+Identity coordination is not one domain—it's a **federation of bounded contexts**, each with its own model, language, and rules. Identity itself is not a context; it is the emergent output of Resolution.
 
 ```mermaid
 flowchart TB
     subgraph Domain[\"Identity Coordination Domain\"]
         subgraph Platform[\"Platform Services (Generic)\"]
-            IdBC[\"Identity\\nBC\"]
             EvBC[\"Evidence\\nBC\"]
             TrustBC[\"Trust\\nBC\"]
             ResBC[\"Resolution\\nBC\"]
         end
         
-        IdBC --> C360
         EvBC --> C360
         TrustBC --> C360
         ResBC --> C360
         
-        C360[\"Customer360\\n(Shared Kernel)\\nRead Model of Verified Attrs\"]
+        C360[\"Customer360\\n(Shared Kernel)\\nCorroborated Attrs\"]
         
         C360 --> UCBC
         C360 --> PensionBC
@@ -593,24 +594,6 @@ flowchart TB
 ```
 
 ### 4.2 Key Bounded Contexts
-
-#### Identity Bounded Context (Platform Service — Generic Subdomain)
-
-This context models citizen identity as it relates to government services.
-
-**Core Aggregates:**
-
-| Aggregate | Description | States |
-|-----------|-------------|--------|
-| Identity Profile | Verified attributes with confidence scores | ClaimedOnly → PartiallyVerified → FullyVerified → Ambiguous → Fraudulent |
-| Claimed Identity | Unverified assertions with evidence links | Created at first authentication |
-| Verification Session | The resolution process | Active → Resolved → Expired |
-
-**Microservices:** `identity-resolution-service`
-
-**Key Invariant:** One verified identity per real-world person, with all evidence binding preserved in audit trails.
-
-**Resolution Operations:** Create (new person), Merge (matches existing), Split (fraud detected), Enrich (additional evidence strengthens existing).
 
 #### Evidence Bounded Context (Platform Service — Generic Subdomain)
 
@@ -653,34 +636,39 @@ This context models issuer trust, credential validation, and verification method
 
 **Why this matters:** This forms a security boundary with centralised trust policy reusable across all subdomains.
 
-#### Resolution & Corroboration Bounded Context
+#### Resolution Bounded Context (Platform Service — Generic Subdomain)
 
-This context models the complex reasoning that matches evidence to identities.
+This context computes identity clusters by correlating evidence. Identity is the emergent output, not a pre-existing entity.
 
 **Core Aggregates:**
 
-| Aggregate | Description |
-|-----------|-------------|
-| Evidence Link | Connecting evidence to identities with match confidence |
-| Resolution Decision | Create/Merge/Split/Enrich with full audit trails |
-| Identity Graph | Network of evidence, attributes, identities, relationships |
+| Aggregate | Description | States |
+|-----------|-------------|--------|
+| Identity Cluster | Correlated attributes with confidence scores | Emerging, Stable, Ambiguous, Fraudulent |
+| Evidence Link | Connecting evidence to clusters with match confidence | |
+| Resolution Decision | Create/Merge/Split/Enrich with full audit trails | |
+| Attribute Correlation | Same attribute corroborated across sources | |
 
 **Microservices:** `identity-resolution-service`
 
 **Trust Computation:** match_confidence × issuer_trust × authenticity × freshness × independence
 
-**Critical insight:** Evidence is never "owned by" an identity—it's linked with confidence scores. This enables detection of fraud patterns when evidence suggests identities should be split, merged, or flagged.
+**Key Invariant:** Identity clusters emerge from corroborated attributes. The attributes are the primary key; identity is the pattern they form.
+
+**Resolution Operations:** Create (new cluster from uncorrelated evidence), Merge (evidence correlates with existing cluster), Split (fraud detected, cluster separates), Enrich (additional evidence strengthens correlations).
+
+**Critical insight:** Evidence is never "owned by" an identity cluster; it is linked with confidence scores. Attributes corroborated across independent sources constitute identity. This enables detection of fraud patterns when evidence suggests clusters should be split, merged, or flagged.
 
 #### Customer360 (Shared Kernel)
 
-A special bounded context providing read models of verified customer attributes—snapshots of identity, relationships, and evidence trails with confidence levels.
+A special bounded context providing read models of corroborated attributes with confidence scores; snapshots of identity clusters, relationships, and evidence trails.
 
-**Core Aggregates:** Customer Profile (read-only, populated from Identity, Evidence, and Resolution contexts)
+**Core Aggregates:** Customer Profile (read-only, populated from Evidence and Resolution contexts)
 
 **Governance:** Co-owned by all consuming subdomains; changes require cross-domain approval.
 
-**Critical Limitation:** Customer360 provides verified relationships with confidence scores but does NOT define what those relationships mean for policy purposes. It answers:
-- ✓ "What verified relationships exist with what confidence?"
+**Critical Limitation:** Customer360 provides corroborated relationships with confidence scores but does NOT define what those relationships mean for policy purposes. It answers:
+- ✓ "What corroborated relationships exist with what confidence?"
 - ✗ "What does this mean for eligibility?"
 
 The second question belongs in Eligibility contexts.
@@ -689,9 +677,9 @@ The second question belongs in Eligibility contexts.
 
 | Category | Content |
 |----------|---------|
-| Identity Profile | Verified name, DOB, NINO |
-| Place Relationships | Person-to-location associations (owned, rented, care home, registered) |
-| Person Relationships | Parent/child, spouse, household member |
+| Identity Cluster | Corroborated name, DOB, NINO with confidence scores |
+| Place Relationships | Person-to-location associations with confidence |
+| Person Relationships | Parent/child, spouse, household member with confidence |
 | Contact Preferences | Communication channels |
 | Evidence History | Complete provenance chain |
 
@@ -710,7 +698,7 @@ Each benefit has its own Eligibility bounded context modelling policy rules.
 
 **Microservices:** `universal-credit-eligibility-service`, `pension-credit-eligibility-service`, etc.
 
-**Key Invariant:** Decisions can only be based on verified attributes meeting confidence thresholds.
+**Key Invariant:** Decisions can only be based on corroborated attributes meeting confidence thresholds.
 
 **Why separate contexts:** Different benefits have different rules, different change cycles, and different policy ownership. Universal Credit eligibility rules change at a different pace than State Pension rules.
 
@@ -735,30 +723,30 @@ flowchart TB
     Claimed --> Evidence["Evidence Gathering\n(multiple sources)"]
     Evidence --> Resolution["Resolution Engine"]
     
-    Resolution --> Create["Create\n(new person)"]
-    Resolution --> Merge["Merge\n(existing match)"]
+    Resolution --> Create["Create\n(new cluster)"]
+    Resolution --> Merge["Merge\n(existing cluster)"]
     Resolution --> Split["Split/Ambiguous\n(fraud/unclear)"]
     
-    Create --> Verified["Verified Identity"]
-    Merge --> Verified
-    Split --> Verified
+    Create --> Stable["Stable Identity Cluster"]
+    Merge --> Stable
+    Split --> Stable
     
-    Verified --> C360["Customer360\n(attribute snapshot)"]
+    Stable --> C360["Customer360\n(attribute snapshot)"]
     C360 --> Eligibility["Eligibility Contexts\n(policy interpretation)"]
     
     style Claimed fill:#fff9c4
     style Resolution fill:#e3f2fd
-    style Verified fill:#c8e6c9
+    style Stable fill:#c8e6c9
     style C360 fill:#ffe0b2
 ```
 
 **The Separation:**
 
-1. **Claimed Identity** is created when a user first authenticates—a digital anchor point for "this authentication session and all evidence gathered during it." Attributes are claimed but unverified.
+1. **Claimed Identity** is created when a user first authenticates—a digital anchor point for "this authentication session and all evidence gathered during it." Attributes are claimed but not yet corroborated.
 
-2. **Evidence is bound to the Claimed Identity**, not a verified person. This avoids the circular dependency.
+2. **Evidence is bound to the Claimed Identity**, not a pre-existing person. This avoids the circular dependency.
 
-3. **Resolution determines what this Claimed Identity represents:** Merge (matches existing), Split (fraud), Create (new person), or Ambiguous (more evidence needed).
+3. **Resolution determines what this evidence represents:** Merge (correlates with existing cluster), Split (fraud), Create (new cluster), or Ambiguous (more evidence needed).
 
 4. **Verification establishes uniqueness** within the identity domain with confidence scores.
 
@@ -779,9 +767,9 @@ Even "address" is policy-dependent:
 - If you work away 3 nights/week, which address counts?
 - Does "address" mean registered, main residence, or current stay?
 
-**The Solution: Verified Place Relationships, Not "Addresses"**
+**The Solution: Corroborated Place Relationships, Not "Addresses"**
 
-Customer360 stores verified relationships to locations:
+Customer360 stores corroborated relationships to locations:
 
 ```turtle
 :person_sarah a :Person ;
@@ -803,11 +791,11 @@ Customer360 stores verified relationships to locations:
 - Universal Credit sees "rented accommodation" and decides it's her main residence
 - Pension Credit sees "care home residence" and applies the 6-week rule
 
-Same verified relationships, different policy lenses.
+Same corroborated relationships, different policy lenses.
 
 ### 4.5 Context Relationships in the Identity Domain
 
-**Identity → Evidence:** Anti-Corruption Layer. Evidence doesn't know Identity exists; Identity translates evidence into its model.
+**Resolution → Evidence:** Anti-Corruption Layer. Evidence doesn't know Resolution exists; Resolution translates evidence into identity clusters.
 
 **Eligibility → Customer360:** Shared Kernel (read-only consumption). All eligibility contexts agree on Customer360 schema.
 
@@ -1379,7 +1367,7 @@ Sarah Miller's six document uploads aren't a UI problem—they're an architectur
 | **Verifiable Credential** | W3C standard for cryptographically-signed claims |
 | **DID** | Decentralised Identifier |
 | **Registration Point** | Authenticated session binding evidence to claimed identity |
-| **Customer360** | Shared kernel of verified attributes |
+| **Customer360** | Shared kernel of corroborated attributes with confidence scores |
 
 ---
 
