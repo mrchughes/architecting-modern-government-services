@@ -187,7 +187,7 @@ In DDD terms, a model is not just a database schema or data structure—it's a *
 
 **Invariants** — Business rules that must always be true. "An EligibilityDecision cannot be approved without minimum evidence confidence." Invariants are enforced by the aggregate root—nothing outside the aggregate can directly modify its internals in ways that would violate the rules.
 
-**Ubiquitous Language** — The precise shared vocabulary used by developers and domain experts. A dictionary of terms with exact definitions that everyone uses consistently.
+**Ubiquitous Language** — The precise shared vocabulary used by developers and domain experts. A dictionary.e.g. a wiki, of terms with exact definitions that everyone uses consistently, from business architects naming value streams to software engineers naming classes.  They all use the same names so there is no misunderstanding.
 
 **A model, then, is the complete collection:** all the value objects, entities, aggregates, invariants, and the ubiquitous language that defines them. It's how we encapsulate business logic—entities know their own rules, aggregates enforce their invariants through controlled access, and the language provides precise shared understanding.
 
@@ -205,7 +205,7 @@ The relationship isn't always 1:1:
 
 If the problem areas share the same business experts, change together for business reasons, and sit in the same part of the organisation, but use sufficiently different language or rules that unifying them creates confusion—that's when you keep them as one subdomain but model them with separate contexts.
 
-For example, Benefits might be one subdomain from an organisational perspective (one directorate, one budget, shared policy experts), but Eligibility uses such different language and rules from Claims processing that forcing them into one model would create the "god-model" antipattern. The subdomain boundary reflects business structure; the bounded context boundary reflects linguistic clarity.
+For example, Benefits might be one subdomain from an organisational perspective (one directorate, one budget, shared policy experts), but Eligibility uses such different language and rules from Claims processing that forcing them into one model would create the "god-model" antipattern. The subdomain boundary reflects business structure; the bounded context boundary reflects linguistic clarity.  **Forcing standardisation rarely works.**
 
 ```mermaid
 flowchart TB
@@ -235,6 +235,8 @@ flowchart TB
     style EligBC fill:#e3f2fd
     style ClaimsBC fill:#fff8e1
 ```
+
+*The diagram shows aggregates becoming services — deployment units that own their aggregate's data and logic. Section 1.5 explains this relationship fully.*
 
 ### 1.3 How to Identify Bounded Context Boundaries
 

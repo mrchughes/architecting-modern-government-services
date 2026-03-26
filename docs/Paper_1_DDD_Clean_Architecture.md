@@ -234,6 +234,8 @@ flowchart TB
     style ClaimsBC fill:#fff8e1
 ```
 
+*The diagram shows aggregates becoming services — deployment units that own their aggregate's data and logic. Section 1.5 explains this relationship fully.*
+
 ### 1.3 How to Identify Bounded Context Boundaries
 
 The question "how many bounded contexts should we have?" is a design skill, not a formula. But reality leaves traces. Six signals reliably indicate where boundaries naturally exist—think of them as diagnostic cues an experienced architect learns to notice.
