@@ -637,10 +637,10 @@ flowchart TB
 
 **The problem space:** Government needs to deliver benefits and services to people it cannot directly identify. Unlike private companies that create accounts, government must establish that a real person exists and meets eligibility criteria—using only indirect evidence from other organisations and individuals.
 
-**The core domain:** Evidence-based identity. Assembling assertions into identity clusters, determining when clusters represent unique persons, and providing that identity foundation to benefit systems. This is differentiating work that no commodity software can do.
+**The core domain:** Evidence-based identity. Storing assertions in the uber graph, computing identity cluster hypotheses on demand, and providing that identity foundation to benefit systems. This is differentiating work that no commodity software can do.
 
 **Supporting subdomains:**
-- **Benefit eligibility** (one per benefit type): Applying policy rules to identity clusters. Important but largely codifying existing regulations.
+- **Benefit eligibility** (one per benefit type): Applying policy rules to cluster hypotheses. Important but largely codifying existing regulations.
 - **Semantic translation:** Mapping between organisational vocabularies. Necessary plumbing with well-understood patterns.
 
 **Generic subdomains** (buy or use commodity solutions):
@@ -752,8 +752,8 @@ This is **one bounded context**. The language is unified: caseworkers and domain
 |--------------|------------------------|
 | "Check their documents" | Receive and validate assertions |
 | "Match the face to the passport" | Biometric binding event |
-| "Link their tax records" | Cluster enrichment via shared NINO |
-| "They proved who they are" | Cluster confidence threshold met |
+| "Link their tax records" | Assertions join cluster hypothesis via shared NINO |
+| "They proved who they are" | Cluster hypothesis confidence threshold met |
 | "Something doesn't add up" | Contradiction detected, review flagged |
 
 **Tactical Design — What's Stored vs What's Computed:**
@@ -943,14 +943,14 @@ flowchart LR
     UC["Universal Credit"]
     HB["Housing Benefit"]
     
-    EBI -->|"Published Language\\n(assertions, clusters)"| UC
-    EBI -->|"Published Language\\n(assertions, clusters)"| HB
+    EBI -->|"Published Language\\n(assertions, hypotheses)"| UC
+    EBI -->|"Published Language\\n(assertions, hypotheses)"| HB
     
     UC -->|"ACL translates\\n'income' to UC meaning"| UC_DOMAIN["UC Domain Model"]
     HB -->|"ACL translates\\n'income' to HB meaning"| HB_DOMAIN["HB Domain Model"]
 ```
 
-**Core → Benefits:** The Evidence-Based Identity context publishes a stable API (its Published Language). It exposes identity clusters and bound assertions. It does NOT interpret what those assertions mean for eligibility.
+**Core → Benefits:** The Evidence-Based Identity context publishes a stable API (its Published Language). It exposes cluster hypotheses (computed on demand) and bound assertions. It does NOT interpret what those assertions mean for eligibility.
 
 **Benefits consume via ACL:** Each benefit context wraps the core API in an Anti-Corruption Layer that translates the generic assertions into benefit-specific domain concepts. UC's ACL knows that HMRC employment assertions map to UC's income definition. Housing Benefit's ACL applies different mapping rules.
 
