@@ -317,7 +317,13 @@ The practical implication: when a statutory instrument changes the UC taper rate
 
 Step two is to name it as a domain concept: `WorkCapabilityStatus`. This aggregate has states (not assessed, assessed limited, assessed fit for work, under appeal), governed transitions (reversion to "not assessed" is only possible at tribunal), and its own invariant: status can only be set by an authorised assessor, never by a claimant directly.
 
-Step three is to encapsulate the rules as a **domain service**. A domain service is stateless logic that doesn't naturally belong to any single entity or aggregate — it operates *on* domain objects rather than *being* one. Use cases (application layer) orchestrate workflows; domain services encode business rules that span multiple objects or represent pure policy logic. Here, the eligibility rules don't belong inside any one aggregate, so they live in a service:
+Step three is to encapsulate the rules as a **domain service**. A domain service is stateless logic that doesn't naturally belong to any single entity or aggregate — it operates *on* domain objects rather than *being* one. Use cases (application layer) orchestrate workflows; domain services encode business rules that span multiple objects or represent pure policy logic.
+
+Why not make this an aggregate? Because aggregates own state — they persist, they have identity, they enforce invariants on *their own data*. The eligibility rules don't own data; they evaluate the current state of other aggregates (`WorkCapabilityStatus`, income records, residency records) and return a decision. They're pure functions, not stateful objects.
+
+Why not an "aggregate of aggregates"? Because that breaks the model. Each aggregate has exactly one root that controls all access. If you nest aggregates, you either have two roots (which one controls access?) or you have one root controlling another root (which means the inner one isn't really an aggregate — it's just an entity). Aggregates are *peers* that communicate through domain events, not a hierarchy where one contains another.
+
+Here, the eligibility rules don't belong inside any one aggregate, so they live in a service:
 
 ```
 EligibilityPolicy (UC context)
