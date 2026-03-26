@@ -28,7 +28,7 @@ When coordination fails, the result is costly duplication, increased fraud and e
 
 ### Core Technical Argument
 
-Evidence-based coordination using RDF triples, semantic translation, and probabilistic identity clustering solves coordination problems that relational databases cannot address. Estonia's X-Road demonstrates that federated cross-government queries and bilateral semantic agreements work at national scale over 20+ years; probabilistic identity and semantic technologies are this paper's proposed extension for contexts without universal identifiers.
+Evidence-based coordination using RDF triples, semantic translation, and probabilistic identity clustering solves coordination problems that relational databases cannot address. Estonia's X-Road demonstrates that federated cross-government queries work at national scale over 20+ years with universal identifiers; probabilistic identity and semantic technologies are this paper's proposed extension for contexts without universal identifiers.
 
 ### The DDD Foundation
 
@@ -1332,7 +1332,7 @@ UK must solve additional challenges Estonia never faced.
 
 **What's Proven:**
 - RDF at scale (50B triples per node demonstrated)
-- Bilateral semantic agreements operationally (Estonia X-Road 20+ years)
+- Federated query infrastructure operationally (Estonia X-Road 20+ years)
 - Probabilistic identity (Fellegi-Sunter academic standard)
 - Verifiable credentials (400M+ EU users)
 
