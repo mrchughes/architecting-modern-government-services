@@ -1291,18 +1291,24 @@ Internal documents describe NINO data quality as "unbelievable"—duplicate issu
 
 ### 8.4 What Estonia Proved (and Didn't)
 
-**Proved:**
-- X-Road secure distributed transport (20+ years)
-- Bilateral semantic agreements are manageable
-- Citizen trust from transparency (95% digital adoption)
+Estonia built excellent infrastructure, but they solved a different problem. Their universal identifier (isikukood) assigned at birth means they never faced the identity matching challenge this paper addresses. X-Road is secure transport, not semantic translation.
 
-**Didn't Prove:**
-- Probabilistic identity (Estonia has universal ID)
+**What Estonia Proved:**
+- Federated government queries can work at national scale (X-Road, 20+ years)
+- Citizens trust transparent data sharing (95% digital adoption)
+- Standardised infrastructure beats point-to-point integration
+
+**What Estonia Didn't Need to Solve (Because Universal ID):**
+- Probabilistic identity matching
+- Cross-department semantic translation
+- Confidence scoring for partial matches
+
+**What We Cannot Extrapolate:**
 - 50× scale (1.3M vs 67M citizens)
-- 100+ organisations (Estonia has 30-50)
-- Automated semantic translation at scale
+- 3× organisation count (30-50 vs 100+ departments)
+- Governance without universal identifier
 
-UK must solve additional challenges Estonia never faced.
+Estonia is a success story, but not a proxy for UK. We must prove the probabilistic identity and semantic translation capabilities independently.
 
 ---
 
