@@ -604,34 +604,41 @@ A bounded context emerges where the same word means different things to differen
 
 ```mermaid
 flowchart TB
-    subgraph Core["Evidence-Based Identity Context"]
+    subgraph Core["Evidence-Based Identity Context (one BC)"]
         direction TB
-        EV["Evidence Gathering"]
-        CL["Cluster Management"]
-        BS["Binding Sessions"]
+        EV["Evidence Gathering\\n(module)"]
+        CL["Cluster Management\\n(module)"]
+        BS["Binding Sessions\\n(module)"]
     end
     
-    subgraph Benefits["Benefit Contexts (linguistic boundaries)"]
-        UC["Universal Credit Context"]
-        HB["Housing Benefit Context"]
-        PIP["PIP Context"]
+    subgraph Benefits["Benefit Contexts (separate BCs)"]
+        UC["Universal Credit"]
+        HB["Housing Benefit"]
+        PIP["PIP"]
     end
     
-    subgraph Generic["Generic Infrastructure"]
+    subgraph Generic["Generic Infrastructure (NOT BCs)"]
         DOC["Document Storage"]
         BIO["Biometric Services"]
         CRED["Credential Issuance"]
     end
     
-    Core --> UC
-    Core --> HB
-    Core --> PIP
-    Generic --> Core
+    Core -->|"Published\\nLanguage"| UC
+    Core -->|"Published\\nLanguage"| HB
+    Core -->|"Published\\nLanguage"| PIP
+    Generic -.->|"SDK/API"| Core
     
     style Core fill:#e8f5e9
     style Benefits fill:#fff3e0
     style Generic fill:#e3f2fd
 ```
+
+**Reading the diagram:**
+- **Green box:** One bounded context with three internal modules (same ubiquitous language throughout)
+- **Orange boxes:** Separate bounded contexts, each with its own ubiquitous language ("income" means different things)
+- **Blue box:** Commodity infrastructure—not bounded contexts, just libraries and services
+- **Solid arrows:** Context integration via Published Language
+- **Dashed arrow:** Technical dependency, not a context relationship
 
 #### Evidence-Based Identity Context (Core)
 
