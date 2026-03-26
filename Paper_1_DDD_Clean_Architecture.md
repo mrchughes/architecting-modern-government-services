@@ -537,6 +537,15 @@ This is stronger than "we agree our ubiquitous languages will align." Language a
 
 The trade-off is coupling. Shared kernels create deployment coordination — you can't change the kernel without considering all consumers. This is why they should be *small*: core identity types, common value objects, shared event schemas. If your shared kernel grows to include business logic, you've likely merged two bounded contexts and should recognise that explicitly.
 
+**Why shared code, not a shared service?** A shared service owns data and you call it at runtime. A shared kernel shares *definitions*, not *state*. Each context still owns its own copy of addresses — it just uses the same `VerifiedAddress` type to represent them. Benefits has its addresses; Pensions has its addresses; they're stored separately, governed separately, but described identically.
+
+This matters because:
+- No runtime dependency: if the Identity service is down, Benefits can still work with the `VerifiedAddress` objects it already has
+- Type safety at compile time: mismatches are caught before deployment, not in production logs
+- Each context remains autonomous: it owns its data, just agrees on vocabulary
+
+If you find yourself wanting a shared service that *stores* the shared data, that's not a shared kernel — that's a separate bounded context (like Customer360) with a Customer-Supplier or OHS relationship to its consumers.
+
 **When to use it:** When the cost of translation is higher than the cost of coordination. If Benefits and Pensions both need to understand "verified address" and the definitions must be identical, maintaining two separate `VerifiedAddress` types with translation between them is pure overhead. Share the type.
 
 **When to avoid it:** When contexts need to evolve independently, or when "the same word" actually means subtly different things in each context. If Benefits' "verified" means "above 0.8 confidence" but Pensions' means "human-reviewed," don't force a shared kernel — use an anti-corruption layer and let each context define the term in its own language.
