@@ -618,10 +618,27 @@ flowchart TB
         AUDIT_SD["Audit Logging"]
     end
     
+    EBI_SD --> UC_SD
+    EBI_SD --> HB_SD
+    EBI_SD --> PIP_SD
+    EBI_SD --> SEM_SD
+    
+    EBI_SD -.-> DOC_SD
+    EBI_SD -.-> BIO_SD
+    EBI_SD -.-> CRED_SD
+    EBI_SD -.-> AUDIT_SD
+    
     style Core fill:#e8f5e9
     style Supporting fill:#fff3e0
     style Generic fill:#e3f2fd
 ```
+
+**Reading this subdomain map:**
+- **Green (Core):** Evidence-Based Identity — differentiating capability, build in-house
+- **Orange (Supporting):** Benefit eligibility contexts consume the core; semantic translation enables cross-context communication
+- **Blue (Generic):** Commodity capabilities the core uses — buy or use existing solutions
+- **Solid arrows:** Domain dependency (supporting subdomains use core)
+- **Dashed arrows:** Technical dependency (core uses generic subdomains)
 
 **Subdomain → Implementation:**
 
