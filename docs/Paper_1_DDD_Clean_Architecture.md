@@ -810,7 +810,75 @@ The same eligibility rules apply whether you're processing a new claim, re-evalu
 
 **Frameworks and Drivers (outermost)** contain the actual technical implementations—FastAPI, DynamoDB SDK, SNS client, web servers. These are plugins, not foundations. They're the most volatile layer, the easiest to replace, and the least important to your business.
 
-### 3.4 Layer-by-Layer Implementation
+### 3.4 Two Ways Dependencies Work
+
+Before looking at code, understand that there are **two different dependency situations** in Clean Architecture:
+
+**Situation 1: Outer needs inner (normal)**
+
+A controller needs to call a use case. The controller is outer, the use case is inner. This is simple:
+
+```
+Controller ──imports and calls──→ UseCase
+```
+
+The controller just imports the use case and calls it. Dependencies point inward. Done.
+
+**Situation 2: Inner needs outer (the problem)**
+
+A use case needs to save data to a database. The use case is inner, the database adapter is outer. But inner can't depend on outer — that breaks the rule.
+
+```
+UseCase ──needs──→ Database ???
+```
+
+If the use case imports `DynamoRefundRepository`, it now depends on infrastructure. Change DynamoDB to Postgres and you're editing business logic.
+
+**The solution: Dependency Inversion**
+
+The inner layer defines *what it needs* as an interface. The outer layer implements that interface:
+
+```
+┌─────────────────────────────────────────────────────┐
+│         Inner Layer (Use Case)                      │
+│  ┌──────────────────────────────────────────────┐   │
+│  │ interface RefundRepository:                  │   │
+│  │   save(refund)                               │   │
+│  │   get_original_amount(payment_id)            │   │
+│  │                                              │   │
+│  │ UseCase uses this interface (doesn't know    │   │
+│  │ what implements it)                          │   │
+│  └──────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────┘
+                           ↑
+                           │ implements
+                           │
+┌─────────────────────────────────────────────────────┐
+│         Outer Layer (Infrastructure)                │
+│  ┌──────────────────────────────────────────────┐   │
+│  │ class DynamoRefundRepository(RefundRepository)│  │
+│  │   def save(refund): boto3.put_item(...)      │   │
+│  └──────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────┘
+```
+
+Now:
+- Use case depends on an interface *it owns* (points inward, to itself)
+- Infrastructure implements that interface and depends on it (points inward)
+- **Both** arrows point inward. Rule preserved.
+
+Swap DynamoDB for Postgres by writing a new `PostgresRefundRepository` that implements the same interface. Use case code doesn't change.
+
+**Summary:**
+
+| Situation | Who needs who | Solution |
+|-----------|---------------|----------|
+| Controller → UseCase | Outer needs inner | Just import and call (normal) |
+| UseCase → Database | Inner needs outer | Define interface, outer implements (inversion) |
+
+With that distinction clear, here's the code:
+
+### 3.5 Layer-by-Layer Implementation
 
 Here's how the layers work together in Python with dependency injection:
 
@@ -957,15 +1025,7 @@ Repositories are abstract because you *do* want to swap implementations: real da
 
 You *could* define a `ProcessRefundUseCaseInterface` and have the controller depend on it — useful if you want to mock the entire use case in controller tests. But it's optional, not required. Abstract where you need flexibility; concrete where you don't.
 
-**"How does the controller know the use case's interface?"** By importing it. Outer layers can see and depend on inner layers — that's the *allowed* direction. The controller imports `ProcessRefundUseCase`, sees its `execute(payment_id, amount, reason)` signature, and calls it. The restriction is the reverse: the use case cannot import the controller. Inner layers are blind to what's outside them.
-
-**Notice two different patterns here:**
-
-1. **Controller → Use Case**: The use case defines its own interface. The controller must conform to call it correctly. This is the *normal* direction — inner defines its shape, outer adapts.
-
-2. **Use Case → Repository**: The use case defines the interface it *needs* (what it wants from persistence). Infrastructure must implement that interface. This is *dependency inversion* — inner specifies requirements, outer satisfies them.
-
-Both follow "dependencies point inward," but they work differently. In (1), the controller accepts the use case as-is. In (2), the use case dictates what it wants and infrastructure conforms. The inversion is about who *defines* the contract at a boundary where you want the inner layer protected from infrastructure details.
+**"How does the controller know the use case's interface?"** By importing it. Outer layers can see and depend on inner layers — that's the *allowed* direction (see §3.4 Situation 1). The controller imports `ProcessRefundUseCase`, sees its `execute(payment_id, amount, reason)` signature, and calls it. The use case cannot import the controller — inner layers don't know what's outside.
 
 #### Layer 5: Wiring (Composition Root) — Dependency injection at application startup
 
@@ -996,7 +1056,7 @@ The use case never imports DynamoDB—it receives an object that satisfies its R
 
 The **dependency direction is always inward**: infrastructure → use case interfaces, controller → use case, use case → domain entities. The core (domain and use cases) never knows about the outer layers (infrastructure and frameworks).
 
-### 3.5 Why Architects Should Care
+### 3.6 Why Architects Should Care
 
 This structure provides **controlled blast radius:**
 
