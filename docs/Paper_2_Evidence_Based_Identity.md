@@ -582,7 +582,23 @@ flowchart TB
 
 *This section applies Domain-Driven Design concepts from Paper 1 to the assertion graph architecture.*
 
-### 4.1 Bounded Contexts
+### 4.1 The Domain
+
+**The problem space:** Government needs to deliver benefits and services to people it cannot directly identify. Unlike private companies that create accounts, government must establish that a real person exists and meets eligibility criteria—using only indirect evidence from other organisations and individuals.
+
+**The core domain:** Evidence-based identity and eligibility determination. This is the heart of the problem—assembling assertions into identity clusters and applying policy rules to those clusters. No commodity software solves this; it must be built.
+
+**Supporting subdomains:**
+- **Trust management:** Assessing asserter reliability. Important but rules-based; could be extracted to a separate system.
+- **Binding operations:** Connecting assertions to physical claimants. Operational concern with standard biometric/authentication patterns.
+- **Semantic translation:** Mapping between organisational vocabularies. Technical infrastructure, not core business logic.
+
+**Generic subdomains:**
+- **Document storage:** Holding original evidence documents. Commodity storage with retention policies.
+- **Audit logging:** Recording all decisions for legal compliance. Standard append-only logging.
+- **Credential issuance:** Generating verifiable credentials from decisions. Follows W3C standards.
+
+### 4.2 Bounded Contexts
 
 The architecture comprises five bounded contexts, each with distinct responsibilities:
 
@@ -604,7 +620,7 @@ flowchart TB
     TC --> AC
     BC --> IRC
     BC --> ERC
-    IRC --> C360["Customer360\\n(Cluster Snapshot)"]
+    IRC --> C360["Customer360\\n(Read Model)"]
     ERC --> C360
     
     style Platform fill:#e3f2fd
@@ -681,7 +697,7 @@ One context per benefit, applying policy rules to bound assertions.
 
 **Key Invariant:** Eligibility rules are applied to bound assertions meeting confidence thresholds.
 
-### 4.2 Context Relationships
+### 4.3 Context Relationships
 
 **Trust → Assertions:** Every assertion's confidence depends on its asserter's trust score.
 
@@ -689,9 +705,9 @@ One context per benefit, applying policy rules to bound assertions.
 
 **Identity Rules → Customer360:** Stable clusters publish to the shared read model.
 
-**Eligibility Rules → Customer360:** Eligibility decisions reference cluster snapshots.
+**Eligibility Rules → Customer360:** Eligibility decisions query the cluster read model.
 
-### 4.3 Customer360: The Cluster Read Model
+### 4.4 Customer360: The Cluster Read Model
 
 Customer360 provides a read-only view of stable identity clusters with bound assertions. It answers: "What assertions are bound to this cluster with what confidence?"
 
