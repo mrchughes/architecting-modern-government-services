@@ -810,31 +810,35 @@ The same eligibility rules apply whether you're processing a new claim, re-evalu
 
 **Frameworks and Drivers (outermost)** contain the actual technical implementations—FastAPI, DynamoDB SDK, SNS client, web servers. These are plugins, not foundations. They're the most volatile layer, the easiest to replace, and the least important to your business.
 
-### 3.4 Two Ways Dependencies Work
+### 3.4 The Rule and How We Enforce It
 
-Before looking at code, understand that there are **two different dependency situations** in Clean Architecture:
+Before looking at code, understand the single rule and how we maintain it.
 
-**Situation 1: Outer needs inner (normal)**
+**The rule: Inner layers never import outer layers. Always.**
 
-A controller needs to call a use case. The controller is outer, the use case is inner. This is simple:
+This is not "when convenient" or "where it makes sense" — it's absolute. The question is how we maintain it when code in one layer needs to call code in another.
 
-```
-Controller ──imports and calls──→ UseCase
-```
+**Why does outer need to call inner?**
 
-The controller just imports the use case and calls it. Dependencies point inward. Done.
-
-**Situation 2: Inner needs outer (the problem)**
-
-A use case needs to save data to a database. The use case is inner, the database adapter is outer. But inner can't depend on outer — that breaks the rule.
+A controller receives an HTTP request. It needs to invoke business logic. The controller is outer, the use case is inner. The controller imports and calls the use case:
 
 ```
-UseCase ──needs──→ Database ???
+Controller ──imports──→ UseCase ──calls──→ UseCase.execute()
 ```
 
-If the use case imports `DynamoRefundRepository`, it now depends on infrastructure. Change DynamoDB to Postgres and you're editing business logic.
+Import direction: outer → inner. ✓ Rule satisfied.
 
-**The solution: Dependency Inversion**
+**Why does inner need to call outer?**
+
+A use case processes a refund. It needs to save to a database. But the database adapter lives in the outer layer (infrastructure). The use case can't import it — that would be inner importing outer, breaking the rule.
+
+```
+UseCase ──imports──→ DynamoRefundRepository    ✗ BREAKS THE RULE
+```
+
+If we did this, changing from DynamoDB to Postgres means editing business logic code. The inner layer becomes coupled to infrastructure choices.
+
+**How do we let inner call outer without importing it?**
 
 The inner layer defines *what it needs* as an interface. The outer layer implements that interface:
 
@@ -846,12 +850,12 @@ The inner layer defines *what it needs* as an interface. The outer layer impleme
 │  │   save(refund)                               │   │
 │  │   get_original_amount(payment_id)            │   │
 │  │                                              │   │
-│  │ UseCase uses this interface (doesn't know    │   │
-│  │ what implements it)                          │   │
+│  │ UseCase calls this interface                 │   │
+│  │ (doesn't know or care what implements it)    │   │
 │  └──────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────┘
                            ↑
-                           │ implements
+                           │ imports and implements
                            │
 ┌─────────────────────────────────────────────────────┐
 │         Outer Layer (Infrastructure)                │
@@ -862,21 +866,26 @@ The inner layer defines *what it needs* as an interface. The outer layer impleme
 └─────────────────────────────────────────────────────┘
 ```
 
-Now:
-- Use case depends on an interface *it owns* (points inward, to itself)
-- Infrastructure implements that interface and depends on it (points inward)
-- **Both** arrows point inward. Rule preserved.
+Now look at the import directions:
+- Use case imports `RefundRepository` interface — but that interface lives *in its own layer*. Inner → inner. ✓
+- `DynamoRefundRepository` imports `RefundRepository` to implement it. Outer → inner. ✓
 
-Swap DynamoDB for Postgres by writing a new `PostgresRefundRepository` that implements the same interface. Use case code doesn't change.
+**Both** import arrows point inward. At runtime, the use case calls DynamoDB. At compile time, nothing in the inner layer knows DynamoDB exists.
+
+Swap DynamoDB for Postgres by writing a new `PostgresRefundRepository` that implements the same interface. Zero changes to use case code.
+
+**This is called Dependency Inversion** — the compile-time dependency points the opposite direction to the runtime call.
 
 **Summary:**
 
-| Situation | Who needs who | Solution |
-|-----------|---------------|----------|
-| Controller → UseCase | Outer needs inner | Just import and call (normal) |
-| UseCase → Database | Inner needs outer | Define interface, outer implements (inversion) |
+| Situation | Runtime call | Compile-time import | How |
+|-----------|--------------|---------------------|-----|
+| Controller → UseCase | Outer calls inner | Outer imports inner ✓ | Just import |
+| UseCase → Database | Inner calls outer | Inner imports... inner ✓ | Define interface in inner layer, outer implements it |
 
-With that distinction clear, here's the code:
+The rule is always enforced. The technique differs based on call direction. When outer calls inner, importing satisfies the rule directly. When inner calls outer, we restructure so the interface lives in the inner layer.
+
+With that clear, here's the code:
 
 ### 3.5 Layer-by-Layer Implementation
 
