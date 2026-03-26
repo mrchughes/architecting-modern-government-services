@@ -356,7 +356,9 @@ Inside a BC, objects reference each other freely, transactions make sense, invar
 
 **The consistency test:** Ask "Can a business invariant break if these two services disagree for 5 seconds?" If yes, they belong in the same BC service.
 
-**What people wrongly do:** Split into "read service" vs "write service," or "API service" vs "processing service," or "validation service" vs "rules service." But all share the same model, data, and invariants. That's not microservices—that's distributed layers. DDD says those belong inside one BC service.
+**What people wrongly do:** Split into "read service" vs "write service," or "API service" vs "processing service," or "validation service" vs "rules service" — and treat them as separate microservices that both own parts of the same model. That's not microservices; that's distributed layers. You've taken what should be internal code modules (a validation layer, a rules engine, a data access layer) and spread them across a network, adding latency and failure modes without gaining any domain isolation.
+
+The legitimate splits above (point 2) are different: the "API gateway" or "background worker" doesn't own the domain model — it's infrastructure that *calls* the BC service. The BC service still owns all the business logic and data. If your split means two services both need to understand the domain rules or share the same database, you haven't split a BC — you've just made your single BC harder to deploy and debug.
 
 ### 1.5 Aggregates
 
