@@ -953,6 +953,8 @@ class RefundController:
 
 **Key points:** Controllers handle translation between external formats (HTTP JSON) and internal domain types. They depend on use cases but don't contain business logic themselves.
 
+**"How does the controller know the use case's interface?"** By importing it. Outer layers can see and depend on inner layers — that's the *allowed* direction. The controller imports `ProcessRefundUseCase`, sees its `execute(payment_id, amount, reason)` signature, and calls it. The restriction is the reverse: the use case cannot import the controller. Inner layers are blind to what's outside them.
+
 #### Layer 5: Wiring (Composition Root) — Dependency injection at application startup
 
 ```python
