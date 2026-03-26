@@ -582,146 +582,194 @@ flowchart TB
 
 *This section applies Domain-Driven Design concepts from Paper 1 to the assertion graph architecture.*
 
-### 4.1 The Domain
+### 4.1 The Domain and Subdomains
 
 **The problem space:** Government needs to deliver benefits and services to people it cannot directly identify. Unlike private companies that create accounts, government must establish that a real person exists and meets eligibility criteria—using only indirect evidence from other organisations and individuals.
 
-**The core domain:** Evidence-based identity and eligibility determination. This is the heart of the problem—assembling assertions into identity clusters and applying policy rules to those clusters. No commodity software solves this; it must be built.
+**The core domain:** Evidence-based identity. Assembling assertions into identity clusters, determining when clusters represent unique persons, and providing that identity foundation to benefit systems. This is differentiating work that no commodity software can do.
 
 **Supporting subdomains:**
-- **Trust management:** Assessing asserter reliability. Important but rules-based; could be extracted to a separate system.
-- **Binding operations:** Connecting assertions to physical claimants. Operational concern with standard biometric/authentication patterns.
-- **Semantic translation:** Mapping between organisational vocabularies. Technical infrastructure, not core business logic.
+- **Benefit eligibility** (one per benefit type): Applying policy rules to identity clusters. Important but largely codifying existing regulations.
+- **Semantic translation:** Mapping between organisational vocabularies. Necessary infrastructure with well-understood patterns.
 
 **Generic subdomains:**
-- **Document storage:** Holding original evidence documents. Commodity storage with retention policies.
-- **Audit logging:** Recording all decisions for legal compliance. Standard append-only logging.
-- **Credential issuance:** Generating verifiable credentials from decisions. Follows W3C standards.
+- **Document storage:** Commodity S3-style storage with retention policies.
+- **Biometric matching:** Vendor SDK integration for face/fingerprint/voice.
+- **Credential issuance:** W3C Verifiable Credentials library.
+- **Audit logging:** Append-only compliance logging.
 
 ### 4.2 Bounded Contexts
 
-The architecture comprises five bounded contexts, each with distinct responsibilities:
+A bounded context emerges where the same word means different things to different teams. Context boundaries follow linguistic boundaries, not architectural layers.
 
 ```mermaid
 flowchart TB
-    subgraph Platform["Platform Contexts"]
-        AC["Assertions Context"]
-        TC["Trust Context"]
-        BC["Binding Context"]
+    subgraph Core["Evidence-Based Identity Context"]
+        direction TB
+        EV["Evidence Gathering"]
+        CL["Cluster Management"]
+        BS["Binding Sessions"]
     end
     
-    subgraph Rules["Rule Application Contexts"]
-        IRC["Identity Rules Context"]
-        ERC["Eligibility Rules Contexts\\n(one per benefit)"]
+    subgraph Benefits["Benefit Contexts (linguistic boundaries)"]
+        UC["Universal Credit Context"]
+        HB["Housing Benefit Context"]
+        PIP["PIP Context"]
     end
     
-    AC --> IRC
-    AC --> ERC
-    TC --> AC
-    BC --> IRC
-    BC --> ERC
-    IRC --> C360["Customer360\\n(Read Model)"]
-    ERC --> C360
+    subgraph Generic["Generic Infrastructure"]
+        DOC["Document Storage"]
+        BIO["Biometric Services"]
+        CRED["Credential Issuance"]
+    end
     
-    style Platform fill:#e3f2fd
-    style Rules fill:#c8e6c9
-    style C360 fill:#fff9c4
+    Core --> UC
+    Core --> HB
+    Core --> PIP
+    Generic --> Core
+    
+    style Core fill:#e8f5e9
+    style Benefits fill:#fff3e0
+    style Generic fill:#e3f2fd
 ```
 
-#### Assertions Context
+#### Evidence-Based Identity Context (Core)
 
-Captures assertions with full provenance. Every assertion records: asserter (who made the claim), assertee reference (by attributes, not by identity), claim content, verification method, confidence score, and timestamp.
+This is **one bounded context**, not five. The language is unified: caseworkers and domain experts talk about "checking documents," "matching the face," "proving who someone is," and "linking records together." These are different operations but share a ubiquitous language.
 
-**Core Aggregates:**
-- **Assertion:** The fundamental unit—asserter, assertee reference, claim, provenance, confidence
-- **Asserter Identity:** The identity node of the claiming entity (institution or person)
-- **Raw Evidence:** Original documents before attribute extraction
+**Why one context, not many:**
+- "Assertion" means the same thing whether from HMRC or from a vouch
+- "Binding" means the same thing whether biometric or knowledge-based
+- "Cluster" means the same thing to everyone working on identity
+- One team owns this; one deployment; one model
 
-**Key Invariants:**
-- Assertions are immutable once recorded
-- Assertee is referenced by attributes, never by identity ID
-- Asserter must be a known identity node
+**The language domain experts use:**
 
-#### Trust Context
-
-Models asserter reliability. Asserters are themselves identity nodes; their assertions carry weight because their identity carries weight.
-
-**Core Aggregates:**
-- **Asserter Profile:** Classification and reliability scores for institutional asserters
-- **Person Trust Score:** Accumulated trust for individual asserters based on vouch accuracy
-- **Verification Capability:** What each asserter can credibly assert
-
-**Key Invariants:**
-- Institutional asserters (HMRC, DVLA) have pre-established trust tiers
-- Person asserters build trust through vouch accuracy over time
-- Trust scores adjust based on validation outcomes
-
-#### Binding Context
-
-Models how assertions connect to physical presence. Binding is the central operation that makes the graph operational.
+| What they say | What the model calls it |
+|--------------|------------------------|
+| "Check their documents" | Receive and validate assertions |
+| "Match the face to the passport" | Biometric binding event |
+| "Link their tax records" | Cluster enrichment via shared NINO |
+| "They proved who they are" | Cluster confidence threshold met |
+| "Something doesn't add up" | Contradiction detected, review flagged |
 
 **Core Aggregates:**
-- **Binding Session:** A live interaction where assertions are gathered and binding established
-- **Biometric Binding:** Face, fingerprint, voice with liveness detection
-- **Knowledge Binding:** Demonstration of secrets
-- **Social Binding:** Vouches from established identity nodes
 
-**Key Invariants:**
-- Binding requires a live session
-- Binding confidence degrades over time without re-verification
-- Multiple binding types strengthen overall confidence
+**IdentityCluster** (Aggregate Root)
+The central aggregate. An identity cluster is the working hypothesis that a set of assertions refer to the same person.
 
-#### Identity Rules Context
+```
+IdentityCluster
+├── clusterId: ClusterId
+├── assertions: List<BoundAssertion>
+├── confidence: ConfidenceScore
+├── status: Active | Flagged | Merged | Split
+└── invariants:
+    - No two assertions with contradictory unique identifiers (e.g., different NINOs) 
+      without status = Flagged
+    - Confidence recalculates whenever assertions added/removed
+    - Merged clusters retain provenance to original cluster IDs
+```
 
-Applies identity rules to bound assertions. Identity clusters emerge; they are not pre-existing entities.
+**BindingSession** (Aggregate Root)
+A live interaction where a claimant links themselves to assertions. The session is the transactional boundary.
 
-**Core Aggregates:**
-- **Identity Cluster:** Bound assertions passing identity rules, with confidence score
-- **Assertion-Cluster Link:** Connection with match confidence
-- **Rule Decision:** Create, merge, split, or flag for review
+```
+BindingSession
+├── sessionId: SessionId
+├── startedAt: Timestamp
+├── claimantBindings: List<BindingEvent>
+├── gatheredAssertions: List<Assertion>
+├── resultingClusterLink: ClusterId?
+└── invariants:
+    - Session expires after 30 minutes without activity
+    - At least one binding event required before cluster linking
+    - Binding strength degrades calculation based on event types
+```
 
-**Key Operations:**
-- Create: New cluster when assertions don't match existing
-- Merge: Assertions correlate with existing cluster
-- Split: Contradictions reveal incorrectly grouped assertions
-- Enrich: Additional assertions strengthen existing cluster
+**Assertion** (Entity within BindingSession, or received from external source)
+An assertion is immutable once recorded. It's not an aggregate root because it has no independent lifecycle—it exists in context of the session that gathered it or the external feed that provided it.
 
-#### Eligibility Rules Contexts
+```
+Assertion
+├── assertionId: AssertionId
+├── asserter: AsserterReference
+├── boundAttributes: AttributeBundle
+├── confidence: ConfidenceScore
+├── verificationMethod: VerificationMethod
+├── receivedAt: Timestamp
+└── invariants:
+    - Immutable after creation
+    - Asserter must be resolvable (institution or person cluster)
+```
 
-One context per benefit, applying policy rules to bound assertions.
+**Value Objects:**
+- `ConfidenceScore`: 0.0–1.0 with composition rules
+- `AttributeBundle`: The bound attributes within an assertion
+- `BindingEvent`: Biometric match, knowledge proof, or social vouch
+- `AsserterReference`: Pointer to institutional config or person cluster
 
-**Core Aggregates:**
-- **Eligibility Request:** Claim session bound to identity cluster
-- **Policy Rule Set:** Versioned eligibility rules
-- **Decision Result:** Approved or denied with confidence and reasoning
+#### Benefit Contexts (Linguistic Boundaries)
 
-**Key Invariant:** Eligibility rules are applied to bound assertions meeting confidence thresholds.
+Here's where contexts actually diverge: each benefit uses different words for the same underlying data.
+
+**Universal Credit Context:**
+- "Income" = gross taxable earnings per HMRC RTI
+- "Household" = benefit unit (complex cohabitation rules)
+- "Residence" = where you normally live (distinct from tenancy)
+
+**Housing Benefit Context:**
+- "Income" = take-home plus child maintenance plus in-kind support
+- "Household" = who sleeps there 4+ nights per week
+- "Residence" = the tenancy address
+
+**PIP Context:**
+- "Income" = irrelevant (not means-tested)
+- "Condition" = functional impact, not diagnosis
+- "Residence" = UK ordinarily resident test
+
+Each benefit context has its own ubiquitous language. When UC asks the core context for "income," it needs **semantic translation**—the core context provides HMRC assertions, and UC's Anti-Corruption Layer translates to UC's income definition.
+
+**This is a real context boundary:** different teams (UC policy team vs. Housing Benefit policy team), different domain experts, different meanings for the same words.
 
 ### 4.3 Context Relationships
 
-**Trust → Assertions:** Every assertion's confidence depends on its asserter's trust score.
+```mermaid
+flowchart LR
+    EBI["Evidence-Based Identity\\n(Core Context)"]
+    
+    UC["Universal Credit"]
+    HB["Housing Benefit"]
+    
+    EBI -->|"Published Language\\n(assertions, clusters)"| UC
+    EBI -->|"Published Language\\n(assertions, clusters)"| HB
+    
+    UC -->|"ACL translates\\n'income' to UC meaning"| UC_DOMAIN["UC Domain Model"]
+    HB -->|"ACL translates\\n'income' to HB meaning"| HB_DOMAIN["HB Domain Model"]
+```
 
-**Binding → Identity Rules, Eligibility Rules:** Both require binding events to connect assertions to claimants.
+**Core → Benefits:** The Evidence-Based Identity context publishes a stable API (its Published Language). It exposes identity clusters and bound assertions. It does NOT interpret what those assertions mean for eligibility.
 
-**Identity Rules → Customer360:** Stable clusters publish to the shared read model.
+**Benefits consume via ACL:** Each benefit context wraps the core API in an Anti-Corruption Layer that translates the generic assertions into benefit-specific domain concepts. UC's ACL knows that HMRC employment assertions map to UC's income definition. Housing Benefit's ACL applies different mapping rules.
 
-**Eligibility Rules → Customer360:** Eligibility decisions query the cluster read model.
+**Why this matters:** When UC policy changes (e.g., capital disregards), only UC's ACL changes. The core context remains stable. When the core context improves cluster matching, all benefits get better identity without changing their eligibility logic.
 
-### 4.4 Customer360: The Cluster Read Model
+### 4.4 The Read Model: Customer360
 
-Customer360 provides a read-only view of stable identity clusters with bound assertions. It answers: "What assertions are bound to this cluster with what confidence?"
+Customer360 is not a bounded context—it's a **read model** (CQRS projection) built from the core context's events.
 
-It does NOT answer: "What does this mean for eligibility?" That question belongs in Eligibility Rules contexts.
+**What it provides:**
+- Current state of identity clusters
+- All bound assertions with confidence scores
+- Relationship assertions (household composition, dependents)
+- Query-optimized for benefit contexts to consume
 
-**What Customer360 Contains:**
+**What it doesn't do:**
+- Make eligibility decisions (that's the benefit contexts' job)
+- Store additional data (it's a projection, not a source of truth)
+- Enforce business rules (those live in the core aggregates)
 
-| Category | Content |
-|----------|---------|
-| Identity Cluster | Corroborated name, DOB, NINO with confidence scores |
-| Bound Assertions | All assertions linked to this cluster |
-| Place Relationships | Person-to-location assertions with confidence |
-| Person Relationships | Parent, child, spouse assertions with confidence |
-| Assertion History | Complete provenance chain |
+**Implementation:** Event-sourced projection from IdentityCluster and BindingSession events. Updated asynchronously. Benefit contexts query it but never write to it.
 
 ---
 
