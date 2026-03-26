@@ -584,6 +584,8 @@ flowchart TB
 
 ### 4.1 The Domain and Subdomains
 
+**Scope:** This domain model covers *evidence-based identity and eligibility determination*—the problem space this paper addresses. DWP and other government departments have many other domains (payments, accounting, case management, debt recovery, fraud investigation, appeals, etc.) that are outside this scope. Those domains would consume the outputs of this one but have their own models, teams, and bounded contexts. What follows is not "the DWP domain model"—it's the domain model for the specific problem we're solving.
+
 **The problem space:** Government needs to deliver benefits and services to people it cannot directly identify. Unlike private companies that create accounts, government must establish that a real person exists and meets eligibility criteria—using only indirect evidence from other organisations and individuals.
 
 **The core domain:** Evidence-based identity. Assembling assertions into identity clusters, determining when clusters represent unique persons, and providing that identity foundation to benefit systems. This is differentiating work that no commodity software can do.
