@@ -602,47 +602,50 @@ flowchart TB
 
 A bounded context emerges where the same word means different things to different teams. Context boundaries follow linguistic boundaries, not architectural layers.
 
-**A note on terminology:** This section uses DDD strategic design concepts (bounded contexts, context relationships, subdomains). The internal structure of each context—aggregates, entities, value objects—is tactical design, covered below under "Core Aggregates."
+**A note on terminology:** This section uses DDD strategic design concepts (bounded contexts, context relationships, subdomains). The internal structure of each context—aggregates, entities, value objects—is tactical design, covered below under "Tactical Design."
 
 ```mermaid
 flowchart TB
-    subgraph Core["Evidence-Based Identity\\n(Core Subdomain \u2192 one BC)"]
-        CORE_INNER[" "]
-    end
+    EBI["Evidence-Based Identity (BC)"]
     
-    subgraph Benefits["Benefit Eligibility\\n(Supporting Subdomains \u2192 separate BCs)"]
-        UC["Universal Credit"]
-        HB["Housing Benefit"]
-        PIP["PIP"]
-    end
+    UC["Universal Credit (BC)"]
+    HB["Housing Benefit (BC)"]
+    PIP["PIP (BC)"]
     
-    subgraph Generic["Generic Subdomains\\n(libraries/vendor, not BCs)"]
-        DOC["Document Storage"]
-        BIO["Biometric Matching"]
-        CRED["Credential Issuance"]
-    end
+    DOC["Document Storage (library)"]
+    BIO["Biometric Matching (library)"]
+    CRED["Credential Issuance (library)"]
     
-    Core -->|"Published\\nLanguage"| UC
-    Core -->|"Published\\nLanguage"| HB
-    Core -->|"Published\\nLanguage"| PIP
-    Generic -.->|"library\\ncalls"| Core
+    EBI -->|"Published Language"| UC
+    EBI -->|"Published Language"| HB
+    EBI -->|"Published Language"| PIP
+    DOC -.-> EBI
+    BIO -.-> EBI
+    CRED -.-> EBI
     
-    style Core fill:#e8f5e9
-    style Benefits fill:#fff3e0
-    style Generic fill:#e3f2fd
-    style CORE_INNER fill:#e8f5e9,stroke:#e8f5e9
+    style EBI fill:#e8f5e9
+    style UC fill:#fff3e0
+    style HB fill:#fff3e0
+    style PIP fill:#fff3e0
+    style DOC fill:#e3f2fd
+    style BIO fill:#e3f2fd
+    style CRED fill:#e3f2fd
 ```
 
 **Reading this context map:**
-- **Green:** Core subdomain implemented as one bounded context. Internal structure (aggregates, services) not shown—that's tactical design.
-- **Orange:** Supporting subdomains, each a separate bounded context with its own ubiquitous language ("income" means different things in UC vs HB).
-- **Blue:** Generic subdomains implemented via libraries and vendor services. No domain language of their own; not bounded contexts.
-- **Solid arrows:** Context integration pattern (Published Language from core to benefits).
-- **Dashed arrow:** Technical dependency only—no domain semantics crossing.
 
-#### Evidence-Based Identity Context (Core Subdomain)
+| Color | What it is | Example |
+|-------|-----------|---------|
+| Green | Core subdomain, implemented as one BC | Evidence-Based Identity |
+| Orange | Supporting subdomains, each its own BC | UC, HB, PIP—each has its own meaning for "income" |
+| Blue | Generic subdomains, implemented as libraries | Document storage, biometrics—no domain language |
 
-This is **one bounded context**, not five. The language is unified: caseworkers and domain experts talk about "checking documents," "matching the face," "proving who someone is," and "linking records together." These are different operations but share a ubiquitous language.
+- **Solid arrows:** BC-to-BC integration via Published Language
+- **Dashed arrows:** Technical dependency on libraries (no domain semantics)
+
+#### Evidence-Based Identity (BC)
+
+This is **one bounded context**. The language is unified: caseworkers and domain experts talk about "checking documents," "matching the face," "proving who someone is," and "linking records together." These are different operations but share a ubiquitous language.
 
 **Why one context, not many:**
 - "Assertion" means the same thing whether from HMRC or from a vouch
@@ -660,7 +663,7 @@ This is **one bounded context**, not five. The language is unified: caseworkers 
 | "They proved who they are" | Cluster confidence threshold met |
 | "Something doesn't add up" | Contradiction detected, review flagged |
 
-**Core Aggregates:**
+**Tactical Design (Aggregates):**
 
 **IdentityCluster** (Aggregate Root)
 The central aggregate. An identity cluster is the working hypothesis that a set of assertions refer to the same person.
