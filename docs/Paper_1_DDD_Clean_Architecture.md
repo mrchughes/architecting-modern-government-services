@@ -745,6 +745,14 @@ class PostgresClaimRepository implements ClaimRepository {
 
 The dependency flows *inward*: `PostgresClaimRepository` depends on `ClaimRepository` (it has to implement that interface). The core doesn't depend on Postgres at all — it defines what it needs and trusts something will provide it. At runtime, dependency injection wires the implementation to the interface.
 
+**"But doesn't the domain still depend on *something* implementing the interface?"** Yes — at runtime, someone must provide an implementation. But there's a crucial difference between *compile-time* and *runtime* dependency:
+
+- **Compile-time**: Can the domain code compile without knowing about Postgres? Yes. The domain only references the interface it owns.
+- **Test-time**: Can you test the domain without a real database? Yes. Pass in a fake `InMemoryClaimRepository` that implements the same interface.
+- **Change-time**: If you switch from Postgres to DynamoDB, does the domain code change? No. Only the infrastructure layer changes.
+
+The domain depends on *the contract being satisfied*, not on *any specific implementation*. That's the inversion: the infrastructure must conform to the domain's expectations, not the other way around.
+
 This is why you can swap Postgres for DynamoDB without touching business logic. The infrastructure layer changes; the core doesn't.
 
 **This is dependency inversion**, and it's the mechanism that makes everything else possible.
