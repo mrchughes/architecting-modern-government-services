@@ -955,6 +955,14 @@ class RefundController:
 
 **"How does the controller know the use case's interface?"** By importing it. Outer layers can see and depend on inner layers — that's the *allowed* direction. The controller imports `ProcessRefundUseCase`, sees its `execute(payment_id, amount, reason)` signature, and calls it. The restriction is the reverse: the use case cannot import the controller. Inner layers are blind to what's outside them.
 
+**Notice two different patterns here:**
+
+1. **Controller → Use Case**: The use case defines its own interface. The controller must conform to call it correctly. This is the *normal* direction — inner defines its shape, outer adapts.
+
+2. **Use Case → Repository**: The use case defines the interface it *needs* (what it wants from persistence). Infrastructure must implement that interface. This is *dependency inversion* — inner specifies requirements, outer satisfies them.
+
+Both follow "dependencies point inward," but they work differently. In (1), the controller accepts the use case as-is. In (2), the use case dictates what it wants and infrastructure conforms. The inversion is about who *defines* the contract at a boundary where you want the inner layer protected from infrastructure details.
+
 #### Layer 5: Wiring (Composition Root) — Dependency injection at application startup
 
 ```python
