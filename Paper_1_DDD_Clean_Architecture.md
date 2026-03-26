@@ -416,9 +416,21 @@ These facts live in other bounded contexts. Eligibility doesn't own them. Three 
 
 DWP typically uses pattern 2 for high-volume decisions and pattern 3 for complex cases requiring human review.
 
-**The critical rule: translate into your language.** Eligibility doesn't store Identity's `VerificationResult` object. It stores an `IdentityConfidence` value object that means something *in eligibility terms*: "verified to threshold X" or "requires manual review." This is the anti-corruption layer — you take external data and translate it into your bounded context's ubiquitous language.
+**The critical rule: translate into your language.** Eligibility doesn't store Identity's `VerificationResult` object. It stores the fact in its own terms: "verified to threshold X" or "requires manual review." This is the anti-corruption layer — you take external data and translate it into your bounded context's ubiquitous language.
 
-The same applies downstream. Payments doesn't understand eligibility rules. It receives an `EntitlementAmount` — a fact stated in payment terms. If eligibility logic changes, Payments is unaffected as long as the contract ("here's what to pay") remains stable.
+But for audit, you need more than the value — you need *provenance*. Which event did this come from? When did we receive it? What version of Identity's model produced it? This means the translated data isn't a pure value object; it's an entity (or part of one) with identity and timestamp:
+
+```
+ReceivedIdentityConfidence
+  ├── confidenceLevel: ConfidenceLevel     ← the translated value
+  ├── sourceEventId: EventId               ← which event we consumed
+  ├── receivedAt: Timestamp                ← when we recorded it
+  └── sourceContextVersion: String         ← Identity's schema version
+```
+
+When the `EligibilityDecision` aggregate records its decision, it references the `ReceivedIdentityConfidence` it used. Audit can now trace: "This decision used identity confidence from event X, received at time Y, when Identity was running schema version Z." If a dispute arises, you can determine exactly what data the decision was based on.
+
+The same applies downstream. Payments doesn't understand eligibility rules. It receives an `EntitlementAmount` — a fact stated in payment terms, with its own provenance chain. If eligibility logic changes, Payments is unaffected as long as the contract ("here's what to pay") remains stable.
 
 ```mermaid
 flowchart LR
@@ -427,7 +439,7 @@ flowchart LR
     end
     
     subgraph Eligibility["Eligibility Context"]
-        IC["IdentityConfidence\n(local value object)"]
+        IC["ReceivedIdentityConfidence\n(with provenance)"]
         ED["EligibilityDecision"]
         EA["EntitlementAmount"]
     end
@@ -436,10 +448,10 @@ flowchart LR
         PO["PaymentOrder"]
     end
     
-    IV -->|"translated to"| IC
+    IV -->|"translated + tracked"| IC
     IC --> ED
     ED -->|"emits"| EA
-    EA -->|"translated to"| PO
+    EA -->|"translated + tracked"| PO
 ```
 
 This is why bounded contexts work: each context owns its language, translates at the boundaries, and never lets external models leak in. The coupling is in the *contracts* (events, APIs), not the *models*.
