@@ -802,9 +802,11 @@ flowchart TB
 
 This layer also includes **domain services**—stateless logic that spans multiple entities. The `EligibilityPolicy` from §1.3 lives here: it evaluates rules across `WorkCapabilityStatus`, income records, and residency—pure domain logic that doesn't belong inside any single entity. Domain services are part of the domain model, not application orchestration.
 
-**Use Cases** (sometimes called Interactors or Application Services) contain application-specific workflows. The `ProcessRefund` use case orchestrates the steps: validate the request, call domain logic, persist the change, emit events. It knows *what* needs to happen but not *how* the infrastructure accomplishes it.
+**Use Cases** (sometimes called Interactors or Application Services) orchestrate workflows and cause side effects. The `ProcessRefund` use case loads data, calls domain logic, persists changes, emits events. It depends on repository and event bus interfaces.
 
-**The distinction matters:** A domain service asks "Does this claimant meet eligibility criteria?" A use case asks "What are all the steps to process this eligibility application?"—gathering inputs, calling the domain service, saving results, notifying downstream systems. Domain services encode business rules; use cases coordinate application flow.
+**The distinction:** Domain services are *pure*—give them inputs, get outputs, no side effects, no dependencies on persistence or messaging. Use cases are *impure*—they load, save, publish, and coordinate. Both contain business logic, but domain services answer questions ("Is this claimant eligible?") while use cases make things happen ("Process this eligibility application and record the outcome").
+
+The same eligibility rules apply whether you're processing a new claim, re-evaluating after a change of circumstances, or running a batch recalculation. The domain service is reused; the use cases for each scenario are different because they coordinate different workflows.
 
 **Interface Adapters** translate between the use cases and the outside world. Controllers receive HTTP requests and translate them into use case inputs. Presenters translate use case outputs into HTTP responses. Repository adapters implement the repository interfaces that use cases depend on, translating domain objects to and from database formats.
 
