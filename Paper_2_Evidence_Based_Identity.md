@@ -392,6 +392,38 @@ The question isn't "match this person to their identity record." The question is
 
 **The chicken-and-egg dissolves:** We don't need an identity record to correlate assertions. We cluster assertions by attribute similarity and linking events. Assertions citing NINO AB123456C cluster together. Assertions linked via the same binding session cluster together. Clusters that share multiple attributes merge. The identity emerges from this correlation; we don't need it to exist beforehand.
 
+### 2.7a The Uber Graph Is Primary
+
+This is the heart of the paradigm shift, and it's easy to miss: **the assertion graph is the only thing that exists. Identity clusters are ephemeral computations over it.**
+
+There is ONE global graph of assertions—call it the "uber graph." Every assertion from every source lives in this graph: HMRC employment data, HMPO passport issuances, council tax records, GP registrations, social vouches, binding events. They accumulate. They never disappear. The graph only grows.
+
+**Identity clusters are not stored records.** They are computed projections—working hypotheses about which assertions in the uber graph refer to the same person. When you ask "who is Sarah Miller?", a clustering service traverses the graph, identifies assertions that likely refer to the same person, and returns a cluster hypothesis with a confidence score. The cluster is computed, not retrieved.
+
+**This means:**
+
+1. **Multiple cluster hypotheses can coexist.** The same assertions might support different clustering interpretations. Two clusters might overlap—sharing some assertions but not others. One algorithm might cluster assertions one way; another algorithm might cluster them differently. Neither is "correct"—they're hypotheses with different confidence scores.
+
+2. **Clusters are blurry, not crisp.** A cluster boundary isn't a hard line. Some assertions belong firmly (high match probability). Others are ambiguous (0.6 match to cluster A, 0.4 to cluster B). The blurriness is the truth—forcing crisp boundaries would be a lie.
+
+3. **Clusters get clearer or blurrier over time.** When corroborating evidence arrives, a cluster hypothesis strengthens—confidence rises from 0.78 to 0.92. When contradicting evidence arrives, confidence drops. When evidence links two clusters, they merge. When fraud reveals mis-grouped assertions, a cluster splits. The cluster is not stable; it's a living hypothesis.
+
+4. **The cluster is NOT the person.** The person exists in the real world. The cluster is our current best guess about which graph nodes refer to that person. New evidence can strengthen the guess, weaken it, or prove it wrong entirely.
+
+**Why this matters for implementation:**
+
+Traditional systems would store an `IdentityRecord` table or an `IdentityCluster` aggregate and update it when evidence arrives. That's the old paradigm leaking back in. What we store is assertions (immutable events). What we compute is clusters (ephemeral hypotheses). The distinction is critical:
+
+| Store | Compute |
+|-------|---------|
+| Assertions (immutable) | Cluster hypotheses |
+| Binding events (immutable) | Cluster confidence scores |
+| Decisions made (audit trail) | Cluster membership probabilities |
+
+If you find yourself designing a database table for identity clusters with CRUD operations, you've slipped back into the old paradigm. Assertions have CRUD (well, just CR—they're immutable). Clusters don't. Clusters are query results.
+
+**The neural network analogy (from the addendum):** The assertion graph functions cognitively like a neural network—nodes are entities, edges are weighted relationships, intelligence emerges from traversing weighted paths. But unlike a neural network, the graph is **explainable**: every clustering decision can be traced to specific assertions, specific match scores, specific binding events. We get the power of probabilistic reasoning with the auditability of explicit rules.
+
 ### 2.8 Eligibility Is Just Another Rule-Application
 
 Here's the final insight that completes the paradigm shift: identity and eligibility are parallel operations on the same assertion graph.
@@ -418,41 +450,48 @@ Everything in Part II:
 
 ```mermaid
 flowchart TB
-    subgraph INTRA["Intra-Assertion Binding"]
-        A1["HMRC Employment Assertion"]
-        A1_attr["NINO + Employer + Income + Period"]
-        A1 --> A1_attr
+    subgraph UBER["The Uber Graph (What Exists)"]
+        A1["Assertion: HMRC Employment"]
+        A2["Assertion: HMPO Passport"]
+        A3["Assertion: Council Tax"]
+        A4["Assertion: Social Vouch"]
+        A5["Assertion: Binding Event"]
         
-        A2["HMPO Passport Assertion"]
-        A2_attr["Name + DOB + Photo + Passport#"]
-        A2 --> A2_attr
-        
-        A3["Imam Vouch Assertion"]
-        A3_attr["Name + Community Context + Vouch"]
-        A3 --> A3_attr
+        A1 --- A2
+        A2 --- A3
+        A3 --- A4
+        A1 --- A5
+        A2 --- A5
     end
     
-    subgraph INTER["Inter-Assertion Binding"]
-        LINK1["Shared NINO links assertions"]
-        LINK2["Biometric match links claimant"]
-        LINK3["Multiple vouches triangulate"]
+    subgraph COMPUTE["Clustering Service (What Computes)"]
+        CS["Traverse graph"]
+        CS --> MATCH["Calculate match probabilities"]
+        MATCH --> HYPO["Generate cluster hypotheses"]
     end
     
-    subgraph EMERGE["Identity Emerges"]
-        CLUSTER["Linked assertions form cluster"]
-        CLUSTER --> IDENTITY["Unique person deduced"]
-        CLUSTER --> ELIG["Eligibility computed"]
+    subgraph RESULT["Cluster Hypotheses (Ephemeral Output)"]
+        C1["Cluster A\\nconfidence: 0.89"]
+        C2["Cluster B\\nconfidence: 0.72"]
+        OVERLAP["Some assertions in both\\n(blurry boundaries)"]
+        C1 --- OVERLAP
+        C2 --- OVERLAP
     end
     
-    INTRA --> INTER
-    INTER --> EMERGE
+    UBER --> COMPUTE
+    COMPUTE --> RESULT
     
-    style INTRA fill:#e1f5fe
-    style INTER fill:#fff3e0
-    style EMERGE fill:#e8f5e9
+    style UBER fill:#e8f5e9
+    style COMPUTE fill:#fff3e0
+    style RESULT fill:#e1f5fe
 ```
 
-**The Frankenstein insight:** Identity is assembled from parts—each assertion a bundle of attributes, stitched together by inter-assertion links. It's not stored anywhere. It emerges from the graph.
+**Reading this diagram:**
+- **Green:** The uber graph — assertions accumulated over time. This is what exists.
+- **Orange:** The clustering service — computes hypotheses by traversing the graph.
+- **Blue:** Cluster hypotheses — ephemeral results, not stored. Multiple can coexist. Boundaries are blurry.
+
+**The Frankenstein insight:** Identity is assembled from parts—each assertion a bundle of attributes, stitched together by inter-assertion links. It's not stored anywhere. It's computed from the graph. And the computation can yield multiple hypotheses with different confidence levels.
 
 ---
 
@@ -462,20 +501,28 @@ flowchart TB
 
 ### 3.1 No More Master Identity Records
 
-Stop trying to create authoritative identity records. There is no master file. There are only assertions, bindings, and clusters.
+Stop trying to create authoritative identity records. There is no master file. There are only assertions, bindings, and the clusters computed over them.
 
 An identity cluster is a working hypothesis: these assertions probably refer to the same person. The hypothesis strengthens with corroborating evidence. It weakens with contradictions. It can merge with other clusters when new assertions link them. It can split when fraud reveals that assertions were incorrectly grouped.
+
+**Clusters are blurry.** When Sarah applies for Universal Credit, the system computes a cluster hypothesis: confidence 0.89 that these 47 assertions refer to the same person. But three of those assertions have only 0.62 membership probability—they might belong to a different Sarah Miller. The cluster boundary isn't crisp; some assertions are firmly in, others are ambiguous. This blurriness is the truth. Forcing a binary in/out decision would be a lie.
+
+**Clusters get clearer or blurrier.** A year later, Sarah presents additional evidence—a bank statement with her NINO, a council tax bill at her current address. The cluster hypothesis strengthens: confidence rises to 0.94, and those three ambiguous assertions now have 0.88 membership probability. The cluster got clearer. But then contradicting evidence arrives: an employment record with the same NINO but a different date of birth. Confidence drops to 0.76. The cluster got blurrier. Neither state is "wrong"—they're the system's honest uncertainty given the evidence at each point in time.
+
+**Multiple cluster hypotheses can coexist.** Sometimes the evidence genuinely supports two interpretations. Perhaps "Sarah Miller, DOB 15/3/1985" and "Sarah J. Miller, DOB 15/3/1985" share some assertions but diverge on others. The system maintains both cluster hypotheses: Cluster A (confidence 0.72) and Cluster B (confidence 0.68). Neither is definitively correct. When additional evidence arrives—perhaps a biometric match—one hypothesis will strengthen and the other will weaken. Until then, both coexist. This isn't a bug; it's the system accurately representing genuine ambiguity.
 
 **What this abandons:**
 - The illusion that identity is a fixed fact
 - The requirement to decide identity before processing evidence
 - The single point of failure of a master identity database
+- The pretense of certainty when evidence is ambiguous
 
 **What this enables:**
 - Processing evidence without knowing identity
 - Graceful handling of ambiguity
 - Fraud detection through contradiction analysis
 - Evolution of understanding as evidence accumulates
+- Honest representation of uncertainty to decision-makers
 
 ### 3.2 Semantic Translation, Not Standardisation
 
@@ -707,42 +754,22 @@ This is **one bounded context**. The language is unified: caseworkers and domain
 | "They proved who they are" | Cluster confidence threshold met |
 | "Something doesn't add up" | Contradiction detected, review flagged |
 
-**Tactical Design (Aggregates):**
+**Tactical Design — What's Stored vs What's Computed:**
 
-**IdentityCluster** (Aggregate Root)
-The central aggregate. An identity cluster is the working hypothesis that a set of assertions refer to the same person.
+This is where the paradigm shift bites. Traditional DDD would model `IdentityCluster` as an Aggregate Root with status and lifecycle. That's the old paradigm leaking in. As §2.7a established: assertions are stored; clusters are computed.
 
-```
-IdentityCluster
-├── clusterId: ClusterId
-├── assertions: List<BoundAssertion>
-├── confidence: ConfidenceScore
-├── status: Active | Flagged | Merged | Split
-└── invariants:
-    - No two assertions with contradictory unique identifiers (e.g., different NINOs) 
-      without status = Flagged
-    - Confidence recalculates whenever assertions added/removed
-    - Merged clusters retain provenance to original cluster IDs
-```
+| Concept | Stored or Computed? | Why |
+|---------|-------------------|-----|
+| Assertions | **Stored** (immutable events) | They happened; cannot change |
+| Binding events | **Stored** (immutable events) | They happened during sessions |
+| Identity clusters | **Computed** | Working hypotheses over graph |
+| Cluster snapshots | **Cached** (read model) | Performance optimization |
+| Eligibility decisions | **Stored** (events) | Audit trail |
 
-**BindingSession** (Aggregate Root)
-A live interaction where a claimant links themselves to assertions. The session is the transactional boundary.
+**Aggregates (What We Store):**
 
-```
-BindingSession
-├── sessionId: SessionId
-├── startedAt: Timestamp
-├── claimantBindings: List<BindingEvent>
-├── gatheredAssertions: List<Assertion>
-├── resultingClusterLink: ClusterId?
-└── invariants:
-    - Session expires after 30 minutes without activity
-    - At least one binding event required before cluster linking
-    - Binding strength degrades calculation based on event types
-```
-
-**Assertion** (Entity within BindingSession, or received from external source)
-An assertion is immutable once recorded. It's not an aggregate root because it has no independent lifecycle—it exists in context of the session that gathered it or the external feed that provided it.
+**Assertion** (Aggregate Root)
+The assertion is the primary stored entity. The uber graph IS the collection of assertions.
 
 ```
 Assertion
@@ -755,13 +782,92 @@ Assertion
 └── invariants:
     - Immutable after creation
     - Asserter must be resolvable (institution or person cluster)
+    - Attributes are bound together (intra-assertion binding)
 ```
+
+**BindingSession** (Aggregate Root)
+A live interaction where a claimant creates binding events that link assertions.
+
+```
+BindingSession
+├── sessionId: SessionId
+├── startedAt: Timestamp
+├── bindingEvents: List<BindingEvent>
+├── linkedAssertions: List<AssertionId>
+└── invariants:
+    - Session expires after 30 minutes without activity
+    - At least one binding event required before linking
+    - Binding events are immutable once recorded
+```
+
+**Domain Services (What We Compute):**
+
+**ClusteringService**
+Computes cluster hypotheses by traversing the assertion graph.
+
+```
+ClusteringService
+├── computeCluster(startingAssertions: List<AssertionId>) → ClusterHypothesis
+├── findRelatedAssertions(attributes: AttributeBundle) → List<AssertionId>
+├── detectContradictions(assertions: List<AssertionId>) → List<Contradiction>
+└── operations:
+    - Traverse graph via shared attributes (NINO, DOB, address)
+    - Calculate match probabilities using Fellegi-Sunter
+    - Aggregate confidence scores
+    - Flag contradictions for review
+```
+
+**ClusterHypothesis** (Value Object — never stored)
+The output of clustering. Ephemeral. Computed on demand.
+
+```
+ClusterHypothesis
+├── assertions: List<AssertionId>
+├── confidence: ConfidenceScore
+├── membershipProbabilities: Map<AssertionId, Probability>
+├── contradictions: List<Contradiction>
+├── computedAt: Timestamp
+└── characteristics:
+    - NOT an aggregate — no lifecycle, no identity
+    - Blurry boundaries (membership is probabilistic)
+    - Multiple hypotheses can coexist for same assertions
+    - Gets clearer or blurrier as graph changes
+```
+
+**Read Models (What We Cache):**
+
+**ClusterSnapshot** (Read Model / CQRS Projection)
+For performance, we cache the current best clustering. This is a projection, not truth.
+
+```
+ClusterSnapshot
+├── snapshotId: SnapshotId
+├── hypothesis: ClusterHypothesis
+├── cachedAt: Timestamp
+├── invalidatedBy: AssertionId? (null if still valid)
+└── characteristics:
+    - Invalidated when new assertions arrive
+    - Re-computed on demand or batch
+    - Customer360 reads from these snapshots
+    - NOT a source of truth
+```
+
+**Why no IdentityCluster aggregate?**
+
+Traditional systems would create an `IdentityCluster` aggregate with `status: Active | Flagged | Merged | Split`. That implies the cluster is a thing that exists and changes state. But:
+
+- Clusters don't split — the service computes a different hypothesis when evidence changes
+- Clusters don't merge — the service finds more assertions that link together
+- Clusters don't get flagged — contradictions are detected at query time
+
+The graph is what exists. Clusters are what we compute. The distinction isn't pedantic; it determines whether your system can handle the fundamental truth that identity is uncertain, overlapping, and constantly revised.
 
 **Value Objects:**
 - `ConfidenceScore`: 0.0–1.0 with composition rules
 - `AttributeBundle`: The bound attributes within an assertion
 - `BindingEvent`: Biometric match, knowledge proof, or social vouch
 - `AsserterReference`: Pointer to institutional config or person cluster
+- `Contradiction`: Two assertions with incompatible claims (e.g., different NINOs for same biometric)
 
 #### Benefit Contexts (Linguistic Boundaries)
 
@@ -810,20 +916,22 @@ flowchart LR
 
 ### 4.4 The Read Model: Customer360
 
-Customer360 is not a bounded context—it's a **read model** (CQRS projection) built from the core context's events.
+Customer360 is not a bounded context—it's a **read model** (CQRS projection) built from cluster snapshots.
 
 **What it provides:**
-- Current state of identity clusters
-- All bound assertions with confidence scores
+- Current best cluster hypotheses (cached, not authoritative)
+- Bound assertions with confidence scores
 - Relationship assertions (household composition, dependents)
 - Query-optimized for benefit contexts to consume
 
 **What it doesn't do:**
 - Make eligibility decisions (that's the benefit contexts' job)
-- Store additional data (it's a projection, not a source of truth)
-- Enforce business rules (those live in the core aggregates)
+- Store authoritative identity (there is no authoritative identity—only hypotheses)
+- Enforce business rules (those live in domain services)
 
-**Implementation:** Event-sourced projection from IdentityCluster and BindingSession events. Updated asynchronously. Benefit contexts query it but never write to it.
+**Implementation:** Projects from ClusterSnapshot cache. When new assertions arrive, affected snapshots are invalidated and re-computed by the ClusteringService. Customer360 always serves the latest cached hypotheses. Benefit contexts query it but never write to it.
+
+**Remember:** Customer360 serves cluster *hypotheses*, not ground truth. The hypotheses have confidence scores. They can change when new evidence arrives. Benefit contexts must handle this uncertainty—they cannot assume the identity they received yesterday is still valid today.
 
 ---
 
